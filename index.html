@@ -1317,7 +1317,7 @@
       color: var(--mute);
       line-height: 1.4;
     }
-    .engine-clock { width: 128px; pointer-events: auto; }
+    .engine-clock { width: 128px; pointer-events: none; }
     .engine-clock.interval { left: 44%; top: 44%; }
     .engine-clock.timeout { left: 74%; top: 42%; }
     .engine-clock.retry { left: 30%; top: 78%; width: 140px; }
@@ -1328,7 +1328,7 @@
       top: 78%;
       width: 150px;
       transform: translate(-50%, -50%);
-      border: 1px solid var(--accent);
+      border: 1px solid var(--line);
       background: #171410;
       color: inherit;
       border-radius: 12px;
@@ -1480,8 +1480,7 @@
     .lab-pick:hover .lab-tip,
     .lab-pick:focus-visible .lab-tip { display: block; }
     .lab-pick.on {
-      border-color: var(--accent);
-      background: #241c14;
+      filter: brightness(1.35);
     }
     .lab-pick.on b { color: var(--accent); }
     .lab-pick:disabled { opacity: 0.45; cursor: default; }
@@ -1633,16 +1632,16 @@
     .air-sim.failing .air-say { border-color: #c47a6a; }
     .engine-title small { display: none; }
     .engine-collapse,
+    .engine-collapse,
     .engine-clock.retry,
     .engine-clock.timeout,
     .engine-clock.interval,
     .engine-ignite,
     .engine-pinghit,
     .engine-cargo,
-    .fate-word,
-    .path-lab {
+    .fate-word {
       opacity: 0.12;
-      transition: opacity 0.45s ease, outline-color 0.2s ease, box-shadow 0.2s ease;
+      transition: opacity 0.45s ease;
     }
     .engine-lab { opacity: 1; }
     .engine-ignite.on,
@@ -1656,9 +1655,19 @@
       opacity: 1;
       z-index: 8;
       filter: brightness(1.45);
+      outline: none;
+      box-shadow: none;
     }
-    .engine-collapse { pointer-events: auto; }
-    .engine-stage .path-lab:hover,
+    .engine-collapse { pointer-events: auto; cursor: pointer; }
+    .engine-stage .path-lab { opacity: 1; }
+    .engine-stage .path-lab > :not(.sky-tip) {
+      opacity: 0.12;
+      transition: opacity 0.45s ease;
+    }
+    .engine-stage .path-lab:hover > :not(.sky-tip),
+    .engine-stage .path-lab.on > :not(.sky-tip) {
+      opacity: 1;
+    }
     .engine-stage .engine-ignite:hover,
     .engine-stage .engine-clock:hover,
     .engine-stage .engine-collapse:hover,
@@ -1720,10 +1729,7 @@
     .sky-go:hover { filter: brightness(1.25); }
     .path-lab.road .sky-tip { top: auto; bottom: calc(100% + 8px); }
     .path-lab.road .sky-tip::before { bottom: auto; top: 100%; }
-    .path-lab:hover .sky-tip,
-    .engine-ignite:hover .sky-tip,
-    .engine-clock:hover .sky-tip,
-    .engine-collapse:hover .sky-tip {
+    .path-lab:hover .sky-tip {
       display: block;
       pointer-events: auto;
     }
@@ -2122,7 +2128,7 @@
       background: none;
       border: 0;
       color: inherit;
-      cursor: default;
+      cursor: pointer;
       z-index: 5;
       padding: 0;
       text-align: center;
@@ -4405,7 +4411,7 @@
       while (state.path.length > 1) {
         const n = here();
         const p = nodeFromId(state.path[state.path.length - 2]);
-        if (p && p.kind === "engine" && n && inert[n.kind]) state.path.pop();
+        if (p && p.kind === "engine" && n && inert[n.kind] && n.kind !== "worldline") state.path.pop();
         else break;
       }
     }
@@ -4550,6 +4556,7 @@
       const asChild = kids.some((c) => c.id === id);
       const asSib = !asChild && sibs.some((c) => c.id === id);
       if (!asChild && !asSib) return;
+      if (node && node.kind === "engine" && dest.kind !== "worldline") return;
       const apply = () => {
         state.path = validPath(asSib ? [...state.path.slice(0, -1), id] : [...state.path, id]);
         const arriving = parseIssueId(id);
@@ -4560,10 +4567,6 @@
         render();
       };
       if (dest.rockBox) {
-        apply();
-        return;
-      }
-      if (dest.kind === "lab") {
         apply();
         return;
       }
@@ -4806,9 +4809,9 @@
         `<button class="sky-go" type="button" data-warp="${l.path.join(",")}">${escapeHtml(l.label)}</button>`
       ).join(" · ")}</span>`;
     }
-    function skyTip(node, links) {
-      if (!node || !node.say) return "";
-      return `<span class="sky-tip">${escapeHtml(node.say)}${skyGlimpse(links)}</span>`;
+    function skyTip(hereText, links) {
+      if (!hereText) return "";
+      return `<span class="sky-tip">${escapeHtml(hereText)}${skyGlimpse(links)}</span>`;
     }
     function warpFromSky(pathStr) {
       const path = validPath((pathStr || "").split(",").filter(Boolean));
@@ -4890,20 +4893,30 @@
         </div>
         <span class="fate-word death">death</span>
         <span class="fate-word reignite">the connection</span>
-        ${road ? `<div class="path-lab road${on(road)}">
+        ${road ? `<div class="path-lab road">
           <span class="mini-ring"></span>
           <span class="php">Geodesic</span>
           <span class="pname">${escapeHtml(road.name)}</span>
-          ${skyTip(road, [{ label: "The connection", path: ["universe", "connection"] }])}
+          ${skyTip(
+            "Here TCP is the ordered stream from this phone to the LiveKit server. The websocket rides it. Airplane mode can cut it, or leave it half-open so the stream still looks there while the websocket is silent.",
+            [
+              { label: "The connection", path: ["universe", "connection"] },
+              { label: "TCP", path: ["universe", "connection", "rock:tcp"] }
+            ]
+          )}
         </div>` : ""}
-        ${pipe ? `<div class="path-lab pipe${on(pipe)}">
+        ${pipe ? `<div class="path-lab pipe">
           <span class="ember"></span>
           <span class="php">Tube</span>
           <span class="pname">${escapeHtml(pipe.name)}</span>
-          ${skyTip(pipe, [
-            { label: "The websocket", path: ["universe", "connection", "ws"] },
-            { label: "The connection", path: ["universe", "connection"] }
-          ])}
+          ${skyTip(
+            "Here this is the control socket the SDK opened. Join, tracks, ping, and pong all travel on it. It rides TCP. Voice on this call is WebRTC on UDP.",
+            [
+              { label: "The websocket", path: ["universe", "connection", "ws"] },
+              { label: "TCP", path: ["universe", "connection", "rock:tcp"] },
+              { label: "UDP", path: ["universe", "connection", "rock:udp"] }
+            ]
+          )}
         </div>` : ""}
         <div class="engine-phone">
           <span class="halo"></span>
@@ -4919,35 +4932,30 @@
           <span class="php">First light</span>
           <span class="pname">Opens the tube</span>
           <small>connect · first, and after wait</small>
-          ${skyTip(start)}
         </div>` : ""}
           ${interval ? `<div class="engine-clock interval${on(interval)}">
             ${clockFace("interval")}
             <span class="php">Photon</span>
             <span class="pname">Sends ping</span>
             <small>rides the tube</small>
-            ${skyTip(interval)}
           </div>` : ""}
           ${timeout ? `<div class="engine-clock timeout${on(timeout)}">
             ${clockFace("timeout")}
             <span class="php">Photon</span>
             <span class="pname">Waits for pong</span>
             <small>no teal · the tube dies</small>
-            ${skyTip(timeout)}
           </div>` : ""}
-          ${timeout ? `<div class="engine-collapse${on(timeout)}">
+          ${timeout ? `<button class="engine-collapse${on(timeout)}" type="button" data-warp="universe,connection,ws">
             <span class="void"></span>
             <span class="php">Collapse</span>
             <span class="pname">No pong</span>
             <small>death · retry starts</small>
-            ${skyTip(timeout)}
-          </div>` : ""}
+          </button>` : ""}
           ${retry ? `<div class="engine-clock retry${on(retry)}">
             ${clockFace("retry")}
             <span class="php">After collapse</span>
             <span class="pname">Retry wait</span>
             <small id="labEngLit">then first light again</small>
-            ${skyTip(retry)}
           </div>` : ""}
           ${lab ? `<button class="engine-lab${on(lab)}" type="button" id="labRunBtn">
             <span class="php">On this sky</span>
