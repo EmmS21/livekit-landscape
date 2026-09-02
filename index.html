@@ -5955,10 +5955,10 @@
         const st = STATUS_CLASS[iss.status] || "";
         const tag = issueTag(iss);
         const lab = issueLabel(iss);
+        const mapped = isMappedTicket(iss);
         const sub = mapped
           ? [deep ? countBoxes(iss.thread) + " next boxes" : "", isHomeGate(iss.id) ? lab : ""].filter(Boolean).join(" · ")
           : "";
-        const mapped = isMappedTicket(iss);
         const slack = iss.source === "slack";
         return `<button class="moon ${on} ${maybe ? "maybe" : ""} ${mapped ? "" : "haze"} ${slack ? "path" : ""} ${st}" type="button" data-issue="${iss.id}" title="${escapeHtml(tag + " " + lab)}" style="left:${p.left}%;top:${p.top}%">
           <span class="globe"></span>
