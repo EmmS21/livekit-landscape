@@ -3738,7 +3738,7 @@
           { ask: "The retry is late, so they stay disconnected longer than necessary", say: "The user starts a live session with an AI voice agent. The websocket is what creates and maintains the call. The user is in the call, then goes on airplane mode, which cuts the connection. The internet returns, but the retry is late, so they stay disconnected longer than necessary.", thread: [
             { ask: "What is the retry?", say: "A wait-timer in LiveKit's Flutter SDK on this phone. After the websocket dies, the SDK waits, then calls connect again. The next box is that SDK. Retry is one clock inside it.", thread: [
               { ask: "SDK on this phone", kind: "engine", say: "LiveKit's Flutter SDK running this call. The connection is the live link (websocket + voice). This SDK is the code that runs that link. Retry is one timer in this code.", thread: [
-                { ask: "The simulation", kind: "lab", say: "A container running the Flutter SDK. Call up, airplane on, airplane off. Tear kills the websocket now. Mute waits 15s with no pong, then the same retry." },
+                { ask: "The simulation", kind: "lab", say: "Mute the Flux. Tear the Tether." },
                 { ask: "How connect starts", kind: "ignite", say: "The app calls room.connect. That is the SDK opening the websocket." },
                 { ask: "Sends the ping", kind: "clock", code: "pingInterval", say: "Runs only while the call is already up. Every 5s it writes the ping onto the live websocket, asking the server if this socket still carries LiveKit messages." },
                 { ask: "Waits for the pong", kind: "clock", code: "pingTimeout", say: "Runs only while the call is up. It watches for teal. If 15s pass with no pong, the SDK treats the websocket as dead. That death is what creates the retry clock." },
@@ -4723,12 +4723,10 @@
         <div class="engine-laws">
           <div class="lab-choice">
             <button class="lab-pick" type="button" data-lab-law="tear">
-              <b>Tear the tether</b>
-              <span>OS kills the websocket. Retry starts now.</span>
+              <b>Tear the Tether</b>
             </button>
             <button class="lab-pick" type="button" data-lab-law="mute">
-              <b>Mute the flux</b>
-              <span>Socket stays. Ping out, no pong. Dead after 15s.</span>
+              <b>Mute the Flux</b>
             </button>
           </div>
           <div class="lab-row">
@@ -4877,19 +4875,15 @@
           <div class="copy">
             <p class="php">The simulation</p>
             <p class="pname">Container running the Flutter SDK</p>
-            <p class="say">Call is up. Gold ping goes out, teal pong comes back. Then you turn airplane on, then you turn it off.</p>
           </div>
           <div class="lab-controls">
             <div class="lab-field">
-              <p class="lab">What airplane does to the websocket</p>
               <div class="lab-choice">
                 <button class="lab-pick" type="button" data-lab-law="tear">
-                  <b>OS tears it down</b>
-                  <span>The websocket is gone. Retry starts now.</span>
+                  <b>Tear the Tether</b>
                 </button>
                 <button class="lab-pick" type="button" data-lab-law="mute">
-                  <b>OS leaves it open</b>
-                  <span>Ping still goes out. No pong comes back. After 15s of that, retry starts.</span>
+                  <b>Mute the Flux</b>
                 </button>
               </div>
             </div>
@@ -5778,7 +5772,7 @@
         : atBox && !kids.length
         ? "End of this path · Step back"
         : atEngine || atEngineStay
-        ? "Two laws on this tether. Airplane on, then off. Same phone, same LiveKit."
+        ? "Mute the Flux. Tear the Tether."
         : atWorldline || atWorldlineStay
         ? "Token and URL are what it takes. The path is what it does. Gold ping out, teal pong back."
         : atDna || atBase
