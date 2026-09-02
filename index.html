@@ -1444,6 +1444,7 @@
       justify-content: flex-end;
     }
     .lab-pick {
+      position: relative;
       max-width: 210px;
       border: 1px solid var(--line);
       background: #171410;
@@ -1457,14 +1458,29 @@
       display: block;
       font-size: 12px;
       font-weight: 600;
-      margin-bottom: 3px;
+      margin-bottom: 0;
     }
-    .lab-pick span {
-      display: block;
-      font-size: 11px;
-      color: var(--mute);
-      line-height: 1.3;
+    .lab-pick .lab-tip {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      z-index: 12;
+      width: max(240px, 100%);
+      padding: 8px 10px;
+      border: 1px solid var(--accent);
+      background: #171410;
+      color: var(--text);
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      pointer-events: none;
     }
+    .lab-pick:hover .lab-tip,
+    .lab-pick:focus-visible .lab-tip { display: block; }
     .lab-pick.on {
       border-color: var(--accent);
       background: #241c14;
@@ -1623,13 +1639,37 @@
     .engine-clock.timeout,
     .engine-clock.interval,
     .engine-ignite,
-    .engine-lab,
     .engine-pinghit,
     .engine-cargo,
     .fate-word,
     .path-lab {
       opacity: 0.12;
-      transition: opacity 0.45s ease;
+      transition: opacity 0.45s ease, outline-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .engine-lab { opacity: 1; }
+    .air-sim.ready .engine-collapse,
+    .air-sim.ready .engine-clock.retry,
+    .air-sim.ready .engine-clock.timeout,
+    .air-sim.ready .engine-clock.interval,
+    .air-sim.ready .engine-ignite,
+    .air-sim.ready .engine-pinghit,
+    .air-sim.ready .engine-cargo,
+    .air-sim.ready .path-lab {
+      opacity: 0.9;
+    }
+    .engine-ignite.on,
+    .engine-clock.on,
+    .engine-lab.on,
+    .engine-collapse.on,
+    .engine-pinghit.on,
+    .engine-cargo.on,
+    .path-lab.on,
+    .engine-core.on {
+      opacity: 1;
+      z-index: 8;
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      box-shadow: 0 0 18px rgba(231, 163, 90, 0.35);
     }
     .engine-collapse { pointer-events: none; }
     .air-sim.up .engine-clock.interval { opacity: 0.9; }
@@ -1679,15 +1719,39 @@
       top: 52px;
       right: 14px;
       z-index: 8;
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 8px;
       align-items: flex-end;
       max-width: 280px;
     }
+    .air-sim.ready .engine-laws { display: flex; }
+    .lab-ways {
+      margin: 0;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: right;
+      max-width: 22ch;
+    }
     .engine-laws .lab-choice { justify-content: flex-end; }
     .engine-laws .lab-pick { max-width: 168px; padding: 7px 9px; }
     .engine-laws .lab-pick b { font-size: 11px; }
+    .air-sim.idle .flow-word.ping,
+    .air-sim.idle .flow-word.pong,
+    .air-sim.boot .flow-word.ping,
+    .air-sim.boot .flow-word.pong { display: none; }
+    .air-sim.idle .photon.ping,
+    .air-sim.idle .photon.pong,
+    .air-sim.boot .photon.ping,
+    .air-sim.boot .photon.pong { display: none; }
+    .air-sim.idle .engine-os,
+    .air-sim.boot .engine-os { opacity: 0; }
+    .lab-stage.air-sim:not(.ready) .lab-controls { display: none; }
+    .copy #labRunBtn { margin-top: 10px; }
+    .air-sim.ready .copy #labRunBtn { display: none; }
     .engine-os {
       position: absolute;
       left: 8%;
@@ -3216,16 +3280,23 @@
     .ship-hop small { display: block; font-size: 10px; color: rgba(154, 141, 124, 0.8); line-height: 1.35; margin-top: 3px; }
     .dock-tix { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
     .dock-tix button {
-      border: 1px solid #b9a57d;
-      background: transparent;
-      color: var(--ink);
+      border: 1px solid rgba(231, 163, 90, 0.55);
+      background: rgba(23, 20, 16, 0.72);
+      color: var(--text);
       border-radius: 999px;
       padding: 4px 8px;
       cursor: pointer;
       font-size: 11px;
       text-align: left;
+      opacity: 1;
+      filter: none;
     }
-    .dock-tix button.on { border-color: #a1622f; background: #2a2118; color: var(--paper); }
+    .dock-tix button.on {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--ink);
+      font-weight: 600;
+    }
     .trail .kicker { margin-bottom: 14px; }
     .crumb-tree { list-style: none; margin: 0; padding: 0; }
     .crumb-tree button {
@@ -3408,8 +3479,8 @@
       opacity: 0.5;
       filter: blur(0.4px);
     }
-    .gone button.haze, .dock-tix button.haze, .moon.haze, .land.path,
-    .gone button.dim, .dock-tix button.dim, .moon.dim, .nebula.dim {
+    .gone button.haze, .moon.haze, .land.path,
+    .gone button.dim, .moon.dim, .nebula.dim {
       opacity: 0.08;
       filter: blur(4.5px);
       border-color: rgba(231, 163, 90, 0.08);
@@ -3444,8 +3515,6 @@
     }
     .gone button.haze:hover, .gone button.haze.on, .gone button.path:hover, .gone button.path.on,
     .gone button.dim:hover, .gone button.dim.on,
-    .dock-tix button.haze:hover, .dock-tix button.haze.on,
-    .dock-tix button.dim:hover, .dock-tix button.dim.on,
     .moon.haze:hover, .moon.haze.on, .moon.path:hover, .moon.path.on,
     .moon.dim:hover, .moon.dim.on,
     .nebula.dim:hover,
@@ -3506,7 +3575,6 @@
         filter: none;
       }
       .gone button.haze, .gone button.dim, .gone button.path,
-      .dock-tix button.haze, .dock-tix button.dim,
       .moon.haze, .moon.dim, .moon.path, .nebula.dim, .land.path {
         opacity: 0.38;
         filter: blur(1.6px);
@@ -3739,7 +3807,7 @@
           { ask: "The retry is late, so they stay disconnected longer than necessary", say: "The user starts a live session with an AI voice agent. The websocket is what creates and maintains the call. The user is in the call, then goes on airplane mode, which cuts the connection. The internet returns, but the retry is late, so they stay disconnected longer than necessary.", thread: [
             { ask: "What is the retry?", say: "A wait-timer in LiveKit's Flutter SDK on this phone. After the websocket dies, the SDK waits, then calls connect again. The next box is that SDK. Retry is one clock inside it.", thread: [
               { ask: "SDK on this phone", kind: "engine", say: "LiveKit's Flutter SDK running this call. The connection is the live link (websocket + voice). This SDK is the code that runs that link. Retry is one timer in this code.", thread: [
-                { ask: "The simulation", kind: "lab", say: "Mute the Flux. Tear the Tether." },
+                { ask: "Run the simulation", kind: "lab", say: "The OS either tears down the websocket and TCP connection or leaves it open with nothing moving in it." },
                 { ask: "How connect starts", kind: "ignite", say: "The app calls room.connect. That is the SDK opening the websocket." },
                 { ask: "Sends the ping", kind: "clock", code: "pingInterval", say: "Runs only while the call is already up. Every 5s it writes the ping onto the live websocket, asking the server if this socket still carries LiveKit messages." },
                 { ask: "Waits for the pong", kind: "clock", code: "pingTimeout", say: "Runs only while the call is up. It watches for teal. If 15s pass with no pong, the SDK treats the websocket as dead. That death is what creates the retry clock." },
@@ -4722,12 +4790,15 @@
         </div>
         <div class="air-say" id="labLook"></div>
         <div class="engine-laws">
+          <p class="lab-ways">Two ways airplane mode shuts the connection</p>
           <div class="lab-choice">
-            <button class="lab-pick" type="button" data-lab-law="tear">
+            <button class="lab-pick" type="button" data-lab-law="tear" title="The OS tears down the websocket and TCP connection">
               <b>Tear the Tether</b>
+              <span class="lab-tip">The OS tears down the websocket and TCP connection</span>
             </button>
-            <button class="lab-pick" type="button" data-lab-law="mute">
+            <button class="lab-pick" type="button" data-lab-law="mute" title="The OS leaves it open with nothing moving in it">
               <b>Mute the Flux</b>
+              <span class="lab-tip">The OS leaves it open with nothing moving in it</span>
             </button>
           </div>
           <div class="lab-row">
@@ -4793,10 +4864,9 @@
             <span class="pname">Retry wait</span>
             <small id="labEngLit">then first light again</small>
           </button>` : ""}
-          ${lab ? `<button class="engine-lab${on(lab)}" type="button" data-enter="${lab.id}">
+          ${lab ? `<button class="engine-lab${on(lab)}" type="button" id="labRunBtn">
             <span class="php">On this sky</span>
-            <span class="pname">The simulation</span>
-            <small>airplane on this tether</small>
+            <span class="pname">Run the simulation</span>
           </button>` : ""}
           ${cargo ? `<button class="engine-cargo${on(cargo)}" type="button" data-enter="${cargo.id}">
             ${miniHelix()}
@@ -4832,7 +4902,7 @@
     const labSim = {
       law: "tear",
       dur: 25,
-      phase: "up",
+      phase: "idle",
       dead: false,
       restored: false,
       t0: 0,
@@ -4869,6 +4939,19 @@
     function labBeginConnect() {
       labBeat("connect", 3.6);
     }
+    function labBoot() {
+      labStop();
+      labSim.phase = "boot";
+      labSim.dead = false;
+      labSim.restored = false;
+      labSim.air = 0;
+      labSim.off = 0;
+      labSim.attempt = 0;
+      labSim.sleepFor = 0;
+      labBeginConnect();
+      labRun();
+      labPaint();
+    }
     function labHtml() {
       const fwd = "M14 58 C 38 52, 62 44, 86 36";
       return `<div class="lab-stage air-sim" id="labStage">
@@ -4876,15 +4959,19 @@
           <div class="copy">
             <p class="php">The simulation</p>
             <p class="pname">Container running the Flutter SDK</p>
+            <button class="lab-play" type="button" id="labRunBtn">Run the simulation</button>
           </div>
           <div class="lab-controls">
             <div class="lab-field">
+              <p class="lab-ways">Two ways airplane mode shuts the connection</p>
               <div class="lab-choice">
-                <button class="lab-pick" type="button" data-lab-law="tear">
+                <button class="lab-pick" type="button" data-lab-law="tear" title="The OS tears down the websocket and TCP connection">
                   <b>Tear the Tether</b>
+                  <span class="lab-tip">The OS tears down the websocket and TCP connection</span>
                 </button>
-                <button class="lab-pick" type="button" data-lab-law="mute">
+                <button class="lab-pick" type="button" data-lab-law="mute" title="The OS leaves it open with nothing moving in it">
                   <b>Mute the Flux</b>
+                  <span class="lab-tip">The OS leaves it open with nothing moving in it</span>
                 </button>
               </div>
             </div>
@@ -4986,6 +5073,9 @@
       const failing = beat === "fail";
       const later = phase === "off" && dead && !restored && (waiting || connecting);
       const pct = beatDur <= 0 ? 100 : Math.min(100, (1 - hold / beatDur) * 100);
+      stage.classList.toggle("idle", phase === "idle");
+      stage.classList.toggle("boot", phase === "boot");
+      stage.classList.toggle("ready", phase === "up" || phase === "air" || phase === "off");
       stage.classList.toggle("up", phase === "up" && !dead);
       stage.classList.toggle("air", airOn);
       stage.classList.toggle("torn", dead && !restored && law === "tear");
@@ -5016,7 +5106,14 @@
       let step = "";
       let look = "Call's up. Gold ping out, teal pong back.";
       let engLit = "then first light again";
-      if (airOn && law === "mute" && !dead) {
+      if (phase === "idle") {
+        step = "";
+        look = "";
+      } else if (phase === "boot") {
+        step = "Connect";
+        look = "That's connect kicking off.";
+        engLit = "connect";
+      } else if (airOn && law === "mute" && !dead) {
         step = "No pong";
         look = "Socket's still there. Ping's going, nothing's coming back.";
         engLit = "waiting on a pong · " + Math.min(15, (1 - hold / Math.max(beatDur, 0.001)) * 15).toFixed(1) + "s / 15s";
@@ -5055,6 +5152,7 @@
       const lookEl = document.getElementById("labLook");
       if (lookEl) {
         lookEl.innerHTML = (step ? "<span class=\"step\">" + step + "</span>" : "") + look;
+        lookEl.style.display = look || step ? "" : "none";
         if (labSim.sayKey !== sayKey) {
           labSim.sayKey = sayKey;
           lookEl.classList.remove("quiet");
@@ -5108,6 +5206,14 @@
         return;
       }
       if (beat === "connect") {
+        if (phase === "boot") {
+          labSim.phase = "up";
+          labSim.beat = "idle";
+          labSim.hold = 0;
+          labSim.dead = false;
+          labSim.restored = false;
+          return;
+        }
         if (phase === "air") labBeat("fail", 3);
         else {
           labSim.restored = true;
@@ -5137,7 +5243,7 @@
         }
       }
       labPaint();
-      const running = labSim.phase === "air" || (labSim.phase === "off" && labSim.dead && !labSim.restored);
+      const running = labSim.phase === "boot" || labSim.phase === "air" || (labSim.phase === "off" && labSim.dead && !labSim.restored);
       if (running) labRaf = requestAnimationFrame(labTick);
       else labRaf = 0;
     }
@@ -5156,6 +5262,14 @@
           labPaint();
         };
       });
+      const runBtn = document.getElementById("labRunBtn");
+      if (runBtn) {
+        runBtn.onclick = () => {
+          if (labSim.phase !== "idle" && labSim.phase !== "off") return;
+          track("lab", { action: "run" });
+          labBoot();
+        };
+      }
       const onBtn = document.getElementById("labOn");
       const offBtn = document.getElementById("labOff");
       if (onBtn) {
@@ -5190,7 +5304,7 @@
           labPaint();
         };
       }
-      if (labSim.phase === "air" || (labSim.phase === "off" && labSim.dead && !labSim.restored)) {
+      if (labSim.phase === "boot" || labSim.phase === "air" || (labSim.phase === "off" && labSim.dead && !labSim.restored)) {
         labRun();
       }
     }
@@ -5773,7 +5887,7 @@
         : atBox && !kids.length
         ? "End of this path · Step back"
         : atEngine || atEngineStay
-        ? "Mute the Flux. Tear the Tether."
+        ? "Two ways airplane mode shuts the connection. Hover a toggle."
         : atWorldline || atWorldlineStay
         ? "Token and URL are what it takes. The path is what it does. Gold ping out, teal pong back."
         : atDna || atBase
@@ -6098,7 +6212,7 @@
         startCosmicMotion({ helixKids: atDna ? kids : (parent.children || []), onId: atBase ? node.id : null });
       } else if (atWorldline || atWorldlineStay) {
         startCosmicMotion({ mini: true });
-      } else if (atEngine || atEngineStay) {
+      } else if (atEngine || atEngineStay || atLab) {
         startCosmicMotion({ mini: true });
         bindLab();
       } else if (atBeacon || atSignal) {
@@ -6126,7 +6240,7 @@
           </div>`
         : !atTicket && !atBox && issues.length
         ? `<div class="dock-tix">${issues.map((iss) => `
-            <button type="button" class="${issue && String(issue.id) === String(iss.id) ? "on" : ""} ${isMappedTicket(iss) ? "" : "haze"} ${iss.source === "slack" ? "path" : ""}" data-issue="${iss.id}">${escapeHtml(issueTag(iss))} ${escapeHtml(issueLabel(iss))}</button>
+            <button type="button" class="${issue && String(issue.id) === String(iss.id) ? "on" : ""}" data-issue="${iss.id}">${escapeHtml(issueTag(iss))} ${escapeHtml(issueLabel(iss))}</button>
           `).join("")}</div>`
         : atEngine || atEngineStay
         ? `<div class="dock-tix">
@@ -6140,7 +6254,7 @@
           `).join("")}</div>`
         : cosmic && (atWorldline || atDna || atBeacon) && kids.length
         ? `<div class="dock-tix">${kids.map((c) => `
-            <button type="button" data-enter="${c.id}">${escapeHtml(c.name)}</button>
+            <button type="button" class="${c.id === node.id ? "on" : ""}" data-enter="${c.id}">${escapeHtml(c.name)}</button>
           `).join("")}</div>`
         : (atBase && parent && parent.children || atSignal && parent && parent.children)
         ? `<div class="dock-tix">${(parent.children || []).map((c) => `
