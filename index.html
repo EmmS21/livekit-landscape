@@ -56,7 +56,11 @@
     button {
       font-family: inherit;
       touch-action: manipulation;
-      -webkit-tap-highlight-color: rgba(231, 163, 90, 0.22);
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:focus,
+    button:focus-visible {
+      outline: none;
     }
     a { color: var(--accent); }
 
@@ -1243,9 +1247,9 @@
       border: 0;
       padding: 0;
       background: none;
-      cursor: pointer;
+      cursor: default;
       z-index: 3;
-      pointer-events: auto;
+      pointer-events: none;
     }
     .engine-core .heart {
       display: block;
@@ -1278,7 +1282,7 @@
       background: none;
       border: 0;
       color: inherit;
-      cursor: pointer;
+      cursor: default;
       z-index: 5;
       padding: 0;
       display: flex;
@@ -1671,7 +1675,7 @@
       top: calc(100% + 8px);
       transform: translateX(-50%);
       z-index: 12;
-      width: 26ch;
+      width: min(42ch, 72vw);
       padding: 8px 10px;
       border: 1px solid var(--accent);
       background: #171410;
@@ -1683,12 +1687,46 @@
       text-transform: none;
       line-height: 1.35;
       text-shadow: none;
+      text-align: left;
       pointer-events: none;
     }
+    .sky-tip::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 100%;
+      height: 12px;
+    }
+    .sky-glimpse {
+      display: block;
+      margin-top: 8px;
+      color: var(--soft);
+      font-size: 11px;
+    }
+    .sky-go {
+      display: inline;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--accent);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      pointer-events: auto;
+    }
+    .sky-go:hover { filter: brightness(1.25); }
     .path-lab.road .sky-tip { top: auto; bottom: calc(100% + 8px); }
+    .path-lab.road .sky-tip::before { bottom: auto; top: 100%; }
     .path-lab:hover .sky-tip,
     .engine-ignite:hover .sky-tip,
-    .engine-clock:hover .sky-tip { display: block; }
+    .engine-clock:hover .sky-tip,
+    .engine-collapse:hover .sky-tip {
+      display: block;
+      pointer-events: auto;
+    }
     .air-sim.up .engine-clock.interval { opacity: 0.9; }
     .air-sim.mute .engine-clock.interval,
     .air-sim.mute .engine-clock.timeout,
@@ -2084,7 +2122,7 @@
       background: none;
       border: 0;
       color: inherit;
-      cursor: pointer;
+      cursor: default;
       z-index: 5;
       padding: 0;
       text-align: center;
@@ -2212,6 +2250,7 @@
       top: 86%;
       width: 130px;
       pointer-events: auto;
+      cursor: pointer;
     }
     .engine-cargo .mini-helix { width: 28px; height: 40px; }
     .engine-tether {
@@ -4362,6 +4401,13 @@
       if (!state.path.length || !here()) state.path = gatePath();
       const root = String(state.path[0] || "");
       if (root !== "universe" && !root.startsWith("issue:") && !root.startsWith("rock:")) state.path = gatePath();
+      const inert = { clock: true, pulse: true, geodesic: true, tube: true, ignite: true };
+      while (state.path.length > 1) {
+        const n = here();
+        const p = nodeFromId(state.path[state.path.length - 2]);
+        if (p && p.kind === "engine" && n && inert[n.kind]) state.path.pop();
+        else break;
+      }
     }
     function validPath(path) {
       const out = [];
@@ -4754,6 +4800,29 @@
         <line class="hand" x1="20" y1="20" x2="20" y2="8" stroke="${col}" stroke-width="0.9" stroke-linecap="round" opacity="0.7"/>
       </svg>`;
     }
+    function skyGlimpse(links) {
+      if (!links || !links.length) return "";
+      return `<span class="sky-glimpse">In the universe: ${links.map((l) =>
+        `<button class="sky-go" type="button" data-warp="${l.path.join(",")}">${escapeHtml(l.label)}</button>`
+      ).join(" · ")}</span>`;
+    }
+    function skyTip(node, links) {
+      if (!node || !node.say) return "";
+      return `<span class="sky-tip">${escapeHtml(node.say)}${skyGlimpse(links)}</span>`;
+    }
+    function warpFromSky(pathStr) {
+      const path = validPath((pathStr || "").split(",").filter(Boolean));
+      if (!path.length) return;
+      if (!samePath(state.path, path)) state.warpBack = { path: [...state.path] };
+      rememberPlace(state.path);
+      warpTo(path);
+    }
+    function warpBack() {
+      if (!state.warpBack || !state.warpBack.path) return;
+      const p = validPath(state.warpBack.path);
+      state.warpBack = null;
+      warpTo(p);
+    }
     function engineHtml(engineNode, onId) {
       const kids = engineNode.children || [];
       const interval = kids.find((c) => c.code === "pingInterval");
@@ -4820,56 +4889,66 @@
           <small id="labOsLit">internet on</small>
         </div>
         <span class="fate-word death">death</span>
-        <span class="fate-word reignite">same connect</span>
-        ${road ? `<button class="path-lab road${on(road)}" type="button" data-enter="${road.id}">
+        <span class="fate-word reignite">the connection</span>
+        ${road ? `<div class="path-lab road${on(road)}">
           <span class="mini-ring"></span>
           <span class="php">Geodesic</span>
           <span class="pname">${escapeHtml(road.name)}</span>
-        </button>` : ""}
-        ${pipe ? `<button class="path-lab pipe${on(pipe)}" type="button" data-enter="${pipe.id}">
+          ${skyTip(road, [{ label: "The connection", path: ["universe", "connection"] }])}
+        </div>` : ""}
+        ${pipe ? `<div class="path-lab pipe${on(pipe)}">
           <span class="ember"></span>
           <span class="php">Tube</span>
           <span class="pname">${escapeHtml(pipe.name)}</span>
-        </button>` : ""}
+          ${skyTip(pipe, [
+            { label: "The websocket", path: ["universe", "connection", "ws"] },
+            { label: "The connection", path: ["universe", "connection"] }
+          ])}
+        </div>` : ""}
         <div class="engine-phone">
           <span class="halo"></span>
           <span class="orbit"></span>
           <span class="elab">Body · phone</span>
-          <button class="engine-core${coreOn}" type="button" data-go="${engineNode.id}">
+          <div class="engine-core${coreOn}">
             <span class="heart"></span>
             <span class="php">SDK</span>
-          </button>
+          </div>
         </div>
-        ${start ? `<button class="engine-ignite${on(start)}" type="button" data-enter="${start.id}">
+        ${start ? `<div class="engine-ignite${on(start)}">
           <span class="spark"></span>
           <span class="php">First light</span>
           <span class="pname">Opens the tube</span>
           <small>connect · first, and after wait</small>
-        </button>` : ""}
-          ${interval ? `<button class="engine-clock interval${on(interval)}" type="button" data-enter="${interval.id}">
+          ${skyTip(start)}
+        </div>` : ""}
+          ${interval ? `<div class="engine-clock interval${on(interval)}">
             ${clockFace("interval")}
             <span class="php">Photon</span>
             <span class="pname">Sends ping</span>
             <small>rides the tube</small>
-          </button>` : ""}
-          ${timeout ? `<button class="engine-clock timeout${on(timeout)}" type="button" data-enter="${timeout.id}">
+            ${skyTip(interval)}
+          </div>` : ""}
+          ${timeout ? `<div class="engine-clock timeout${on(timeout)}">
             ${clockFace("timeout")}
             <span class="php">Photon</span>
             <span class="pname">Waits for pong</span>
             <small>no teal · the tube dies</small>
-          </button>` : ""}
-          ${timeout ? `<button class="engine-collapse${on(timeout)}" type="button" data-enter="${timeout.id}">
+            ${skyTip(timeout)}
+          </div>` : ""}
+          ${timeout ? `<div class="engine-collapse${on(timeout)}">
             <span class="void"></span>
             <span class="php">Collapse</span>
             <span class="pname">No pong</span>
             <small>death · retry starts</small>
-          </button>` : ""}
-          ${retry ? `<button class="engine-clock retry${on(retry)}" type="button" data-enter="${retry.id}">
+            ${skyTip(timeout)}
+          </div>` : ""}
+          ${retry ? `<div class="engine-clock retry${on(retry)}">
             ${clockFace("retry")}
             <span class="php">After collapse</span>
             <span class="pname">Retry wait</span>
             <small id="labEngLit">then first light again</small>
-          </button>` : ""}
+            ${skyTip(retry)}
+          </div>` : ""}
           ${lab ? `<button class="engine-lab${on(lab)}" type="button" id="labRunBtn">
             <span class="php">On this sky</span>
             <span class="pname">Run the simulation</span>
@@ -4879,18 +4958,18 @@
             <span class="php">Takes</span>
             <span class="pname">What connect takes</span>
           </button>` : ""}
-        ${pulse ? `<button class="engine-pinghit${on(pulse)}" type="button" data-enter="${pulse.id}">
+        ${pulse ? `<div class="engine-pinghit${on(pulse)}">
           <span class="php">This light</span>
           <span class="pname">on the tube</span>
-        </button>
-        <button class="engine-server${on(pulse)}" type="button" data-enter="${pulse.id}">
+        </div>
+        <div class="engine-server${on(pulse)}">
           <span class="pulse"></span>
           <span class="rings"></span>
           <span class="rings r2"></span>
           <span class="php">Hits</span>
           <span class="pname">LiveKit</span>
           <small>signal websocket</small>
-        </button>` : ""}
+        </div>` : ""}
         <div class="engine-stamps" id="labStamps">
           <div class="stamp os" id="airStampOs">
             <span class="php">OS moon</span>
@@ -5768,7 +5847,8 @@
       const el = document.getElementById("watch");
       const w = state.watching && lookupIssue(state.watching.id);
       if (!w) { el.innerHTML = ""; return; }
-      if (atGateHome() && isHomeGate(w.id)) { el.innerHTML = ""; return; }
+      const rootIssue = parseIssueId(state.path[0]);
+      if (rootIssue && String(rootIssue.id) === String(w.id)) { el.innerHTML = ""; return; }
       const boxes = (w.thread || []).length;
       const where = pathLabel(state.watching.path);
       el.innerHTML = `
@@ -5866,7 +5946,7 @@
       const atAct = node.kind === "act";
       const atEngine = node.kind === "engine";
       const atLab = node.kind === "lab";
-      const atEngineStay = !!(parent && parent.kind === "engine" && (node.kind === "clock" || node.kind === "pulse" || node.kind === "geodesic" || node.kind === "tube" || node.kind === "ignite" || node.kind === "lab"));
+      const atEngineStay = !!(parent && parent.kind === "engine" && (node.kind === "lab"));
       const atWorldlineStay = !!(parent && parent.kind === "worldline" && atAct);
       const atBeacon = node.kind === "beacon";
       const atBase = node.kind === "strand";
@@ -5914,6 +5994,7 @@
       document.getElementById("ship").innerHTML = `
         <button class="ship-back" type="button" id="shipBack" ${home ? "disabled" : ""}>Step back</button>
         <button class="ship-warp" type="button" id="shipWarp">${warpOut ? "Out to LiveKit" : "Warp to #" + HOME_GATE.issueId}</button>
+        ${state.warpBack ? `<button class="ship-warp" type="button" id="shipWarpBack">Warp back</button>` : ""}
         ${shipHint ? `<div class="ship-strata-hint">${escapeHtml(shipHint)}</div>` : ""}
         ${hops.length ? (state.hideExplored
           ? `<div class="ship-lab">Explored <button type="button" id="shipExploredToggle">Show</button></div>`
@@ -5931,6 +6012,8 @@
       `;
       document.getElementById("shipBack").onclick = stepBack;
       document.getElementById("shipWarp").onclick = warpOut ? exploreUniverse : warpHome;
+      const warpBackBtn = document.getElementById("shipWarpBack");
+      if (warpBackBtn) warpBackBtn.onclick = warpBack;
       const exploredToggle = document.getElementById("shipExploredToggle");
       if (exploredToggle) {
         exploredToggle.onclick = () => {
@@ -6199,6 +6282,10 @@
         ${showMoonLand ? "" : moons}
       `;
       document.querySelectorAll("[data-enter]").forEach((b) => b.addEventListener("click", () => enterChild(b.dataset.enter, b)));
+      document.querySelectorAll("[data-warp]").forEach((b) => b.addEventListener("click", (e) => {
+        e.stopPropagation();
+        warpFromSky(b.dataset.warp);
+      }));
       document.querySelectorAll("#sky [data-go]").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.go)));
       document.querySelectorAll("#sky [data-issue]").forEach((b) => b.addEventListener("click", () => enterIssue(b.dataset.issue, b)));
       document.querySelectorAll("[data-rock]").forEach((b) => b.addEventListener("click", () => enterRock(b.dataset.rock)));
@@ -6249,11 +6336,7 @@
             <button type="button" class="${issue && String(issue.id) === String(iss.id) ? "on" : ""}" data-issue="${iss.id}">${escapeHtml(issueTag(iss))} ${escapeHtml(issueLabel(iss))}</button>
           `).join("")}</div>`
         : atEngine || atEngineStay
-        ? `<div class="dock-tix">
-            <button type="button" class="${atEngine ? "on" : ""}" data-go="${engineNode.id}">SDK</button>
-            ${(engineNode.children || []).map((c) => `
-            <button type="button" class="${c.id === node.id ? "on" : ""}" data-enter="${c.id}">${escapeHtml(c.name)}</button>
-          `).join("")}</div>`
+        ? ""
         : atWorldlineStay
         ? `<div class="dock-tix">${(parent.children || []).map((c) => `
             <button type="button" class="${c.id === node.id ? "on" : ""}" data-enter="${c.id}">${escapeHtml(c.name)}</button>
