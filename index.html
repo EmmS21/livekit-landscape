@@ -3693,7 +3693,7 @@
     </aside>
   </div>
   <script>
-    const UMAMI_WEBSITE_ID = "";
+    const UMAMI_WEBSITE_ID = "071e8874-ccc3-4e3b-99f5-12cca93b5890";
     (function () {
       if (!UMAMI_WEBSITE_ID) return;
       const host = location.hostname;
@@ -3702,6 +3702,7 @@
       s.defer = true;
       s.src = "https://cloud.umami.is/script.js";
       s.setAttribute("data-website-id", UMAMI_WEBSITE_ID);
+      s.setAttribute("data-domains", "emms21.github.io");
       document.head.appendChild(s);
     })();
     function track(name, data) {
