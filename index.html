@@ -1815,7 +1815,24 @@
     .air-sim.boot .engine-os { opacity: 0; }
     .lab-stage.air-sim:not(.ready) .lab-controls { display: none; }
     .copy #labRunBtn { margin-top: 10px; }
-    .air-sim.ready .copy #labRunBtn { display: none; }
+    #labRunBtn {
+      overflow: hidden;
+      max-height: 5.5rem;
+      opacity: 1;
+      filter: blur(0);
+      transition: opacity 0.4s ease, filter 0.4s ease, max-height 0.4s ease 0.22s, margin 0.4s ease 0.22s, padding 0.4s ease 0.22s, border-width 0.4s ease 0.22s;
+    }
+    .air-sim:not(.idle) #labRunBtn {
+      opacity: 0;
+      filter: blur(10px);
+      pointer-events: none;
+      max-height: 0;
+      margin: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-width: 0;
+    }
+    .air-sim:not(.idle) #labRunBtn:hover { filter: blur(10px); }
     .engine-os {
       position: absolute;
       left: 8%;
@@ -3309,6 +3326,14 @@
       text-transform: uppercase;
       padding: 0;
     }
+    .shell.hops-on .ship {
+      padding: 8px;
+      background: #050408;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 0 48px 28px #050408;
+      border-radius: 16px;
+    }
     .ship-hops {
       position: relative;
       z-index: 3;
@@ -3317,13 +3342,10 @@
       gap: 6px;
       max-height: 38vh;
       overflow: auto;
-      padding: 8px;
-      background: #050408;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 0 28px 12px #050408;
-      border: 1px solid rgba(231, 163, 90, 0.22);
-      border-radius: 14px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
     }
     .ship-hop {
       text-align: left;
@@ -3335,8 +3357,8 @@
       cursor: pointer;
       max-width: 280px;
     }
-    .ship-hop:hover, .ship-hop.on { border-color: rgba(231, 163, 90, 0.7); background: rgba(23, 20, 16, 0.55); }
-    .ship-hop[disabled] { opacity: 0.45; cursor: default; }
+    .ship-hop:hover, .ship-hop.on { border-color: rgba(231, 163, 90, 0.7); background: #1c1814; }
+    .ship-hop[disabled] { opacity: 1; color: rgba(243, 234, 220, 0.5); cursor: default; }
     .ship-hop b { display: block; font-size: 12px; font-weight: 600; }
     .ship-hop small { display: block; font-size: 10px; color: rgba(154, 141, 124, 0.8); line-height: 1.35; margin-top: 3px; }
     .dock-tix { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
@@ -3682,7 +3704,10 @@
         bottom: calc(max(12px, env(safe-area-inset-bottom)) + 96px);
         max-height: min(40vh, 320px);
         overflow: auto;
-        background: linear-gradient(180deg, rgba(5, 4, 8, 0.22), rgba(5, 4, 8, 0.58));
+        background: #050408;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: 0 0 48px 28px #050408;
         border: 1px solid rgba(231, 163, 90, 0.22);
         border-radius: 16px;
         padding-bottom: 8px;
@@ -3754,16 +3779,21 @@
         padding: 6px 11px;
         font-size: 11px;
       }
-      .shell.hops-on .ship-hops {
-        width: min(252px, calc(100vw - 20px));
-        max-height: 28vh;
+      .shell.hops-on .ship {
         padding: 8px;
         background: #050408;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        box-shadow: 0 0 28px 12px #050408;
-        border: 1px solid rgba(231, 163, 90, 0.22);
-        border-radius: 14px;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: 0 0 48px 28px #050408;
+        border-radius: 16px;
+      }
+      .shell.hops-on .ship-hops {
+        width: min(252px, calc(100vw - 36px));
+        max-height: 28vh;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+        border: 0;
       }
       .ship-hop { min-height: 0; max-width: 100%; padding: 5px 8px; font-size: 11px; font-weight: 600; }
       .ship-hop b, .ship-hop small { display: none; }
@@ -6175,8 +6205,8 @@
       const warpOut = rootedInIssue;
       const phone = onPhone();
       const hops = phone ? exploredPhoneHops() : exploredShortcuts();
-      const orbExplored = `<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="8.5" ry="4.2" fill="none" stroke="currentColor" stroke-width="1.25"/><circle cx="20" cy="12" r="1.55" fill="currentColor"/><circle cx="7.2" cy="10.4" r="1.05" fill="currentColor" opacity=".7"/></svg>`;
-      const orbTickets = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="currentColor" opacity=".2"/><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.25"/><circle cx="9.6" cy="10.4" r="2.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/></svg>`;
+      const orbExplored = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2.1" fill="currentColor"/><circle cx="12" cy="12" r="2.1" fill="currentColor"/><circle cx="18" cy="6" r="2.1" fill="currentColor"/><path d="M7.6 16.4L10.4 13.6M13.6 10.4L16.4 7.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`;
+      const orbTickets = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7.5h15v3c-1.35.35-1.35 2.65 0 3v3h-15v-3c1.35-.35 1.35-2.65 0-3v-3z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8.2l-1.2 7.6M15.2 8.2l-1.2 7.6M8 11h8M7.6 14.2h8" fill="none" stroke="currentColor" stroke-width="1.35"/></svg>`;
       document.querySelector(".shell").classList.toggle("hops-on", !!(hops.length && !state.hideExplored));
       const hopBtn = (h, simple) => {
         const hereNow = samePath(state.path, h.path);
@@ -6190,7 +6220,7 @@
       document.getElementById("ship").innerHTML = phone ? `
         ${hops.length && !state.hideExplored ? `<div class="ship-hops">${hops.map((h) => hopBtn(h, true)).join("")}</div>` : ""}
         <div class="ship-orbit">
-          ${hops.length ? `<button class="ship-orb ${state.hideExplored ? "" : "on"}" type="button" id="shipExploredToggle" aria-label="Explored" title="Explored">${orbExplored}</button>` : ""}
+          ${hops.length ? `<button class="ship-orb ${state.hideExplored ? "" : "on"}" type="button" id="shipExploredToggle" aria-label="Explored places" title="Explored">${orbExplored}</button>` : ""}
           <button class="ship-orb ${state.hidePad ? "" : "on"}" type="button" id="shipTickets" aria-label="Tickets" title="Tickets">${orbTickets}</button>
         </div>
         <div class="ship-nav">
