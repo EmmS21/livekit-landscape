@@ -1477,8 +1477,10 @@
       letter-spacing: 0;
       pointer-events: none;
     }
-    .lab-pick:hover .lab-tip,
-    .lab-pick:focus-visible .lab-tip { display: block; }
+    @media (hover: hover) and (pointer: fine) {
+      .lab-pick:hover .lab-tip,
+      .lab-pick:focus-visible .lab-tip { display: block; }
+    }
     .lab-pick.on {
       filter: brightness(1.35);
     }
