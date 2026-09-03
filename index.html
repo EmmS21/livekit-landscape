@@ -1441,6 +1441,7 @@
       flex-wrap: wrap;
       justify-content: flex-end;
     }
+    html.no-hover-tips .lab-tip { display: none !important; }
     .lab-pick {
       position: relative;
       max-width: 210px;
@@ -4965,11 +4966,11 @@
           <div class="lab-choice">
             <button class="lab-pick" type="button" data-lab-law="tear">
               <b>Tear the Tether</b>
-              <span class="lab-tip">The OS tears down the websocket and TCP connection</span>
+              ${labTip("The OS tears down the websocket and TCP connection")}
             </button>
             <button class="lab-pick" type="button" data-lab-law="mute">
               <b>Mute the Flux</b>
-              <span class="lab-tip">The OS leaves it open with nothing moving in it</span>
+              ${labTip("The OS leaves it open with nothing moving in it")}
             </button>
           </div>
           <div class="lab-row">
@@ -5153,11 +5154,11 @@
               <div class="lab-choice">
                 <button class="lab-pick" type="button" data-lab-law="tear">
                   <b>Tear the Tether</b>
-                  <span class="lab-tip">The OS tears down the websocket and TCP connection</span>
+                  ${labTip("The OS tears down the websocket and TCP connection")}
                 </button>
                 <button class="lab-pick" type="button" data-lab-law="mute">
                   <b>Mute the Flux</b>
-                  <span class="lab-tip">The OS leaves it open with nothing moving in it</span>
+                  ${labTip("The OS leaves it open with nothing moving in it")}
                 </button>
               </div>
             </div>
@@ -5439,6 +5440,7 @@
       labRaf = requestAnimationFrame(labTick);
     }
     function bindLab() {
+      stripLabTips();
       labPaint();
       document.querySelectorAll("[data-lab-law]").forEach((b) => {
         b.onclick = () => {
@@ -5988,6 +5990,18 @@
     };
     function phoneSky() {
       return window.matchMedia("(max-width: 720px)").matches;
+    }
+    function noHoverTips() {
+      return window.matchMedia("(hover: none), (pointer: coarse), (max-width: 720px)").matches;
+    }
+    function labTip(text) {
+      if (noHoverTips()) return "";
+      return `<span class="lab-tip">${escapeHtml(text)}</span>`;
+    }
+    function stripLabTips() {
+      const off = noHoverTips();
+      document.documentElement.classList.toggle("no-hover-tips", off);
+      if (off) document.querySelectorAll(".lab-tip").forEach((el) => el.remove());
     }
     function strataSlot(id) {
       const s = STRATA_POS[id];
