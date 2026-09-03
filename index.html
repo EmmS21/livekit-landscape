@@ -4052,7 +4052,7 @@
                 { ask: "How connect starts", kind: "ignite", say: "The app calls room.connect. That is the SDK opening the websocket." },
                 { ask: "Sends the ping", kind: "clock", code: "pingInterval", say: "Runs only while the call is already up. Every 5s it writes the ping onto the live websocket, asking the server if this socket still carries LiveKit messages." },
                 { ask: "Waits for the pong", kind: "clock", code: "pingTimeout", say: "Runs only while the call is up. It watches for teal. If 15s pass with no pong, the SDK treats the websocket as dead. That death is what creates the retry clock." },
-                { ask: "The ping on the tube", kind: "pulse", say: "Same ping the send clock writes. Gold out, teal back. Missing teal for 15s is death. Death starts the retry wait. The retry wait is what later calls connect." },
+                { ask: "ping", kind: "pulse", say: "Same ping the send clock writes. Gold out, teal back. Missing teal for 15s is death. Death starts the retry wait. The retry wait is what later calls connect." },
                 { ask: "Retry wait", kind: "clock", code: "retryWait", say: "The clock that calls connect again. It lives in this SDK. After the websocket is dead, it waits (0ms, then 300ms, up to 7s) and calls connect. #4477 is this clock still counting after internet is back." },
                 { ask: "TCP", kind: "geodesic", say: "The ordered stream between this phone and the LiveKit server — the same gold plane at The connection. TCP carries the websocket. Airplane mode can cut it, or leave it half-open so the stream still looks there while the websocket is silent." },
                 { ask: "The websocket", kind: "tube", say: "The control socket the SDK opened. Join, tracks, ping, and pong all travel on it. It rides TCP. If it goes quiet for 15s, the SDK treats the call as dead even if TCP has not closed." },
@@ -4212,7 +4212,7 @@
       id: "universe",
       name: "LiveKit",
       who: "The project. The repo.",
-      deep: "This sky is LiveKit. The six galaxies are the classes we know. At the edge is a landscape we are still mapping.",
+      deep: "LiveKit. The steps a call walks. At the edge is what we have not classified.",
       broken: "",
       issueIds: [],
       children: [
@@ -4657,7 +4657,7 @@
         if (i === 0) return null;
         const n = nodeFromId(id);
         if (!n) return null;
-        return vantageAt(i, id) + " · " + n.name;
+        return n.name;
       }).filter(Boolean).join(" / ");
     }
     function rememberPlace(path) {
@@ -4943,7 +4943,6 @@
         const on = String(c.id) === String(onId) ? " on" : "";
         const side = x >= 50 ? "alt" : "";
         return `<button class="base ${arm} ${side}${on}" type="button" data-enter="${c.id}" style="top:${r.top}%;--x:${x.toFixed(2)}">
-          <span class="php">Base</span>
           <span class="pname">${escapeHtml(c.name)}</span>
         </button>`;
       }).join("");
@@ -4987,19 +4986,16 @@
         <span class="flow-word pong">pong</span>
         ${act ? `<button class="connect-act${actOn ? " on" : ""}" type="button" data-enter="${act.id}">
           <span class="spark"></span>
-          <span class="php">Does</span>
           <span class="pname">${escapeHtml(act.name)}</span>
         </button>` : ""}
         <button class="body helix-pack" type="button" data-enter="${helix.id}" style="left:28%;top:62%">
           ${miniHelix()}
-          <span class="php">Takes</span>
           <span class="pname">${escapeHtml(helix.name)}</span>
         </button>
         <button class="body beacon-pack" type="button" data-enter="${beacon.id}" style="left:74%;top:28%">
           <span class="pulse"></span>
           <span class="rings"></span>
           <span class="rings r2"></span>
-          <span class="php">Takes</span>
           <span class="pname">${escapeHtml(beacon.name)}</span>
         </button>
       </div>`;
@@ -5071,7 +5067,6 @@
         <span class="flow-word pong">pong</span>
         <span class="flow-word connect">connect</span>
         <div class="engine-title">
-          <span class="php">This sky</span>
           <span class="pname">SDK on this phone</span>
           <small id="labCaption"></small>
         </div>
@@ -5104,7 +5099,6 @@
         <span class="fate-word reignite">the connection</span>
         ${road ? `<div class="path-lab road${on(road)}">
           <span class="mini-ring"></span>
-          <span class="php">Geodesic</span>
           <span class="pname">${escapeHtml(road.name)}</span>
           ${skyTip(
             "Here TCP is the ordered stream from this phone to the LiveKit server. The websocket rides it. Airplane mode can cut it, or leave it half-open so the stream still looks there while the websocket is silent.",
@@ -5116,7 +5110,6 @@
         </div>` : ""}
         ${pipe ? `<div class="path-lab pipe${on(pipe)}">
           <span class="ember"></span>
-          <span class="php">Tube</span>
           <span class="pname">${escapeHtml(pipe.name)}</span>
           ${skyTip(
             "Here this is the control socket the SDK opened. Join, tracks, ping, and pong all travel on it. It rides TCP. Voice on this call is WebRTC on UDP.",
@@ -5129,7 +5122,6 @@
         <div class="engine-phone">
           <span class="halo"></span>
           <span class="orbit"></span>
-          <span class="elab">Body · phone</span>
           <div class="engine-core${coreOn}">
             <span class="heart"></span>
             <span class="php">SDK</span>
@@ -5137,63 +5129,54 @@
         </div>
         ${start ? `<div class="engine-ignite${on(start)}">
           <span class="spark"></span>
-          <span class="php">First light</span>
-          <span class="pname">Opens the tube</span>
-          <small>connect · first, and after wait</small>
+          <span class="pname">connect</span>
+          <small>first, and after wait</small>
         </div>` : ""}
           ${interval ? `<div class="engine-clock interval${on(interval)}">
             ${clockFace("interval")}
-            <span class="php">Photon</span>
-            <span class="pname">Sends ping</span>
-            <small>rides the tube</small>
+            <span class="pname">ping interval</span>
+            <small>every 5s</small>
           </div>` : ""}
           ${timeout ? `<div class="engine-clock timeout${on(timeout)}">
             ${clockFace("timeout")}
-            <span class="php">Photon</span>
-            <span class="pname">Waits for pong</span>
-            <small>no teal · the tube dies</small>
+            <span class="pname">ping timeout</span>
+            <small>15s · no pong</small>
           </div>` : ""}
           ${timeout ? `<div class="engine-collapse${on(timeout)}">
             <span class="void"></span>
-            <span class="php">Collapse</span>
             <span class="pname">No pong</span>
-            <small>death · retry starts</small>
+            <small>timeout · retry starts</small>
           </div>` : ""}
           ${retry ? `<div class="engine-clock retry${on(retry)}">
             ${clockFace("retry")}
-            <span class="php">After collapse</span>
             <span class="pname">Retry wait</span>
-            <small id="labEngLit">then first light again</small>
+            <small id="labEngLit">then connect again</small>
           </div>` : ""}
           ${lab ? `<button class="engine-lab${on(lab)}" type="button" id="labRunBtn">
-            <span class="php">On this sky</span>
             <span class="pname">Run the simulation</span>
           </button>` : ""}
           ${cargo ? `<button class="engine-cargo${on(cargo)}" type="button" data-enter="${cargo.id}">
             ${miniHelix()}
-            <span class="php">Takes</span>
             <span class="pname">What connect takes</span>
           </button>` : ""}
         ${pulse ? `<div class="engine-pinghit${on(pulse)}">
-          <span class="php">This light</span>
-          <span class="pname">on the tube</span>
+          <span class="pname">ping</span>
         </div>
         <div class="engine-server${on(pulse)}">
           <span class="pulse"></span>
           <span class="rings"></span>
           <span class="rings r2"></span>
-          <span class="php">Hits</span>
           <span class="pname">LiveKit</span>
           <small>signal websocket</small>
         </div>` : ""}
         <div class="engine-stamps" id="labStamps">
           <div class="stamp os" id="airStampOs">
-            <span class="php">OS moon</span>
+            <span class="php">OS</span>
             <b>internet back</b>
           </div>
           <span class="stamp-gap"></span>
           <div class="stamp sdk" id="airStampSdk">
-            <span class="php">Engine</span>
+            <span class="php">SDK</span>
             <b>TRANSPORT RESTORED</b>
           </div>
         </div>
@@ -5299,13 +5282,11 @@
         <span class="flow-word connect">connect</span>
         <div class="lab-body phone">
           <span class="globe"></span>
-          <span class="php">Body</span>
-          <span class="pname">Container / phone</span>
+          <span class="pname">phone</span>
           <small>Flutter SDK</small>
         </div>
         <div class="lab-body server">
           <span class="globe"></span>
-          <span class="php">Hits</span>
           <span class="pname">LiveKit</span>
           <small>signal websocket</small>
         </div>
@@ -5318,18 +5299,18 @@
         </div>
         <div class="engine-stamps" id="labStamps">
           <div class="stamp os" id="airStampOs">
-            <span class="php">OS moon</span>
+            <span class="php">OS</span>
             <b>internet back</b>
           </div>
           <span class="stamp-gap"></span>
           <div class="stamp sdk" id="airStampSdk">
-            <span class="php">Engine</span>
+            <span class="php">SDK</span>
             <b>TRANSPORT RESTORED</b>
           </div>
         </div>
         <div class="lab-inst engine" id="labEng">
-          <p class="php">Inside the SDK</p>
-          <p class="pname">Engine sleep then connect</p>
+          <p class="php">SDK</p>
+          <p class="pname">retry wait then connect</p>
           <div class="lab-ring" id="labRing"></div>
           <div class="lit" id="labEngLit">call up</div>
         </div>
@@ -5406,7 +5387,7 @@
       if (osLit) osLit.textContent = osOn ? "internet is back" : "no internet";
       let step = "";
       let look = "Call's up. Gold ping out, teal pong back.";
-      let engLit = "then first light again";
+      let engLit = "then connect again";
       if (phase === "idle") {
         step = "";
         look = "";
@@ -5624,7 +5605,6 @@
           const top = 28 + (i % 2) * 24;
           return `<button class="signal${on}" type="button" data-enter="${c.id}" style="left:${left}%;top:${top}%">
             <span class="dot"></span>
-            <span class="php">Signal</span>
             <span class="pname">${escapeHtml(c.name)}</span>
           </button>`;
         }).join("")}
@@ -6071,7 +6051,7 @@
       const where = pathLabel(state.watching.path);
       el.innerHTML = `
         <div class="watch">
-          <p class="kicker">Looking at${boxes ? " · " + boxes + " next boxes" : ""}</p>
+          <p class="kicker">Looking at${boxes ? " · " + boxes + " next" : ""}</p>
           <b>${escapeHtml(issueTag(w))} ${escapeHtml(issueLabel(w))}</b>
           ${where ? `<p class="kicker" style="margin:6px 0 8px;text-transform:none;letter-spacing:0;font-size:11px;line-height:1.35">${escapeHtml(where)}</p>` : ""}
           <div class="watch-row">
@@ -6335,12 +6315,10 @@
           const extra = !!(c.who && c.who !== c.name);
           if (!deeper && !extra) {
             return `<div class="land still" data-box="${i}" style="left:${p.left}%;top:${p.top}%">
-              <span class="php">Box ${boxStart + i + 1}</span>
               <span class="pname">${escapeHtml(c.name)}</span>
             </div>`;
           }
           return `<button class="land ${on ? "on" : ""} ${slackPathNode(c) ? "haze path" : ""}" type="button" data-enter="${c.id}" data-box="${i}" style="left:${p.left}%;top:${p.top}%">
-            <span class="php">Box ${boxStart + i + 1}</span>
             <span class="pname">${escapeHtml(c.name)}</span>
           </button>`;
         }
@@ -6349,7 +6327,6 @@
             <span class="cloud c1"></span>
             <span class="cloud c2"></span>
             <span class="cloud c3"></span>
-            <span class="php">Nebula</span>
             <span class="g-name">${escapeHtml(c.name)}</span>
             ${g ? `<span class="gone-mark">gone into</span>` : ""}
             ${g && n ? `<span class="g-count">${n}</span>` : ""}
@@ -6362,7 +6339,6 @@
             <span class="g-halo"></span>
             ${c.id === "connection" ? `<span class="g-strata">TCP · UDP</span>` : ""}
             ${galaxySvg(knownI, hues[knownI % hues.length])}
-            <span class="php">Galaxy</span>
             <span class="g-name">${escapeHtml(c.name)}</span>
             ${mark}
             ${g && n ? `<span class="g-count">${n}</span>` : ""}
@@ -6372,7 +6348,7 @@
           const starK = rockClass ? "" : kindFrom(c.id, STAR_KINDS);
           const tw = idHash(c.id);
           return `<button class="body star-sys${rockClass} ${starK} ${farClass(c)}" type="button" data-enter="${c.id}" style="left:${p.left}%;top:${p.top}%${zStyle};--tw:${(2.6 + (tw % 5) * 0.7).toFixed(2)}s;--tw-delay:-${tw % 7}s">
-            ${rockTag || `<span class="php">Star</span>`}
+            ${rockTag}
             <span class="orbit"></span>
             <span class="fire"></span>
             <span class="core"></span>
@@ -6387,7 +6363,6 @@
         return `<button class="planet ${pKind} ${farClass(c)}" type="button" data-enter="${c.id}" style="left:${p.left}%;top:${p.top}%;z-index:${z};--near:${near};${spinVars(c.id)}">
           ${pKind === "p-ring" ? `<span class="ring"></span>` : ""}
           <span class="globe"></span>
-          <span class="php">Planet</span>
           <span class="pname">${escapeHtml(c.name)}</span>
           ${mark}
           ${g && n ? `<span class="count">${n}</span>` : ""}
@@ -6405,12 +6380,11 @@
         const lab = issueLabel(iss);
         const mapped = isMappedTicket(iss);
         const sub = mapped
-          ? [deep ? countBoxes(iss.thread) + " next boxes" : "", isHomeGate(iss.id) ? lab : ""].filter(Boolean).join(" · ")
+          ? [deep ? countBoxes(iss.thread) + " next" : "", isHomeGate(iss.id) ? lab : ""].filter(Boolean).join(" · ")
           : "";
         const slack = iss.source === "slack";
         return `<button class="moon ${on} ${maybe ? "maybe" : ""} ${mapped ? "" : "haze"} ${slack ? "path" : ""} ${st}" type="button" data-issue="${iss.id}" title="${escapeHtml(tag + " " + lab)}" style="left:${p.left}%;top:${p.top}%">
           <span class="globe"></span>
-          <span class="php">${isHomeGate(iss.id) ? "Gate" : "Moon"}</span>
           <span class="pname">${escapeHtml(tag)}</span>
           ${sub ? `<small>${escapeHtml(sub)}</small>` : ""}
         </button>`;
@@ -6441,32 +6415,29 @@
       const showStarRing = uniDepth === 1 && !strataHere && !atRock && !atRockBox && !node.unexplored && knownKids.length;
       const showPlanetRing = uniDepth === 2 && !strataHere && !atRock && !atRockBox && !node.unexplored && knownKids.length;
       const showMoonRing = issues.length && !strataHere && !atRock && !atRockBox && !showMoonLand && !cosmic && uniDepth !== 1 && uniDepth >= 0;
+      const gateIss = gateHere ? lookupIssue(parsedHere.id) : null;
       const placeLab = atUniverse
-        ? "Universe · LiveKit"
-        : gateHere
-        ? "Gate · #" + parsedHere.id
-        : (atRock || atRockBox || showMoonLand || cosmic)
-        ? vantageAt(depth, node.id)
-        : vantageAt(depth, node.id) + " · " + node.name;
+        ? "LiveKit"
+        : gateHere && gateIss
+        ? issueTag(gateIss)
+        : node.name;
       const place = `<div class="place">${escapeHtml(placeLab)}</div>`;
       const hereKind = showPlanetHere ? kindFrom(node.id, PLANET_KINDS) : "";
-      const gateIss = gateHere ? lookupIssue(parsedHere.id) : null;
       const centerObj = (atRock || atRockBox)
         ? `<div class="rock-read ${node.rock || ""}">
-            <span class="php">${atRockBox ? "Box" : "Rock"}</span>
             <span class="pname">${escapeHtml(node.name)}</span>
             <p class="sub">${escapeHtml(node.who || "")}</p>
           </div>`
         : cosmic
         ? ""
         : gateHere
-        ? `<div class="here-moon landed gate"><span class="globe"></span><span class="php">Gate</span><span class="pname">${escapeHtml(issueTag(gateIss))}</span><span class="plabel">${escapeHtml(issueLabel(gateIss))}</span></div>`
+        ? `<div class="here-moon landed gate"><span class="globe"></span><span class="pname">${escapeHtml(issueTag(gateIss))}</span><span class="plabel">${escapeHtml(issueLabel(gateIss))}</span></div>`
         : showMoonLand
-        ? `<div class="here-moon ${atBox ? "box" : "landed"}"><span class="globe"></span><span class="php">${atBox ? "Box" : "Moon"}</span><span class="pname">${escapeHtml(node.name)}</span></div>`
+        ? `<div class="here-moon ${atBox ? "box" : "landed"}"><span class="globe"></span><span class="pname">${escapeHtml(node.name)}</span></div>`
         : showStar
-        ? `<div class="here-star">${starFireSvg(node.id)}<span class="php">Star</span><span class="pname">${escapeHtml(node.name)}</span></div>`
+        ? `<div class="here-star">${starFireSvg(node.id)}<span class="pname">${escapeHtml(node.name)}</span></div>`
         : showPlanetHere
-        ? `<div class="here-planet ${hereKind}" style="${spinVars(node.id)}">${hereKind === "p-ring" ? `<span class="ring"></span>` : ""}<span class="globe"></span><span class="php">Planet</span><span class="pname">${escapeHtml(node.name)}</span></div>`
+        ? `<div class="here-planet ${hereKind}" style="${spinVars(node.id)}">${hereKind === "p-ring" ? `<span class="ring"></span>` : ""}<span class="globe"></span><span class="pname">${escapeHtml(node.name)}</span></div>`
         : "";
 
       const scale = atEngine || atEngineStay ? "engine"
@@ -6503,7 +6474,6 @@
         ${atUniverse ? `<div class="milky"></div>` : ""}
         ${gateHere && rootedInIssue ? `<div class="milky milky-out"></div>` : ""}
         ${atUniverse ? webHtml(webPts) : ""}
-        ${atUniverse ? `<div class="void-lab">Void</div>` : ""}
         ${uniDepth === 1 && !strataHere && !node.unexplored ? `<div class="in-galaxy"></div>` : ""}
         ${strataHere ? `<div class="plane-wash"></div>` : ""}
         ${node.unexplored ? `<div class="nebula-wash"></div>` : ""}
@@ -6515,19 +6485,16 @@
         ${gateHere && rootedInIssue ? `<button class="body galaxy out-universe haze" type="button" data-out="universe">
             <span class="g-halo"></span>
             ${galaxySvg(0, 32)}
-            <span class="php">Out</span>
             <span class="g-name">LiveKit</span>
           </button>` : ""}
         ${strataHere ? `
           <button class="land rock-door" type="button" data-rock="tcp" style="${phoneSky() ? "left:22%;top:18%" : "left:16%;top:22%"}">
-            <span class="php">Rock</span>
             <span class="pname">TCP</span>
             <small>ordered stream</small>
           </button>
           <button class="land rock-door udp" type="button" data-rock="udp" style="${phoneSky() ? "left:78%;top:18%" : "left:78%;top:22%"}">
-            <span class="php">Rock</span>
             <span class="pname">UDP</span>
-            <small>skip a hole</small>
+            <small>WebRTC media</small>
           </button>` : ""}
         ${showMoonLand ? "" : moons}
       `;
@@ -6601,7 +6568,7 @@
           `).join("")}</div>`
         : "";
       document.getElementById("brief").innerHTML = `
-        <p class="kicker">${escapeHtml(vantageAt(depth, node.id))} · ${escapeHtml(node.name)}</p>
+        <p class="kicker">${escapeHtml(node.name)}</p>
         <p class="who">${escapeHtml(atRock || atRockBox ? (node.who || "") : strataHere ? "Click TCP or UDP. Gold is the ordered stream. Teal skips a hole and keeps voice flowing." : (node.who || ""))}</p>
         ${chips}
       `;
@@ -6624,7 +6591,7 @@
         const path = pathToIssue(iss.id) || [];
         const mapped = isMappedTicket(iss);
         const extra = mapped ? (hasNextBoxes(iss)
-          ? `<span class="gone-path">${escapeHtml(pathLabel(path) || "")}</span><span>${countBoxes(iss.thread)} next boxes</span>`
+          ? `<span class="gone-path">${escapeHtml(pathLabel(path) || "")}</span><span>${countBoxes(iss.thread)} next</span>`
           : `<span class="gone-path">${escapeHtml(pathLabel(path) || "")}</span>`) : "";
         return `
           <button type="button" class="${String(onId) === String(iss.id) ? "on" : ""} ${mapped ? "" : "haze"} ${iss.source === "slack" ? "path" : ""}" data-gone="${iss.id}">
