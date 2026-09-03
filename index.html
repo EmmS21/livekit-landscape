@@ -1637,15 +1637,15 @@
     .engine-clock.retry,
     .engine-clock.interval,
     .engine-ignite,
-    .engine-cargo {
+    .engine-cargo,
+    .path-lab {
       opacity: 0.12;
       transition: opacity 0.45s ease;
     }
     .engine-collapse,
     .engine-clock.timeout,
     .engine-pinghit,
-    .fate-word,
-    .engine-stage .path-lab {
+    .fate-word {
       display: none;
       pointer-events: none;
     }
@@ -1659,11 +1659,7 @@
     .air-sim.mute .fate-word.death,
     .air-sim.waiting .fate-word.reignite,
     .air-sim.connecting .fate-word.reignite,
-    .air-sim.failing .fate-word.reignite,
-    .engine-stage .path-lab.on,
-    .air-sim.up .path-lab,
-    .air-sim.mute .path-lab,
-    .air-sim.torn .path-lab.road {
+    .air-sim.failing .fate-word.reignite {
       display: block;
       opacity: 1;
     }
@@ -1683,7 +1679,7 @@
       box-shadow: none;
     }
     .engine-collapse { pointer-events: none; cursor: default; }
-    .engine-stage .path-lab .sky-tip { display: none !important; }
+    .engine-stage .path-lab:hover,
     .engine-stage .engine-ignite:hover,
     .engine-stage .engine-clock:hover,
     .engine-stage .engine-cargo:hover,
@@ -5110,11 +5106,25 @@
           <span class="mini-ring"></span>
           <span class="php">Geodesic</span>
           <span class="pname">${escapeHtml(road.name)}</span>
+          ${skyTip(
+            "Here TCP is the ordered stream from this phone to the LiveKit server. The websocket rides it. Airplane mode can cut it, or leave it half-open so the stream still looks there while the websocket is silent.",
+            [
+              { label: "The connection", path: ["universe", "connection"] },
+              { label: "TCP", path: ["universe", "connection", "rock:tcp"] }
+            ]
+          )}
         </div>` : ""}
         ${pipe ? `<div class="path-lab pipe${on(pipe)}">
           <span class="ember"></span>
           <span class="php">Tube</span>
           <span class="pname">${escapeHtml(pipe.name)}</span>
+          ${skyTip(
+            "Here this is the control socket the SDK opened. Join, tracks, ping, and pong all travel on it. It rides TCP. Voice on this call is WebRTC on UDP.",
+            [
+              { label: "The websocket", path: ["universe", "connection", "ws"] },
+              { label: "TCP", path: ["universe", "connection", "rock:tcp"] }
+            ]
+          )}
         </div>` : ""}
         <div class="engine-phone">
           <span class="halo"></span>
