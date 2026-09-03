@@ -1634,17 +1634,38 @@
     .air-sim.connecting .air-say { border-color: #e7a35a; }
     .air-sim.failing .air-say { border-color: #c47a6a; }
     .engine-title small { display: none; }
-    .engine-collapse,
-    .engine-collapse,
     .engine-clock.retry,
-    .engine-clock.timeout,
     .engine-clock.interval,
     .engine-ignite,
-    .engine-pinghit,
-    .engine-cargo,
-    .fate-word {
+    .engine-cargo {
       opacity: 0.12;
       transition: opacity 0.45s ease;
+    }
+    .engine-collapse,
+    .engine-clock.timeout,
+    .engine-pinghit,
+    .fate-word,
+    .engine-stage .path-lab {
+      display: none;
+      pointer-events: none;
+    }
+    .air-sim.up .engine-clock.timeout,
+    .air-sim.mute .engine-clock.timeout,
+    .engine-clock.timeout.on,
+    .air-sim.up .engine-pinghit,
+    .engine-pinghit.on,
+    .air-sim.mute .engine-collapse,
+    .engine-collapse.on,
+    .air-sim.mute .fate-word.death,
+    .air-sim.waiting .fate-word.reignite,
+    .air-sim.connecting .fate-word.reignite,
+    .air-sim.failing .fate-word.reignite,
+    .engine-stage .path-lab.on,
+    .air-sim.up .path-lab,
+    .air-sim.mute .path-lab,
+    .air-sim.torn .path-lab.road {
+      display: block;
+      opacity: 1;
     }
     .engine-lab { opacity: 1; }
     .engine-ignite.on,
@@ -1661,20 +1682,10 @@
       outline: none;
       box-shadow: none;
     }
-    .engine-collapse { pointer-events: auto; cursor: pointer; }
-    .engine-stage .path-lab { opacity: 1; }
-    .engine-stage .path-lab > :not(.sky-tip) {
-      opacity: 0.12;
-      transition: opacity 0.45s ease;
-    }
-    .engine-stage .path-lab:hover > :not(.sky-tip),
-    .engine-stage .path-lab.on > :not(.sky-tip) {
-      opacity: 1;
-    }
+    .engine-collapse { pointer-events: none; cursor: default; }
+    .engine-stage .path-lab .sky-tip { display: none !important; }
     .engine-stage .engine-ignite:hover,
     .engine-stage .engine-clock:hover,
-    .engine-stage .engine-collapse:hover,
-    .engine-stage .engine-pinghit:hover,
     .engine-stage .engine-cargo:hover,
     .engine-stage .engine-server:hover {
       opacity: 1;
@@ -1741,7 +1752,6 @@
     .air-sim.mute .engine-clock.timeout,
     .air-sim.mute .engine-collapse,
     .air-sim.mute .fate-word.death { opacity: 1; }
-    .air-sim.mute .engine-collapse { pointer-events: auto; }
     .air-sim.waiting .engine-clock.retry,
     .air-sim.connecting .engine-clock.retry,
     .air-sim.failing .engine-clock.retry,
@@ -1894,15 +1904,18 @@
       gap: 0;
       pointer-events: none;
     }
+    .engine-stamps:not(.on) { display: none; }
     .engine-stamps .stamp {
+      display: none;
       min-width: 132px;
       padding: 8px 10px;
       border: 1px solid var(--line);
       background: #120f0c;
       border-radius: 12px;
       text-align: center;
-      opacity: 0.4;
+      opacity: 1;
     }
+    .engine-stamps .stamp.on { display: block; }
     .engine-stamps .stamp .php {
       display: block;
       margin: 0 0 3px;
@@ -1928,12 +1941,15 @@
     }
     .engine-stamps .stamp.sdk.on .php { color: #c4b4e8; }
     .engine-stamps .stamp-gap {
+      display: none;
       width: 36px;
       height: 2px;
       margin: 0 4px;
       background: var(--line);
       position: relative;
     }
+    .engine-stamps.on .stamp-gap,
+    .engine-stamps.later .stamp-gap { display: block; }
     .engine-stamps.later .stamp-gap {
       background: var(--accent);
       box-shadow: 0 0 10px rgba(231,163,90,0.55);
@@ -2154,10 +2170,11 @@
       background: none;
       border: 0;
       color: inherit;
-      cursor: pointer;
+      cursor: default;
       z-index: 5;
       padding: 0;
       text-align: center;
+      pointer-events: none;
     }
     .engine-collapse .void {
       display: block;
@@ -5089,30 +5106,15 @@
         </div>
         <span class="fate-word death">death</span>
         <span class="fate-word reignite">the connection</span>
-        ${road ? `<div class="path-lab road">
+        ${road ? `<div class="path-lab road${on(road)}">
           <span class="mini-ring"></span>
           <span class="php">Geodesic</span>
           <span class="pname">${escapeHtml(road.name)}</span>
-          ${skyTip(
-            "Here TCP is the ordered stream from this phone to the LiveKit server. The websocket rides it. Airplane mode can cut it, or leave it half-open so the stream still looks there while the websocket is silent.",
-            [
-              { label: "The connection", path: ["universe", "connection"] },
-              { label: "TCP", path: ["universe", "connection", "rock:tcp"] }
-            ]
-          )}
         </div>` : ""}
-        ${pipe ? `<div class="path-lab pipe">
+        ${pipe ? `<div class="path-lab pipe${on(pipe)}">
           <span class="ember"></span>
           <span class="php">Tube</span>
           <span class="pname">${escapeHtml(pipe.name)}</span>
-          ${skyTip(
-            "Here this is the control socket the SDK opened. Join, tracks, ping, and pong all travel on it. It rides TCP. Voice on this call is WebRTC on UDP.",
-            [
-              { label: "The websocket", path: ["universe", "connection", "ws"] },
-              { label: "TCP", path: ["universe", "connection", "rock:tcp"] },
-              { label: "UDP", path: ["universe", "connection", "rock:udp"] }
-            ]
-          )}
         </div>` : ""}
         <div class="engine-phone">
           <span class="halo"></span>
@@ -5141,12 +5143,12 @@
             <span class="pname">Waits for pong</span>
             <small>no teal · the tube dies</small>
           </div>` : ""}
-          ${timeout ? `<button class="engine-collapse${on(timeout)}" type="button" data-warp="universe,connection,ws">
+          ${timeout ? `<div class="engine-collapse${on(timeout)}">
             <span class="void"></span>
             <span class="php">Collapse</span>
             <span class="pname">No pong</span>
             <small>death · retry starts</small>
-          </button>` : ""}
+          </div>` : ""}
           ${retry ? `<div class="engine-clock retry${on(retry)}">
             ${clockFace("retry")}
             <span class="php">After collapse</span>
