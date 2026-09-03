@@ -3750,6 +3750,11 @@
         pointer-events: none;
       }
       .engine-laws .lab-pick { pointer-events: auto; max-width: 148px; padding: 5px 8px; }
+      .lab-pick .lab-tip,
+      .lab-pick:hover .lab-tip,
+      .lab-pick:focus .lab-tip,
+      .lab-pick:focus-visible .lab-tip,
+      .lab-pick:active .lab-tip { display: none !important; }
       .engine-stamps {
         bottom: max(88px, calc(68px + env(safe-area-inset-bottom)));
         flex-wrap: wrap;
