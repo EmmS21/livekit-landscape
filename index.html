@@ -4170,19 +4170,22 @@
       1755: { id: 1755, title: "First join times out. Retry also fails.", see: "Works on VPN. Fails on the company network, especially with two NATs.", status: "open", why: "If the control socket blips during ICE, the server skips the next network path.", url: "https://github.com/livekit/livekit/issues/1755" },
       2344: { id: 2344, title: "TURN is on, clients get the wrong port", see: "You set a custom TURN port. Clients are still told to use 443.", status: "review", why: "The listen port and the advertised port are not the same setting.", url: "https://github.com/livekit/livekit/issues/2344" },
       4702: { id: 4702, title: "Logs say switch to TCP. It never did.", see: "Video shreds on bad NAT. Logs repeat 'switch to TCP'. The connection stays on UDP.", status: "again", why: "The log ran. The actual switch did not. Fixed in 1.13.6.", url: "https://github.com/livekit/livekit/issues/4702" },
-      4477: { id: 4477, title: "After airplane mode, the agent looks gone", label: "Airplane mode", see: "The retry is late, so they stay disconnected longer than necessary.", status: "open", why: "", url: "https://github.com/livekit/livekit/issues/4477", thread: [
-        { ask: "The retry is late, so they stay disconnected longer than necessary", say: "The user starts a live session with an AI voice agent. The websocket is what creates and maintains the call. The user is in the call, then goes on airplane mode, which cuts the connection. The internet returns, but the retry is late, so they stay disconnected longer than necessary.", thread: [
-          { ask: "What is the retry?", kind: "engine", say: "A wait-timer in LiveKit's Flutter SDK on this phone. After the websocket dies, the SDK waits, then calls connect again. Retry is one clock inside this SDK. The connection is the live link (websocket + voice).", thread: [
-            { ask: "Run the simulation", kind: "lab", say: "The OS either tears down the websocket and TCP connection or leaves it open with nothing moving in it." },
-            { ask: "How connect starts", kind: "ignite", say: "The app calls room.connect. That is the SDK opening the websocket." },
-            { ask: "Sends the ping", kind: "clock", code: "pingInterval", say: "Runs only while the call is already up. Every 5s it writes the ping onto the live websocket, asking the server if this socket still carries LiveKit messages." },
-            { ask: "Waits for the pong", kind: "clock", code: "pingTimeout", say: "Runs only while the call is up. It watches for teal. If 15s pass with no pong, the SDK treats the websocket as dead. That death is what creates the retry clock." },
-            { ask: "ping", kind: "pulse", say: "Same ping the send clock writes. Gold out, teal back. Missing teal for 15s is death. Death starts the retry wait. The retry wait is what later calls connect." },
-            { ask: "Retry wait", kind: "clock", code: "retryWait", say: "The clock that calls connect again. It lives in this SDK. After the websocket is dead, it waits (0ms, then 300ms, up to 7s) and calls connect. #4477 is this clock still counting after internet is back." },
-            { ask: "TCP", kind: "geodesic", say: "The ordered stream between this phone and the LiveKit server — the same gold plane at The connection. TCP carries the websocket. Airplane mode can cut it, or leave it half-open so the stream still looks there while the websocket is silent." },
-            { ask: "The websocket", kind: "tube", say: "The control socket the SDK opened. Join, tracks, ping, and pong all travel on it. It rides TCP. If it goes quiet for 15s, the SDK treats the call as dead even if TCP has not closed." }
+      4477: { id: 4477, title: "After airplane mode, the agent looks gone", label: "Airplane mode", see: "The websocket isn't starting when we expect it to start.", status: "open", why: "", url: "https://github.com/livekit/livekit/issues/4477", thread: [
+        { ask: "The websocket isn't starting when we expect it to start", say: "Yes. The phone already has internet. We expect the SDK to open the control websocket then. It waits, because its retry timer grew while you were offline.", thread: [
+          { ask: "The retry is late, so they stay disconnected longer than necessary", say: "The user starts a live session with an AI voice agent. The websocket is what creates and maintains the call. The user is in the call, then goes on airplane mode, which cuts the connection. The internet returns, but the retry is late, so they stay disconnected longer than necessary.", thread: [
+            { ask: "What is the retry?", kind: "engine", say: "A wait-timer in LiveKit's Flutter SDK on this phone. After the websocket dies, the SDK waits, then calls connect again. Retry is one clock inside this SDK. The connection is the live link (websocket + voice).", thread: [
+              { ask: "Run the simulation", kind: "lab", say: "The OS either tears down the websocket and TCP connection or leaves it open with nothing moving in it." },
+              { ask: "How connect starts", kind: "ignite", say: "The app calls room.connect. That is the SDK opening the websocket." },
+              { ask: "Sends the ping", kind: "clock", code: "pingInterval", say: "Runs only while the call is already up. Every 5s it writes the ping onto the live websocket, asking the server if this socket still carries LiveKit messages." },
+              { ask: "Waits for the pong", kind: "clock", code: "pingTimeout", say: "Runs only while the call is up. It watches for teal. If 15s pass with no pong, the SDK treats the websocket as dead. That death is what creates the retry clock." },
+              { ask: "ping", kind: "pulse", say: "Same ping the send clock writes. Gold out, teal back. Missing teal for 15s is death. Death starts the retry wait. The retry wait is what later calls connect." },
+              { ask: "Retry wait", kind: "clock", code: "retryWait", say: "The clock that calls connect again. It lives in this SDK. After the websocket is dead, it waits (0ms, then 300ms, up to 7s) and calls connect. #4477 is this clock still counting after internet is back." },
+              { ask: "TCP", kind: "geodesic", say: "The ordered stream between this phone and the LiveKit server — the same gold plane at The connection. TCP carries the websocket. Airplane mode can cut it, or leave it half-open so the stream still looks there while the websocket is silent." },
+              { ask: "The websocket", kind: "tube", say: "The control socket the SDK opened. Join, tracks, ping, and pong all travel on it. It rides TCP. If it goes quiet for 15s, the SDK treats the call as dead even if TCP has not closed." }
+            ] }
           ] }
-        ] }
+        ] },
+        { ask: "Where does WebRTC fit?", say: "WebRTC is the voice path: What they send / What they hear, on UDP. The late retry is the websocket still in backoff. After control is up, WebRTC can play audio again (TrackSubscribed). The agent looks gone because ParticipantConnected is a websocket event for a new join. A resume does not send it." }
       ] },
       854: { id: 854, title: "Stop screen share, start again, it hangs", see: "The second publish waits about 15 seconds, then times out. React remounts hit this in development.", status: "open", why: "This is a server control-socket bug. An old 2022 fix did not cover a publish that was cancelled mid-way.", url: "https://github.com/livekit/livekit/issues/854" },
       4594: { id: 4594, title: "Screen share freezes when quality goes up", see: "Looks fine for about a minute. The picture freezes the moment the server upgrades resolution.", status: "review", why: "VP9 screen share is treated like a layered stream. Every resolution is mapped to layer zero.", url: "https://github.com/livekit/livekit/issues/4594" },
@@ -4447,7 +4450,7 @@
       }
     };
 
-    const KEY = "lk-call-path-v8";
+    const KEY = "lk-call-path-v9";
     const STATUS = { open: "Open", review: "Fix in review", fixed: "Fix landed", again: "Came back", maybe: "Uncertain" };
     const STATUS_CLASS = { open: "s-open", review: "s-review", fixed: "s-fixed", again: "s-again", maybe: "s-again" };
 
@@ -4721,11 +4724,6 @@
         if (p && p.kind === "engine" && n && inert[n.kind] && n.kind !== "worldline") state.path.pop();
         else break;
       }
-      const last = state.path[state.path.length - 1];
-      const parsed = parseIssueId(last);
-      if (parsed && isHomeGate(parsed.id) && parsed.boxes.length === 0) {
-        state.path = validPath([...state.path, last + ":0"]);
-      }
     }
     function validPath(path) {
       const out = [];
@@ -4950,7 +4948,7 @@
       flyThen(applyUniverse, "out");
     }
     function atGateHome() {
-      return samePath(state.path, gatePath());
+      return samePath(state.path, ["issue:" + HOME_GATE.issueId]);
     }
 
     function escapeHtml(s) {
