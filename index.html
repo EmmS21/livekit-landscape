@@ -1822,17 +1822,23 @@
       filter: blur(0);
       transition: opacity 0.4s ease, filter 0.4s ease, max-height 0.4s ease 0.22s, margin 0.4s ease 0.22s, padding 0.4s ease 0.22s, border-width 0.4s ease 0.22s;
     }
-    .air-sim:not(.idle) #labRunBtn {
-      opacity: 0;
-      filter: blur(10px);
-      pointer-events: none;
+    .air-sim:not(.idle) #labRunBtn,
+    .air-sim:not(.idle) .engine-lab#labRunBtn {
+      opacity: 0 !important;
+      filter: blur(10px) !important;
+      pointer-events: none !important;
       max-height: 0;
       margin: 0;
       padding-top: 0;
       padding-bottom: 0;
       border-width: 0;
     }
-    .air-sim:not(.idle) #labRunBtn:hover { filter: blur(10px); }
+    .air-sim:not(.idle) #labRunBtn:hover,
+    .air-sim:not(.idle) .engine-lab#labRunBtn:hover,
+    .air-sim:not(.idle) .engine-lab.on#labRunBtn {
+      opacity: 0 !important;
+      filter: blur(10px) !important;
+    }
     .engine-os {
       position: absolute;
       left: 8%;
@@ -3834,7 +3840,8 @@
         max-width: min(168px, 42vw);
         pointer-events: none;
       }
-      .engine-laws .lab-pick { pointer-events: auto; max-width: 148px; padding: 5px 8px; }
+      .engine-laws button { pointer-events: auto; }
+      .engine-laws .lab-pick { max-width: 148px; padding: 5px 8px; }
       .lab-pick .lab-tip,
       .lab-pick:hover .lab-tip,
       .lab-pick:focus .lab-tip,
