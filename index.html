@@ -3194,13 +3194,7 @@
     }
     .ship-strata:hover { filter: brightness(1.15); }
     .ship-strata.on { background: var(--accent); color: var(--ink); }
-    .ship-strata-hint {
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(154, 141, 124, 0.7);
-      margin-top: -4px;
-    }
+    .ship-strata-hint { display: none !important; }
 
     .place {
       position: absolute;
@@ -3316,19 +3310,25 @@
       padding: 0;
     }
     .ship-hops {
+      position: relative;
+      z-index: 3;
       display: flex;
       flex-direction: column;
       gap: 6px;
       max-height: 38vh;
       overflow: auto;
-      padding-right: 4px;
-      opacity: 0.42;
+      padding: 8px;
+      background: #050408;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 0 28px 12px #050408;
+      border: 1px solid rgba(231, 163, 90, 0.22);
+      border-radius: 14px;
     }
-    .ship-hops:hover { opacity: 0.85; }
     .ship-hop {
       text-align: left;
       border: 1px solid rgba(106, 92, 76, 0.45);
-      background: rgba(23, 20, 16, 0.35);
+      background: #171410;
       color: rgba(243, 234, 220, 0.8);
       border-radius: 12px;
       padding: 7px 10px;
@@ -3621,7 +3621,6 @@
       .lab-pick:focus-visible .lab-tip { display: none !important; }
       .air-say,
       .lab-look { display: none !important; }
-      .ship-hops { opacity: 0.85; }
       .gone-rest, .gone-rest:focus-within {
         opacity: 0.55;
         filter: blur(0.5px);
@@ -3676,9 +3675,18 @@
         right: 0;
       }
       .pad {
-        width: var(--pad-w);
-        background: linear-gradient(90deg, transparent 0%, rgba(5, 4, 8, 0.55) 28%, rgba(5, 4, 8, 0.88) 100%);
-        padding-bottom: env(safe-area-inset-bottom);
+        left: max(10px, env(safe-area-inset-left));
+        right: auto;
+        top: auto;
+        width: min(252px, calc(100vw - 20px));
+        bottom: calc(max(12px, env(safe-area-inset-bottom)) + 96px);
+        max-height: min(40vh, 320px);
+        overflow: auto;
+        background: linear-gradient(180deg, rgba(5, 4, 8, 0.22), rgba(5, 4, 8, 0.58));
+        border: 1px solid rgba(231, 163, 90, 0.22);
+        border-radius: 16px;
+        padding-bottom: 8px;
+        z-index: 11;
       }
       .pad > *,
       .pad-head,
@@ -3690,23 +3698,55 @@
       .brief button { pointer-events: auto; }
       .gone-rest,
       .gone-rest button { pointer-events: none; }
-      .pad-head { padding: calc(8px + env(safe-area-inset-top)) 14px 0; }
+      .pad-head { padding: 8px 10px 0; }
       .pad-btn, .pad-show {
         min-height: 0;
         padding: 5px 10px;
       }
-      .pad-show {
-        right: max(12px, env(safe-area-inset-right));
-        bottom: max(14px, env(safe-area-inset-bottom));
-        pointer-events: auto;
-      }
+      .pad-show,
+      .shell.pad-off .pad-show { display: none; }
       .ship {
         left: max(10px, env(safe-area-inset-left));
         bottom: max(12px, env(safe-area-inset-bottom));
-        max-width: min(220px, calc(100vw - 88px));
+        max-width: min(280px, calc(100vw - 20px));
         pointer-events: none;
       }
-      .ship-back, .ship-warp, .ship-strata, .ship-lab, .ship-lab button, .ship-hop {
+      .ship-orbit {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 32px;
+        pointer-events: none;
+      }
+      .ship-nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        pointer-events: none;
+      }
+      .ship-orb {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid rgba(231, 163, 90, 0.45);
+        background: rgba(23, 20, 16, 0.28);
+        color: var(--accent);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        pointer-events: auto;
+      }
+      .ship-orb svg { width: 16px; height: 16px; display: block; }
+      .ship-orb.on {
+        border-color: var(--accent);
+        background: rgba(23, 20, 16, 0.5);
+        box-shadow: 0 0 14px rgba(231, 163, 90, 0.28);
+      }
+      .ship-orb, .ship-back, .ship-warp, .ship-strata, .ship-lab, .ship-lab button, .ship-hops, .ship-hop {
         pointer-events: auto;
       }
       .ship-back, .ship-warp, .ship-strata {
@@ -3714,13 +3754,19 @@
         padding: 6px 11px;
         font-size: 11px;
       }
-      .ship-hops {
-        max-height: 16vh;
-        opacity: 0.85;
-        pointer-events: none;
+      .shell.hops-on .ship-hops {
+        width: min(252px, calc(100vw - 20px));
+        max-height: 28vh;
+        padding: 8px;
+        background: #050408;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 0 28px 12px #050408;
+        border: 1px solid rgba(231, 163, 90, 0.22);
+        border-radius: 14px;
       }
-      .ship-hop { min-height: 0; max-width: 100%; padding: 5px 8px; }
-      .ship-hop b { font-size: 11px; }
+      .ship-hop { min-height: 0; max-width: 100%; padding: 5px 8px; font-size: 11px; font-weight: 600; }
+      .ship-hop b, .ship-hop small { display: none; }
       .logo { width: 32px; height: 32px; }
       .logo svg { width: 32px; height: 32px; }
       .place { left: 12px; top: calc(72px + env(safe-area-inset-top)); }
@@ -4469,11 +4515,16 @@
     }
     function applyPad() {
       document.querySelector(".shell").classList.toggle("pad-off", !!state.hidePad);
+      const tix = document.getElementById("shipTickets");
+      if (tix) tix.classList.toggle("on", !state.hidePad);
     }
     function setPadHidden(hidden) {
       state.hidePad = hidden;
       persist();
       applyPad();
+    }
+    function onPhone() {
+      return window.matchMedia("(max-width: 720px)").matches;
     }
     function here() { return nodeFromId(state.path[state.path.length - 1]); }
     let lastPlaceKey = "";
@@ -4578,6 +4629,20 @@
       for (const iss of goneIntoTickets()) add(pathToIssue(iss.id), iss);
       for (const p of state.explored || []) add(p, null);
       return [...byKey.values()].sort((a, b) => a.path.length - b.path.length || a.path.join("/").localeCompare(b.path.join("/")));
+    }
+    function exploredPhoneHops() {
+      const list = exploredShortcuts();
+      const leaves = list.filter((a) => !list.some((b) => b.path.length > a.path.length && samePath(a.path, b.path.slice(0, a.path.length))));
+      const byEnd = new Map();
+      for (const h of leaves) {
+        const end = h.path[h.path.length - 1];
+        const prev = byEnd.get(end);
+        if (!prev) { byEnd.set(end, h); continue; }
+        for (const t of h.tickets) {
+          if (!prev.tickets.some((x) => x.id === t.id)) prev.tickets.push(t);
+        }
+      }
+      return [...byEnd.values()].sort((a, b) => a.path.length - b.path.length || a.path.join("/").localeCompare(b.path.join("/")));
     }
     let lastWeather = "";
     let weatherTimer = 0;
@@ -6099,25 +6164,6 @@
       const uniDepth = (chain[0] && chain[0].id === "universe") ? depth : -1;
       const gateHere = atTicket && isHomeGate(parsedHere.id);
       const rootedInIssue = isIssuePath(state.path);
-      const shipHint = strataHere
-        ? "Click the TCP or UDP box"
-        : atRockStay
-        ? "Extra is on this box. Step back, or click the other."
-        : atRock
-        ? "Click a box for more"
-        : gateHere
-        ? "This ticket is the gate. Click a box to go in. Click LiveKit to go out."
-        : atBox && !kids.length
-        ? "End of this path · Step back"
-        : atEngine || atEngineStay
-        ? "Two ways airplane mode shuts the connection. Hover a toggle."
-        : atWorldline || atWorldlineStay
-        ? "Token and URL are what it takes. The path is what it does. Gold ping out, teal pong back."
-        : atDna || atBase
-        ? "Click a base of the helix"
-        : atBeacon || atSignal
-        ? "Click a signal"
-        : "";
 
       document.getElementById("where").innerHTML = chain.map((n, i) => {
         if (i === chain.length - 1) return `<span class="now">${escapeHtml(n.name)}</span>`;
@@ -6127,25 +6173,37 @@
 
       const home = atGateHome();
       const warpOut = rootedInIssue;
-      const hops = exploredShortcuts();
-      document.getElementById("ship").innerHTML = `
+      const phone = onPhone();
+      const hops = phone ? exploredPhoneHops() : exploredShortcuts();
+      const orbExplored = `<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="8.5" ry="4.2" fill="none" stroke="currentColor" stroke-width="1.25"/><circle cx="20" cy="12" r="1.55" fill="currentColor"/><circle cx="7.2" cy="10.4" r="1.05" fill="currentColor" opacity=".7"/></svg>`;
+      const orbTickets = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="currentColor" opacity=".2"/><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.25"/><circle cx="9.6" cy="10.4" r="2.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/></svg>`;
+      document.querySelector(".shell").classList.toggle("hops-on", !!(hops.length && !state.hideExplored));
+      const hopBtn = (h, simple) => {
+        const hereNow = samePath(state.path, h.path);
+        const last = nodeFromId(h.path[h.path.length - 1]);
+        const attrs = `class="ship-hop ${hereNow ? "on" : ""}" type="button" data-hop="${h.path.join(",")}" data-ticket="${h.tickets[0] ? h.tickets[0].id : ""}" ${hereNow ? "disabled" : ""}`;
+        if (simple) return `<button ${attrs}>${escapeHtml(last ? last.name : "")}</button>`;
+        const tix = h.tickets.map((t) => issueTag(t)).join(" ");
+        const title = tix ? tix + " · " + (last ? last.name : "") : (last ? last.name : "");
+        return `<button ${attrs}><b>${escapeHtml(title)}</b><small>${escapeHtml(pathLabel(h.path))}</small></button>`;
+      };
+      document.getElementById("ship").innerHTML = phone ? `
+        ${hops.length && !state.hideExplored ? `<div class="ship-hops">${hops.map((h) => hopBtn(h, true)).join("")}</div>` : ""}
+        <div class="ship-orbit">
+          ${hops.length ? `<button class="ship-orb ${state.hideExplored ? "" : "on"}" type="button" id="shipExploredToggle" aria-label="Explored" title="Explored">${orbExplored}</button>` : ""}
+          <button class="ship-orb ${state.hidePad ? "" : "on"}" type="button" id="shipTickets" aria-label="Tickets" title="Tickets">${orbTickets}</button>
+        </div>
+        <div class="ship-nav">
+          <button class="ship-back" type="button" id="shipBack" ${home ? "disabled" : ""}>Step back</button>
+          <button class="ship-warp" type="button" id="shipWarp">${warpOut ? "Out to LiveKit" : "Warp to #" + HOME_GATE.issueId}</button>
+          ${state.warpBack ? `<button class="ship-warp" type="button" id="shipWarpBack">Warp back</button>` : ""}
+        </div>
+      ` : `
+        ${hops.length && !state.hideExplored ? `<div class="ship-hops">${hops.map((h) => hopBtn(h, false)).join("")}</div>` : ""}
         <button class="ship-back" type="button" id="shipBack" ${home ? "disabled" : ""}>Step back</button>
         <button class="ship-warp" type="button" id="shipWarp">${warpOut ? "Out to LiveKit" : "Warp to #" + HOME_GATE.issueId}</button>
         ${state.warpBack ? `<button class="ship-warp" type="button" id="shipWarpBack">Warp back</button>` : ""}
-        ${shipHint ? `<div class="ship-strata-hint">${escapeHtml(shipHint)}</div>` : ""}
-        ${hops.length ? (state.hideExplored
-          ? `<div class="ship-lab">Explored <button type="button" id="shipExploredToggle">Show</button></div>`
-          : `<div class="ship-lab">Explored <button type="button" id="shipExploredToggle">Hide</button></div>
-        <div class="ship-hops">${hops.map((h) => {
-          const hereNow = samePath(state.path, h.path);
-          const last = nodeFromId(h.path[h.path.length - 1]);
-          const tix = h.tickets.map((t) => issueTag(t)).join(" ");
-          const title = tix ? tix + " · " + (last ? last.name : "") : (last ? last.name : "");
-          return `<button class="ship-hop ${hereNow ? "on" : ""}" type="button" data-hop="${h.path.join(",")}" data-ticket="${h.tickets[0] ? h.tickets[0].id : ""}" ${hereNow ? "disabled" : ""}>
-            <b>${escapeHtml(title)}</b>
-            <small>${escapeHtml(pathLabel(h.path))}</small>
-          </button>`;
-        }).join("")}</div>`) : ""}
+        ${hops.length ? `<div class="ship-lab">Explored <button type="button" id="shipExploredToggle">${state.hideExplored ? "Show" : "Hide"}</button></div>` : ""}
       `;
       document.getElementById("shipBack").onclick = stepBack;
       document.getElementById("shipWarp").onclick = warpOut ? exploreUniverse : warpHome;
@@ -6155,8 +6213,18 @@
       if (exploredToggle) {
         exploredToggle.onclick = () => {
           state.hideExplored = !state.hideExplored;
+          if (onPhone() && !state.hideExplored) state.hidePad = true;
           persist();
           render();
+        };
+      }
+      const shipTickets = document.getElementById("shipTickets");
+      if (shipTickets) {
+        shipTickets.onclick = () => {
+          const opening = !!state.hidePad;
+          if (opening) state.hideExplored = true;
+          setPadHidden(!state.hidePad);
+          if (opening) render();
         };
       }
       document.querySelectorAll(".ship-hop").forEach((b) => b.addEventListener("click", () => {
