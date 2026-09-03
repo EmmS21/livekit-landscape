@@ -771,6 +771,60 @@
     .here-moon.landed .php, .here-moon.box .php {
       margin-top: -42%;
     }
+    button.here-moon {
+      font: inherit;
+      background: none;
+      border: 0;
+      color: inherit;
+      padding: 0;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    .here-moon.clickable {
+      pointer-events: auto;
+      z-index: 4;
+      top: 46%;
+      bottom: auto;
+      width: auto;
+      max-width: min(520px, 86vw);
+      transform: translate(-50%, -50%);
+    }
+    .here-moon.clickable .globe {
+      width: min(42vw, 280px) !important;
+      height: min(42vw, 280px) !important;
+    }
+    .here-moon.clickable .pname {
+      margin-top: 14px;
+      font-size: 18px;
+      line-height: 1.25;
+      max-width: 22ch;
+    }
+    .here-moon.clickable:hover .globe,
+    .here-moon.clickable:focus-visible .globe {
+      box-shadow:
+        inset -48px -36px 80px rgba(0,0,0,0.68),
+        inset 18px 14px 28px rgba(255,244,220,0.14),
+        0 0 0 2px rgba(243,234,220,0.55),
+        0 0 48px rgba(231,163,90,0.28);
+    }
+    .moon.step {
+      width: min(240px, 42vw);
+      z-index: 5;
+    }
+    .moon.step .globe {
+      width: 72px;
+      height: 72px;
+      box-shadow:
+        inset -18px -14px 22px rgba(0,0,0,0.7),
+        inset 6px 6px 8px rgba(255,244,220,0.28),
+        0 0 28px rgba(231,163,90,0.4);
+    }
+    .moon.step .pname {
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1.25;
+      max-width: 16ch;
+    }
     .here-moon.gate .globe {
       box-shadow: inset -40px -28px 70px rgba(0,0,0,0.55), 0 0 0 2px rgba(231,163,90,0.5), 0 0 48px rgba(231,163,90,0.28);
     }
@@ -3758,8 +3812,7 @@
         pointer-events: none;
       }
       .logo, .where { pointer-events: auto; }
-      .hud.issue-walk .where { display: none; }
-      .where { font-size: 12px; gap: 4px; }
+      .where, .place { display: none !important; }
       .where button { font-size: 12px; min-height: 0; padding: 2px 0; }
       #watch { width: auto; pointer-events: none; }
       .watch { max-width: min(220px, 72vw); pointer-events: auto; }
@@ -3959,26 +4012,32 @@
       .land .pname { font-size: 13px; }
       .land .php { font-size: 8px; margin-bottom: 4px; }
       .sky.scale-ticket .land, .sky.scale-box .land {
-        width: min(300px, 82vw);
+        width: min(220px, 70vw);
         min-height: 0;
         padding: 10px 14px;
-        left: 50% !important;
       }
       .sky.scale-ticket .land .pname, .sky.scale-box .land .pname { font-size: 14px; line-height: 1.25; }
-      .sky.scale-ticket .land[data-box="0"],
-      .sky.scale-box .land[data-box="0"] { top: 48% !important; }
-      .sky.scale-ticket .land[data-box="1"],
-      .sky.scale-box .land[data-box="1"] { top: 40% !important; }
-      .sky.scale-ticket .land[data-box="2"],
-      .sky.scale-box .land[data-box="2"] { top: 60% !important; }
       .here-moon.landed, .here-moon.box {
         bottom: 10%;
         width: auto;
+      }
+      .here-moon.landed.clickable, .here-moon.box.clickable {
+        top: 42%;
+        bottom: auto;
+        width: auto;
+        transform: translate(-50%, -50%);
       }
       .here-moon.landed .globe, .here-moon.box .globe {
         width: min(38vw, 148px);
         height: min(38vw, 148px);
       }
+      .here-moon.landed.clickable .globe, .here-moon.box.clickable .globe {
+        width: min(56vw, 220px);
+        height: min(56vw, 220px);
+      }
+      .here-moon.clickable .pname { font-size: 16px; }
+      .moon.step { width: min(160px, 44vw); }
+      .moon.step .globe { width: 64px; height: 64px; }
       .here-moon.landed .php, .here-moon.box .php { margin-top: 6px; }
       .here-moon.gate .pname { font-size: 16px; }
       .sky.scale-ticket .out-universe {
@@ -6170,8 +6229,8 @@
         return { left: 26 + (44 * i) / Math.max(n - 1, 1), top: 72 };
       }
       if (n === 1) return { left: 50, top: 48 };
-      if (n === 2) return i === 0 ? { left: 50, top: 18 } : { left: 50, top: 40 };
-      return { left: 50, top: 16 + (20 * i) };
+      if (n === 2) return i === 0 ? { left: 28, top: 48 } : { left: 72, top: 48 };
+      return { left: 22 + (56 * i) / Math.max(n - 1, 1), top: 48 };
     }
     function toggleStrata() {
       state.strata = !state.strata;
@@ -6243,6 +6302,8 @@
       const cosmic = atDna || atWorldline || atWorldlineStay || atAct || atBeacon || atBase || atSignal || atEngine || atEngineStay || atLab;
       const boxStart = parsedHere ? parsedHere.boxes.length : 0;
       const asBoxes = (atTicket || atBox || atRock || atRockStay) && !cosmic;
+      const boxSteps = asBoxes && (atTicket || atBox) ? skyKids : [];
+      const onlyNext = boxSteps.length === 1 ? boxSteps[0] : null;
       const issues = (node.issueIds || []).map((id) => ISSUES[id]).filter(Boolean);
       const issue = (state.watching && ISSUES[state.watching.id])
         || (state.selectedIssue && ISSUES[state.selectedIssue])
@@ -6251,14 +6312,16 @@
       const uniDepth = (chain[0] && chain[0].id === "universe") ? depth : -1;
       const gateHere = atTicket && isHomeGate(parsedHere.id);
       const rootedInIssue = isIssuePath(state.path);
-      const in4477 = !!(parsedHere && String(parsedHere.id) === "4477");
-      document.querySelector(".hud").classList.toggle("issue-walk", in4477);
-
-      document.getElementById("where").innerHTML = chain.map((n, i) => {
-        if (i === chain.length - 1) return `<span class="now">${escapeHtml(n.name)}</span>`;
-        return `<button data-go="${n.id}" type="button">${escapeHtml(n.name)}</button><span class="sep">/</span>`;
-      }).join("");
-      document.querySelectorAll("#where [data-go]").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.go)));
+      document.querySelector(".hud").classList.remove("issue-walk");
+      if (onPhone()) {
+        document.getElementById("where").innerHTML = "";
+      } else {
+        document.getElementById("where").innerHTML = chain.map((n, i) => {
+          if (i === chain.length - 1) return `<span class="now">${escapeHtml(n.name)}</span>`;
+          return `<button data-go="${n.id}" type="button">${escapeHtml(n.name)}</button><span class="sep">/</span>`;
+        }).join("");
+        document.querySelectorAll("#where [data-go]").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.go)));
+      }
 
       const home = atGateHome();
       const warpOut = rootedInIssue;
@@ -6348,6 +6411,8 @@
         ? beaconHtml(kids)
         : atSignal && parent && parent.kind === "beacon"
         ? beaconHtml(parent.children || [], node.id)
+        : onlyNext
+        ? ""
         : skyKids.map((c, i) => {
         const n = countInside(c);
         const g = nodeIsMapped(c);
@@ -6369,6 +6434,18 @@
         const zStyle = slot ? `;transform:translate(-50%,-50%) translateZ(${slot.z}px)` : "";
         const rockClass = slot ? " rock-" + slot.rock : "";
         const rockTag = slot ? `<span class="rock-tag">${slot.rock}</span>` : "";
+        if (asBoxes && (atTicket || atBox)) {
+          const p = boxSlot(i, skyKids.length);
+          const deeper = (c.children || []).length > 0;
+          const extra = !!(c.who && c.who !== c.name);
+          const canEnter = deeper || extra;
+          const tag = canEnter ? "button" : "div";
+          const enter = canEnter ? ` type="button" data-enter="${c.id}"` : "";
+          return `<${tag} class="moon step ${slackPathNode(c) ? "haze path" : ""}"${enter} style="left:${p.left}%;top:${p.top}%">
+            <span class="globe"></span>
+            <span class="pname">${escapeHtml(c.name)}</span>
+          </${tag}>`;
+        }
         if (asBoxes) {
           const on = c.id === node.id;
           const deeper = (c.children || []).length > 0;
@@ -6481,7 +6558,7 @@
         : gateHere && gateIss
         ? issueTag(gateIss)
         : node.name;
-      const place = `<div class="place">${escapeHtml(placeLab)}</div>`;
+      const place = onPhone() ? "" : `<div class="place">${escapeHtml(placeLab)}</div>`;
       const hereKind = showPlanetHere ? kindFrom(node.id, PLANET_KINDS) : "";
       const centerObj = (atRock || atRockBox)
         ? `<div class="rock-read ${node.rock || ""}">
@@ -6489,6 +6566,13 @@
             <p class="sub">${escapeHtml(node.who || "")}</p>
           </div>`
         : cosmic
+        ? ""
+        : onlyNext
+        ? `<button class="here-moon ${atBox ? "box" : "landed"} clickable" type="button" data-enter="${onlyNext.id}">
+            <span class="globe"></span>
+            <span class="pname">${escapeHtml(onlyNext.name)}</span>
+          </button>`
+        : boxSteps.length
         ? ""
         : gateHere
         ? `<div class="here-moon landed gate"><span class="globe"></span><span class="pname">${escapeHtml(issueTag(gateIss))}</span><span class="plabel">${escapeHtml(issueLabel(gateIss))}</span></div>`
