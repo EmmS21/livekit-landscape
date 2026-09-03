@@ -3612,6 +3612,12 @@
       :root { --pad-w: min(240px, 42vw); }
     }
     @media (hover: none) {
+      .lab-pick .lab-tip,
+      .lab-pick:hover .lab-tip,
+      .lab-pick:focus .lab-tip,
+      .lab-pick:focus-visible .lab-tip { display: none !important; }
+      .air-say,
+      .lab-look { display: none !important; }
       .ship-hops { opacity: 0.85; }
       .gone-rest, .gone-rest:focus-within {
         opacity: 0.55;
@@ -3755,6 +3761,8 @@
       .lab-pick:focus .lab-tip,
       .lab-pick:focus-visible .lab-tip,
       .lab-pick:active .lab-tip { display: none !important; }
+      .air-say,
+      .lab-look { display: none !important; }
       .engine-stamps {
         bottom: max(88px, calc(68px + env(safe-area-inset-bottom)));
         flex-wrap: wrap;
@@ -5436,6 +5444,7 @@
           labSim.law = b.dataset.labLaw;
           track("lab", { action: "law", law: labSim.law });
           labPaint();
+          b.blur();
         };
       });
       const runBtn = document.getElementById("labRunBtn");
