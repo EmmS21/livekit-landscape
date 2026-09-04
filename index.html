@@ -5420,16 +5420,8 @@
     }
     function writeEntryUrl(gate) {
       const g = gate || HOME_GATE;
-      if (oneFileEntry()) {
-        const hash = "#" + g.slug;
-        if (location.hash !== hash) history.replaceState(null, "", hash);
-        return;
-      }
-      const onDel = /delete-same-name/.test(location.pathname || "");
-      const wantDel = g.slug === "delete-same-name";
-      if (wantDel && !onDel) history.replaceState(null, "", "delete-same-name.html?card=1");
-      else if (!wantDel && onDel) history.replaceState(null, "", "./");
-      else if (location.hash) history.replaceState(null, "", wantDel ? "delete-same-name.html?card=1" : "./");
+      const hash = "#" + g.slug;
+      if (location.hash !== hash) history.replaceState(null, "", hash);
     }
     function landOnGate(gate) {
       const g = gate || GATES[0];
