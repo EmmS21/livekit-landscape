@@ -122,8 +122,9 @@
       gap: 10px;
       min-width: 0;
       flex: 1;
-      pointer-events: auto;
+      pointer-events: none;
     }
+    .logo, .where { pointer-events: auto; }
     .logo {
       flex: 0 0 auto;
       width: 36px;
@@ -147,7 +148,8 @@
     }
     .watch .kicker { margin: 0 0 4px; }
     .watch b { display: block; font-size: 13px; line-height: 1.3; margin-bottom: 6px; }
-    .watch-row { display: flex; gap: 6px; }
+    .watch-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .watch-row .tix-ext { font-size: 11px; }
     .watch-row button {
       border: 1px solid var(--accent);
       background: var(--accent);
@@ -237,6 +239,9 @@
     .sky.scale-plane.udp-sky::before {
       background: linear-gradient(180deg, transparent 36%, rgba(94,196,189,0.2) 100%);
     }
+    .sky.scale-plane.send-sky::before {
+      background: linear-gradient(180deg, transparent 36%, rgba(243,234,220,0.18) 100%);
+    }
     .sky.scale-box { background: radial-gradient(ellipse at 50% 70%, #1c1510 0%, #070508 72%); }
     .sky.warping-in { animation: warpIn 0.45s ease-in; }
     .sky.warping-out { animation: warpOut 0.45s ease-in; }
@@ -303,19 +308,25 @@
     }
     .rings ellipse, .kepler ellipse {
       fill: none;
-      stroke: rgba(236, 222, 192, 0.48);
-      stroke-width: 1.2px;
+      stroke: rgba(236, 222, 192, 0.42);
+      stroke-width: 1.05px;
       vector-effect: non-scaling-stroke;
-      stroke-dasharray: 0 8.2 0 5.4 0 11.5;
+      stroke-dasharray: 0 2.8 0 7.1 0 1.6 0 11.4 0 4.2 0 6.6 0 2.1 0 9.3 0 3.4;
       stroke-linecap: round;
       animation: wellDrift 48s linear infinite;
     }
     .kepler ellipse.grit {
-      stroke: rgba(243, 234, 220, 0.28);
-      stroke-width: 0.6px;
-      stroke-dasharray: 0 4.4 0 7.6 0 6.1;
+      stroke: rgba(243, 234, 220, 0.26);
+      stroke-width: 0.55px;
+      stroke-dasharray: 0 1.4 0 4.8 0 0.9 0 6.6 0 2.2 0 5.1 0 1.1 0 8.4 0 3.3;
       animation-duration: 31s;
       animation-direction: reverse;
+    }
+    .kepler ellipse.dust {
+      stroke: rgba(198, 176, 148, 0.2);
+      stroke-width: 0.45px;
+      stroke-dasharray: 0 5.6 0 12.8 0 3.2 0 9.4 0 16.2 0 7.1;
+      animation-duration: 67s;
     }
     .kepler .moons {
       stroke: rgba(231, 163, 90, 0.32);
@@ -529,19 +540,25 @@
     }
     .belt ellipse {
       fill: none;
-      stroke: rgba(236, 222, 192, 0.42);
-      stroke-width: 1.15px;
+      stroke: rgba(236, 222, 192, 0.38);
+      stroke-width: 1.45px;
       vector-effect: non-scaling-stroke;
-      stroke-dasharray: 0 7.8 0 5.2 0 10.4;
+      stroke-dasharray: 0.55 3.2 0.32 5.1 0.8 3.8 0.28 6.4 0.5 3.5 0.4 4.9;
       stroke-linecap: round;
       animation: wellDrift 28s linear infinite;
     }
     .belt ellipse.inner {
-      stroke: rgba(243, 234, 220, 0.26);
-      stroke-width: 0.55px;
-      stroke-dasharray: 0 4.1 0 8.2 0 5.8;
+      stroke: rgba(243, 234, 220, 0.22);
+      stroke-width: 0.7px;
+      stroke-dasharray: 0.4 3.6 0.28 5.4 0.6 4.2 0.25 7.1 0.45 3.8;
       animation-duration: 19s;
       animation-direction: reverse;
+    }
+    .belt ellipse.grit {
+      stroke: rgba(198, 176, 148, 0.28);
+      stroke-width: 0.4px;
+      stroke-dasharray: 0 1.6 0 2.8 0 1.2 0 3.5 0 2.2;
+      animation-duration: 36s;
     }
     .belt.faint {
       opacity: 0.55;
@@ -649,6 +666,10 @@
       background: radial-gradient(ellipse at 50% 0%, rgba(94,196,189,0.38), rgba(8,36,36,0.92) 52%, #040808 100%);
       animation: horizonBreathe 6.5s ease-in-out infinite;
     }
+    .horizon.send {
+      background: radial-gradient(ellipse at 50% 0%, rgba(243,234,220,0.36), rgba(42,28,12,0.92) 52%, #080604 100%);
+      animation: horizonBreathe 5.8s ease-in-out infinite;
+    }
     @keyframes horizonBreathe {
       0%, 100% { opacity: 0.82; }
       50% { opacity: 1; }
@@ -711,6 +732,8 @@
       font-size: 16px;
       text-shadow: 0 1px 10px #000;
       max-width: 28ch;
+      position: relative;
+      z-index: 3;
     }
     .here-planet .globe {
       position: relative;
@@ -780,17 +803,41 @@
       overflow: visible;
       animation: moonRingTurn 160s linear infinite;
     }
-    .here-moon .moon-stones ellipse {
+    .here-moon .moon-stones .disk {
       fill: none;
-      stroke: rgba(232, 214, 186, 0.72);
-      stroke-width: 1.35;
       stroke-linecap: round;
-      stroke-dasharray: 0 3.4 0 6.2 0 2.2 0 8.1 0 4.6;
     }
-    .here-moon .moon-stones .inner {
-      stroke: rgba(210, 190, 160, 0.5);
-      stroke-width: 0.9;
-      stroke-dasharray: 0 4.8 0 3.1 0 7.4 0 2.6;
+    .here-moon .moon-stones .disk.outer {
+      stroke: rgba(214, 190, 154, 0.46);
+      stroke-width: 1.45;
+      stroke-dasharray: 0.38 3.4 0.2 5.4 0.55 4.0 0.26 6.8 0.45 3.8 0.22 6.1;
+    }
+    .here-moon .moon-stones .disk.mid {
+      stroke: rgba(232, 214, 186, 0.3);
+      stroke-width: 1.05;
+      stroke-dasharray: 0.28 4.1 0.48 5.8 0.2 3.6 0.38 7.4 0.32 4.5 0.24 5.2;
+    }
+    .here-moon .moon-stones .disk.grit {
+      stroke: rgba(186, 160, 122, 0.42);
+      stroke-width: 0.45;
+      stroke-dasharray: 0 1.2 0 3.4 0 0.9 0 2.6 0 1.8 0 4.1 0 1.4;
+    }
+    .here-moon .moon-stones .disk.inner {
+      stroke: rgba(236, 220, 192, 0.42);
+      stroke-width: 1.2;
+      stroke-dasharray: 0.34 3.1 0.22 5.1 0.5 3.7 0.26 6.5 0.42 3.4 0.2 4.8;
+    }
+    .here-moon .moon-stones .chip {
+      stroke: none;
+    }
+    .here-moon .moon-stones .chip.out {
+      fill: rgba(214, 190, 154, 0.55);
+    }
+    .here-moon .moon-stones .chip.in {
+      fill: rgba(236, 220, 192, 0.45);
+    }
+    .here-moon .moon-stones .chip.stray {
+      fill: rgba(188, 164, 128, 0.28);
     }
     .here-moon .globe { z-index: 1; }
     .here-moon .globe-spin {
@@ -941,6 +988,7 @@
       text-align: left;
     }
     .rock-read.udp { border-color: #7ec8c4; }
+    .rock-read.send { border-color: #f3eadc; }
     .rock-read .php {
       display: block;
       font-size: 9px;
@@ -950,6 +998,7 @@
       margin-bottom: 6px;
     }
     .rock-read.udp .php { color: #7ec8c4; }
+    .rock-read.send .php { color: #f3eadc; }
     .rock-read .pname {
       font-family: Fraunces, serif;
       font-size: 26px;
@@ -966,6 +1015,9 @@
     }
     .rock-door.udp {
       border-color: #7ec8c4;
+    }
+    .rock-door.send {
+      border-color: #f3eadc;
     }
     .rock-door small {
       display: block;
@@ -1477,8 +1529,9 @@
       border-radius: 12px;
       padding: 8px 10px;
       cursor: pointer;
-      z-index: 6;
+      z-index: 13;
       text-align: left;
+      pointer-events: auto;
     }
     .engine-lab .php {
       display: block;
@@ -1502,6 +1555,7 @@
     .engine-lab:hover, .engine-lab.on { filter: brightness(1.15); }
     .sky.scale-engine .place,
     .sky.scale-lab .place { display: none; }
+    .sky.scale-engine ~ .ship,
     .sky.scale-lab ~ .ship {
       flex-direction: row;
       flex-wrap: wrap;
@@ -1510,9 +1564,13 @@
       bottom: 16px;
       max-width: calc(100% - 120px);
     }
+    .sky.scale-engine ~ .ship .ship-hops,
+    .sky.scale-engine ~ .ship .ship-lab,
+    .sky.scale-engine ~ .ship .ship-strata-hint,
     .sky.scale-lab ~ .ship .ship-hops,
     .sky.scale-lab ~ .ship .ship-lab,
     .sky.scale-lab ~ .ship .ship-strata-hint { display: none; }
+    .sky.scale-engine ~ .pad-show,
     .sky.scale-lab ~ .pad-show { bottom: 16px; }
     .lab-stage {
       position: absolute;
@@ -1585,6 +1643,7 @@
       justify-content: flex-end;
     }
     html.no-hover-tips .lab-tip { display: none !important; }
+    html.no-hover-tips .close-sim .path-lab .sky-tip { display: none !important; }
     .lab-pick {
       position: relative;
       max-width: 210px;
@@ -2739,9 +2798,9 @@
       width: 34%;
       height: 28%;
     }
-    .planet.p-ring {
+    .planet.has-rings {
       width: 110px;
-      perspective: 120px;
+      perspective: 140px;
     }
     .planet.p-ring .globe {
       width: 58px; height: 58px;
@@ -2749,7 +2808,7 @@
         radial-gradient(circle at 70% 68%, rgba(30,20,8,0.45) 0%, transparent 50%),
         radial-gradient(circle at 26% 20%, #fffce8 0%, #f0d070 30%, #d49828 56%, #3a280c 92%);
     }
-    .here-planet.p-ring {
+    .here-planet.has-rings {
       perspective: 280px;
     }
     .here-planet.p-ring .globe {
@@ -2757,24 +2816,129 @@
         radial-gradient(circle at 70% 68%, rgba(30,20,8,0.45) 0%, transparent 50%),
         radial-gradient(circle at 26% 20%, #fffce8 0%, #f0d070 30%, #d49828 56%, #3a280c 92%);
     }
-    .planet.p-ring .ring, .here-planet.p-ring .ring {
+    .planet.has-rings .ring-rig,
+    .here-planet.has-rings .ring-rig {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+    .planet.has-rings .ring-rig {
+      width: 58px;
+      height: 58px;
+      transform: scale(var(--near, 1));
+    }
+    .planet.p-ice.has-rings .ring-rig {
+      width: 48px;
+      height: 48px;
+    }
+    .here-planet.has-rings .ring-rig {
+      width: 168px;
+      height: 168px;
+    }
+    .here-planet.p-ice.has-rings .ring-rig {
+      width: 152px;
+      height: 152px;
+    }
+    .planet.has-rings .ring, .here-planet.has-rings .ring {
       position: absolute;
       left: 50%;
-      top: 29px;
-      width: 92px;
-      height: 22px;
-      border: 1.6px solid rgba(255, 228, 180, 0.78);
-      border-radius: 50%;
+      top: 50%;
+      width: 178%;
+      height: 178%;
       pointer-events: none;
-      z-index: 0;
+      border: 0;
       background: transparent;
-      box-shadow: 0 0 12px rgba(255, 190, 110, 0.5), inset 0 0 6px rgba(255,255,255,0.18);
-      transform: translate(-50%, -50%) rotateX(66deg);
+      box-shadow: none;
+      transform: translate(-50%, -50%) rotateZ(var(--ring-yaw, -8deg)) rotateX(var(--ring-tilt, 66deg));
     }
-    .here-planet.p-ring .ring {
-      top: 84px;
-      width: 260px;
-      height: 56px;
+    .planet.has-rings .ring.back, .here-planet.has-rings .ring.back { z-index: 0; }
+    .planet.has-rings .ring.front, .here-planet.has-rings .ring.front {
+      z-index: 2;
+      clip-path: inset(50% -35% -22% -35%);
+    }
+    .planet.has-rings .globe, .here-planet.has-rings .globe {
+      position: relative;
+      z-index: 1;
+      transform: none;
+    }
+    .planet.has-rings .ring-ice,
+    .here-planet.has-rings .ring-ice {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      animation: moonRingTurn 180s linear infinite;
+    }
+    .planet.has-rings .ring-ice .disk,
+    .here-planet.has-rings .ring-ice .disk {
+      fill: none;
+      stroke-linecap: round;
+    }
+    .planet.has-rings .ring-ice .disk.outer,
+    .here-planet.has-rings .ring-ice .disk.outer {
+      stroke: rgba(196, 168, 128, 0.44);
+      stroke-width: 1.45;
+      stroke-dasharray: 0.38 3.4 0.2 5.4 0.55 4.0 0.26 6.8 0.45 3.8 0.22 6.1;
+    }
+    .planet.has-rings .ring-ice .disk.mid,
+    .here-planet.has-rings .ring-ice .disk.mid {
+      stroke: rgba(232, 214, 186, 0.28);
+      stroke-width: 1.05;
+      stroke-dasharray: 0.28 4.1 0.48 5.8 0.2 3.6 0.38 7.4 0.32 4.5 0.24 5.2;
+    }
+    .planet.has-rings .ring-ice .disk.grit,
+    .here-planet.has-rings .ring-ice .disk.grit {
+      stroke: rgba(186, 160, 122, 0.4);
+      stroke-width: 0.45;
+      stroke-dasharray: 0 1.2 0 3.4 0 0.9 0 2.6 0 1.8 0 4.1 0 1.4;
+    }
+    .planet.has-rings .ring-ice .disk.inner,
+    .here-planet.has-rings .ring-ice .disk.inner {
+      stroke: rgba(255, 236, 204, 0.46);
+      stroke-width: 1.2;
+      stroke-dasharray: 0.34 3.1 0.22 5.1 0.5 3.7 0.26 6.5 0.42 3.4 0.2 4.8;
+    }
+    .planet.has-rings .ring-ice .chip,
+    .here-planet.has-rings .ring-ice .chip {
+      stroke: none;
+    }
+    .planet.has-rings .ring-ice .chip.out,
+    .here-planet.has-rings .ring-ice .chip.out {
+      fill: rgba(176, 148, 108, 0.5);
+    }
+    .planet.has-rings .ring-ice .chip.in,
+    .here-planet.has-rings .ring-ice .chip.in {
+      fill: rgba(255, 236, 204, 0.55);
+    }
+    .planet.has-rings .ring-ice .chip.stray,
+    .here-planet.has-rings .ring-ice .chip.stray {
+      fill: rgba(210, 186, 150, 0.28);
+    }
+    .planet.p-ice.has-rings .ring-ice .disk.outer,
+    .here-planet.p-ice.has-rings .ring-ice .disk.outer {
+      stroke: rgba(122, 172, 196, 0.42);
+    }
+    .planet.p-ice.has-rings .ring-ice .disk.mid,
+    .here-planet.p-ice.has-rings .ring-ice .disk.mid {
+      stroke: rgba(170, 210, 228, 0.28);
+    }
+    .planet.p-ice.has-rings .ring-ice .disk.inner,
+    .here-planet.p-ice.has-rings .ring-ice .disk.inner {
+      stroke: rgba(198, 232, 248, 0.48);
+    }
+    .planet.p-ice.has-rings .ring-ice .chip.out,
+    .here-planet.p-ice.has-rings .ring-ice .chip.out {
+      fill: rgba(122, 172, 196, 0.42);
+    }
+    .planet.p-ice.has-rings .ring-ice .chip.in,
+    .here-planet.p-ice.has-rings .ring-ice .chip.in {
+      fill: rgba(198, 232, 248, 0.5);
+    }
+    .planet.p-ice.has-rings .ring-ice .chip.stray,
+    .here-planet.p-ice.has-rings .ring-ice .chip.stray {
+      fill: rgba(160, 204, 220, 0.22);
     }
     .planet.p-ice .globe {
       width: 48px; height: 48px;
@@ -2793,6 +2957,8 @@
     .here-planet.p-ice .globe { width: 152px; height: 152px; }
     .planet:hover { z-index: 5; }
     .planet:hover .globe { transform: scale(calc(var(--near, 1) * 1.1)); }
+    .planet.p-ring:hover .globe, .planet.has-rings:hover .globe { transform: none; }
+    .planet.has-rings:hover .ring-rig { transform: scale(calc(var(--near, 1) * 1.1)); }
     .planet.fade { opacity: 0; transition: opacity 0.35s ease; }
     .planet.zoom { z-index: 8; animation: zoomInto 0.4s ease-in forwards; }
     .planet .php {
@@ -2801,6 +2967,8 @@
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--accent);
+      position: relative;
+      z-index: 3;
     }
     .planet .pname {
       font-family: Fraunces, serif;
@@ -2808,10 +2976,14 @@
       font-weight: 500;
       line-height: 1.2;
       text-shadow: 0 1px 8px #000;
+      position: relative;
+      z-index: 3;
     }
     .planet .count {
       font-size: 10px;
       color: var(--accent);
+      position: relative;
+      z-index: 3;
     }
 
     .body {
@@ -3199,7 +3371,6 @@
       pointer-events: none;
     }
     .depth-world .body,
-    .depth-world .filament-hit,
     .depth-world .plane-lab {
       pointer-events: auto;
     }
@@ -3309,22 +3480,19 @@
     @keyframes filamentPulse {
       to { stroke-dashoffset: -56; }
     }
-    .filament-hit {
-      position: absolute;
-      left: 62%;
-      top: 48%;
-      transform: translate(-50%, -50%) translateZ(20px);
-      border: 1px solid #f3eadc;
-      background: #2a2118;
+    .ship-filament {
+      border: 1px solid rgba(243, 234, 220, 0.4);
+      background: #171410;
       color: #f3eadc;
-      border-radius: 999px;
-      padding: 5px 10px;
+      border-radius: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
       font-family: Fraunces, serif;
       font-size: 11px;
-      cursor: pointer;
-      z-index: 6;
+      text-align: left;
       white-space: nowrap;
     }
+    .ship-filament:hover { filter: brightness(1.15); }
     .rock-glow {
       position: absolute;
       left: 50%;
@@ -3344,7 +3512,7 @@
       border: 1px solid rgba(94,196,189,0.45);
       box-shadow: 0 0 28px rgba(94,196,189,0.16);
     }
-    .filament-hit small {
+    .ship-filament small {
       display: block;
       font-family: Outfit, sans-serif;
       font-size: 8px;
@@ -3551,7 +3719,16 @@
     .ship-hop[disabled] { opacity: 1; color: rgba(243, 234, 220, 0.5); cursor: default; }
     .ship-hop b { display: block; font-size: 12px; font-weight: 600; }
     .ship-hop small { display: block; font-size: 10px; color: rgba(154, 141, 124, 0.8); line-height: 1.35; margin-top: 3px; }
-    .dock-tix { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+    .dock-tix { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; align-items: center; }
+    .tix-pair { display: inline-flex; align-items: center; gap: 6px; }
+    .tix-ext {
+      color: var(--accent);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      opacity: 0.85;
+    }
+    .tix-ext:hover { opacity: 1; text-decoration: underline; }
     .dock-tix button {
       border: 1px solid rgba(231, 163, 90, 0.55);
       background: rgba(23, 20, 16, 0.72);
@@ -3734,7 +3911,70 @@
     .gone button.on { border-color: var(--accent); background: rgba(23, 20, 16, 0.18); }
     .gone button b { display: block; font-size: 12px; margin-bottom: 2px; }
     .gone button span { display: block; font-size: 11px; color: rgba(215, 201, 171, 0.8); line-height: 1.35; }
-    .gone button .gone-path { font-size: 11px; color: rgba(239, 230, 212, 0.7); margin: 4px 0 2px; }
+    .gone button .gone-blurb { margin: 4px 0 6px; }
+    .gone-tix {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 11px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .gone-tix:hover { text-decoration: underline; }
+    .walk-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 0 0 10px;
+      padding: 0 2px 0 8px;
+    }
+    .gone button.walk-step {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      column-gap: 8px;
+      row-gap: 4px;
+      align-items: start;
+      margin-bottom: 0;
+      padding: 7px 8px;
+    }
+    .gone button.walk-step .walk-n {
+      grid-column: 1;
+      grid-row: 1;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1px solid rgba(231, 163, 90, 0.5);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      margin: 0;
+    }
+    .gone button.walk-step.on .walk-n {
+      background: var(--accent);
+      color: var(--ink);
+      border-color: var(--accent);
+    }
+    .gone button.walk-step b {
+      grid-column: 2;
+      grid-row: 1;
+      margin: 0;
+      padding-top: 3px;
+      font-size: 11px;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+    .gone button.walk-step .walk-say {
+      grid-column: 2;
+      margin: 0;
+      color: rgba(215, 201, 171, 0.88);
+      font-size: 11px;
+      line-height: 1.45;
+      font-weight: 400;
+    }
     .gone-rest {
       max-height: 38vh;
       overflow: auto;
@@ -3821,7 +4061,8 @@
       .engine-core .heart, .engine-clock .hand, .engine-ignite .spark, .engine-tether .ping, .engine-tether .pong, .engine-tether path.wire,
       .engine-tether path.tube, .engine-tether path.tcp-grit, .engine-tether path.tcp-road, .worldline-path .tube, .worldline-path .tcp-grit, .worldline-path .tcp-road, .worldline-path .ping, .worldline-path .pong, .worldline-path .null-ray, .engine-tether .null-ray, .engine-tether .tcp-mote, .worldline-path .tcp-mote, .connect-act .spark,
       .path-lab .mini-ring, .path-lab .ember, .photon, .engine-collapse .void,
-      .planet.p-gas .globe, .here-planet.p-gas .globe, .planet.p-ring .ring, .here-planet.p-ring .ring,
+      .planet.p-gas .globe, .here-planet.p-gas .globe, .planet.has-rings .ring, .here-planet.has-rings .ring,
+      .planet.has-rings .ring-ice, .here-planet.has-rings .ring-ice,
       .here-moon .globe-spin, .here-moon .moon-stones { animation: none; }
     }
     @media (max-width: 1100px) {
@@ -3911,7 +4152,9 @@
       .brief { pointer-events: none; }
       .pad-btn,
       .gone button,
-      .brief button { pointer-events: auto; }
+      .gone a,
+      .brief button,
+      .brief a { pointer-events: auto; }
       .gone-rest,
       .gone-rest button { pointer-events: none; }
       .pad-head { padding: 8px 10px 0; }
@@ -3962,10 +4205,10 @@
         background: rgba(23, 20, 16, 0.5);
         box-shadow: 0 0 14px rgba(231, 163, 90, 0.28);
       }
-      .ship-orb, .ship-back, .ship-warp, .ship-strata, .ship-lab, .ship-lab button, .ship-hops, .ship-hop {
+      .ship-orb, .ship-back, .ship-warp, .ship-strata, .ship-filament, .ship-lab, .ship-lab button, .ship-hops, .ship-hop {
         pointer-events: auto;
       }
-      .ship-back, .ship-warp, .ship-strata {
+      .ship-back, .ship-warp, .ship-strata, .ship-filament {
         min-height: 0;
         padding: 6px 11px;
         font-size: 11px;
@@ -4076,6 +4319,13 @@
       .land { width: min(132px, 36vw); min-height: 0; padding: 8px 10px; }
       .land .pname { font-size: 13px; }
       .land .php { font-size: 8px; margin-bottom: 4px; }
+      .sky.scale-planes .rock-door {
+        width: min(104px, 28vw);
+        min-height: 0;
+        padding: 6px 6px;
+      }
+      .sky.scale-planes .rock-door .pname { font-size: 11px; }
+      .sky.scale-planes .rock-door small { font-size: 9px; margin-top: 2px; }
       .sky.scale-ticket .land, .sky.scale-box .land {
         width: min(220px, 70vw);
         min-height: 0;
@@ -4102,6 +4352,8 @@
       }
       .here-moon .moon-ring { width: 168%; height: 168%; }
       .here-moon .moon-stones .inner { display: none; }
+      .planet.has-rings .ring { width: 168%; height: 168%; }
+      .planet.has-rings .ring-ice .stray { display: none; }
       .here-moon .globe-spin { animation-duration: 110s; }
       .here-moon .moon-stones { animation-duration: 200s; }
       .here-moon.clickable .pname { font-size: 16px; }
@@ -4125,14 +4377,14 @@
         left: 76%;
         transform: translateX(-50%);
       }
-      .filament-hit { left: 50%; top: 48%; }
       .moon { width: 64px; padding: 4px 2px; }
       .planet { width: 72px; padding: 4px 2px; }
-      .tcp-chip, .udp-chip, .plane-lab, .filament-hit {
+      .tcp-chip, .udp-chip, .plane-lab {
         min-height: 0;
         padding: 4px 8px;
         font-size: 10px;
       }
+      .sky.scale-engine ~ .ship,
       .sky.scale-lab ~ .ship {
         max-width: calc(100% - 24px);
         left: max(10px, env(safe-area-inset-left));
@@ -4152,6 +4404,754 @@
       .ship-hops { max-height: 18vh; }
       .brief { max-height: 24vh; }
       .helix-stage { top: 10%; height: 78%; }
+    }
+    .close-sim .photon.ping,
+    .close-sim .photon.pong,
+    .close-sim .flow-word.ping,
+    .close-sim .flow-word.pong,
+    .close-sim .flow-word.connect,
+    .close-sim .engine-ignite,
+    .close-sim .engine-cargo,
+    .close-sim .path-lab.pipe,
+    .close-sim .engine-title,
+    .close-sim .engine-phone { display: none !important; }
+    .close-hud {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: max(6px, env(safe-area-inset-top));
+      z-index: 14;
+      pointer-events: none;
+      text-align: left;
+      text-shadow: 0 1px 10px #000;
+      max-height: 14vh;
+      overflow: hidden;
+    }
+    .close-hud .close-tech {
+      margin: 0 0 4px;
+      font-family: Fraunces, serif;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--accent);
+    }
+    .close-hud .close-say {
+      margin: 0 0 6px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text);
+    }
+    .close-hud .close-state,
+    .close-hud .close-clock { display: none; }
+    .close-catalog {
+      display: none;
+      position: absolute;
+      left: 18%;
+      top: 42%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      width: min(240px, 70vw);
+      height: 180px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .close-sim.store-redis:not(.run) .close-catalog {
+      display: block;
+      transform: translate(-50%, -50%) scale(0.62);
+    }
+    .close-sim.store-redis.disturb .close-catalog,
+    .close-sim.store-redis.forgetRam .close-catalog,
+    .close-sim.store-redis.forgetStore .close-catalog,
+    .close-sim.store-redis.try .close-catalog { display: block; transform: translate(-50%, -50%) scale(1); }
+    .close-catalog > .php {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .close-program {
+      position: relative;
+      width: 100%;
+      height: 150px;
+    }
+    .close-program::before {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      background-image: radial-gradient(circle, rgba(231, 163, 90, 0.38) 1.1px, transparent 1.6px);
+      background-size: 16px 16px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .close-sim.disturb .close-program::before,
+    .close-sim.forgetRam .close-program::before {
+      animation: closeFieldShimmer 2.2s ease-out;
+    }
+    @keyframes closeFieldShimmer {
+      0% { opacity: 0.25; }
+      40% { opacity: 0.7; }
+      100% { opacity: 0.35; }
+    }
+    .close-room {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 0;
+      padding: 0;
+      background: none;
+      color: inherit;
+      cursor: default;
+      transform: translate(-50%, -50%);
+    }
+    .close-room .shell {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(231, 163, 90, 0.45);
+      background: rgba(231, 163, 90, 0.25);
+    }
+    .close-room .shell.inner,
+    .close-room .shell-lab,
+    .close-room .dots { display: none; }
+    .close-room .pname {
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      transform: translateX(-50%);
+      margin-top: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0.55;
+    }
+    .close-room.closing .shell,
+    .close-room.hit .shell {
+      width: 16px;
+      height: 16px;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(231, 163, 90, 0.95);
+      border-color: #fff6e0;
+    }
+    .close-sim.disturb .close-room.hit .shell,
+    .close-sim.try-see .close-room.hit .shell,
+    .close-sim.try-err .close-room.hit .shell {
+      animation: closeNameAnswer 2.2s ease-out both;
+    }
+    @keyframes closeNameAnswer {
+      0%, 38% {
+        width: 10px;
+        height: 10px;
+        background: rgba(231, 163, 90, 0.25);
+        box-shadow: none;
+        border-color: rgba(231, 163, 90, 0.45);
+      }
+      48%, 100% {
+        width: 16px;
+        height: 16px;
+        background: var(--accent);
+        box-shadow: 0 0 18px rgba(231, 163, 90, 0.95);
+        border-color: #fff6e0;
+      }
+    }
+    .close-room.closing .pname,
+    .close-room.hit .pname { opacity: 1; color: var(--accent); }
+    .close-room.gone .shell { opacity: 0.12; box-shadow: none; }
+    .close-lattice {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(320px, 78vw);
+      height: min(320px, 78vw);
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 22px, rgba(231, 163, 90, 0.16) 22px 23px),
+        repeating-linear-gradient(90deg, transparent 0 22px, rgba(231, 163, 90, 0.16) 22px 23px);
+      mask-image: radial-gradient(circle at 50% 50%, #000 0%, #000 58%, transparent 78%);
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, #000 58%, transparent 78%);
+    }
+    .close-sim.store-go:not(.run) .close-lattice {
+      display: block;
+      width: min(140px, 38vw);
+      height: min(140px, 38vw);
+      left: 84%;
+      top: 32%;
+    }
+    .close-sim.store-go.disturb .close-lattice,
+    .close-sim.store-go.zoom .close-lattice,
+    .close-sim.store-go.forgetRam .close-lattice,
+    .close-sim.store-go.forgetStore .close-lattice,
+    .close-sim.store-go.try .close-lattice { display: block; }
+    .close-sim.store-go.disturb .close-lattice::after,
+    .close-sim.store-go.forgetRam .close-lattice::after,
+    .close-sim.store-go.forgetStore .close-lattice::after,
+    .close-sim.store-go.try-see .close-lattice::after,
+    .close-sim.store-go.try-err .close-lattice::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 22px rgba(231, 163, 90, 0.95);
+      transform: translate(-50%, -50%);
+    }
+    .close-sim.store-go.forgetStore .close-lattice::after {
+      animation: closeRoomBlow 1.15s ease-out forwards;
+    }
+    .close-orbit {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      pointer-events: none;
+    }
+    .close-sim.zoom .close-orbit { display: block; }
+    .close-orbit .moon {
+      display: flex;
+      width: 72px;
+      z-index: 7;
+    }
+    .close-orbit .moon.hit .globe {
+      transform: scale(1.35);
+      box-shadow: 0 0 20px rgba(231, 163, 90, 0.95);
+    }
+    .close-sim .engine-tether { display: block; }
+    .close-sim .close-well { display: block; }
+    .close-sim .path-lab.road { display: block; }
+    .close-sim .fifo-key { display: none; }
+    .close-sim.tcp .fifo-key { display: flex; }
+    .close-sim.disturb .engine-tether,
+    .close-sim.zoom .engine-tether,
+    .close-sim.hang .engine-tether,
+    .close-sim.forgetRam .engine-tether,
+    .close-sim.forgetStore .engine-tether,
+    .close-sim.disturb .close-well,
+    .close-sim.zoom .close-well,
+    .close-sim.hang .close-well,
+    .close-sim.forgetRam .close-well,
+    .close-sim.forgetStore .close-well,
+    .close-sim.disturb .path-lab.road,
+    .close-sim.zoom .path-lab.road,
+    .close-sim.hang .path-lab.road,
+    .close-sim.forgetRam .path-lab.road,
+    .close-sim.forgetStore .path-lab.road,
+    .close-sim.disturb .fifo-key,
+    .close-sim.zoom .fifo-key,
+    .close-sim.hang .fifo-key,
+    .close-sim.forgetRam .fifo-key,
+    .close-sim.forgetStore .fifo-key,
+    .close-sim.try .engine-tether,
+    .close-sim.try .close-well,
+    .close-sim.try .path-lab.road,
+    .close-sim.try .fifo-key { display: none; }
+    .close-sim.try .moon.close-moon,
+    .close-sim.try .close-stars-lab { display: none !important; }
+    .close-banner {
+      position: absolute;
+      left: 50%;
+      top: 24%;
+      transform: translateX(-50%);
+      z-index: 21;
+      width: min(44ch, calc(100% - 180px));
+      text-align: center;
+      pointer-events: none;
+    }
+    .close-banner .close-title,
+    .close-banner .close-why {
+      margin: 0;
+      font-family: Outfit, system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: #6e675c;
+    }
+    .close-banner .close-why { margin-top: 2px; }
+    .close-sim.people .close-banner,
+    .close-sim.awaitDelete .close-banner {
+      top: max(40px, calc(env(safe-area-inset-top) + 24px));
+    }
+    .close-sim.run .close-banner {
+      top: max(36px, calc(env(safe-area-inset-top) + 18px));
+    }
+    .close-sim .engine-clock {
+      display: none;
+      left: 50%;
+      top: 16%;
+      width: 148px;
+      z-index: 18;
+      opacity: 1;
+      pointer-events: none;
+    }
+    .close-sim.run .engine-clock {
+      display: flex;
+      opacity: 1;
+      top: 30%;
+    }
+    .close-sim .engine-clock svg {
+      width: 52px;
+      height: 52px;
+    }
+    .close-sim .engine-clock .pname { font-size: 18px; }
+    .close-node { display: none; }
+    .close-fail {
+      display: none;
+      margin: 6px 0 0;
+      padding: 6px 8px;
+      border: 1px solid #c47a6a;
+      background: rgba(80, 24, 20, 0.85);
+      color: #f3c4bc;
+      font-size: 12px;
+      line-height: 1.35;
+      border-radius: 8px;
+    }
+    .close-sim.try-err .close-fail { display: block; }
+    .close-sim.try-err .close-hud { max-height: none; overflow: visible; }
+    .close-warp {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0 4px;
+      pointer-events: auto;
+    }
+    .close-warp button {
+      border: 1px solid rgba(231, 163, 90, 0.55);
+      background: rgba(23, 20, 16, 0.88);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .close-marks {
+      margin: 4px 0 0;
+      font-size: 11px;
+      line-height: 1.4;
+      color: var(--accent);
+    }
+    .close-marks span { display: block; }
+    .close-sim .engine-tether path.hole-fill {
+      fill: none;
+      stroke: rgba(231, 163, 90, 0.14);
+      stroke-width: 26px;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+    }
+    .close-sim .engine-tether path.tcp-road {
+      stroke-width: 12px;
+      stroke: rgba(231, 163, 90, 0.32);
+    }
+    .close-sim .engine-tether path.tcp-grit {
+      stroke-width: 2px;
+    }
+    .close-sim .engine-tether path.tube {
+      stroke-width: 2.2px;
+      stroke: rgba(243, 234, 220, 0.55);
+    }
+    .close-sim .close-hole { display: none; }
+    .close-sim[data-n="1"] .close-hole[data-hole="0"],
+    .close-sim[data-n="2"] .close-hole[data-hole="0"],
+    .close-sim[data-n="2"] .close-hole[data-hole="1"],
+    .close-sim[data-n="3"] .close-hole { display: inline; opacity: 0.85; }
+    .close-sim .close-hole.on { opacity: 1; }
+    .close-sim .close-hole.on path.hole-fill { stroke: rgba(231, 163, 90, 0.28); }
+    .close-sim .path-lab.road {
+      left: 62%;
+      top: 38%;
+      pointer-events: auto;
+    }
+    .close-sim .path-lab.road:hover .sky-tip { display: block; pointer-events: auto; }
+    .close-well {
+      position: absolute;
+      width: 92px;
+      height: 92px;
+      transform: translate(-50%, -50%);
+      z-index: 6;
+      border-radius: 50%;
+      border: 2px solid rgba(231, 163, 90, 0.55);
+      background: radial-gradient(circle at 38% 32%, rgba(255, 220, 160, 0.35), rgba(18, 14, 10, 0.92) 62%);
+      box-shadow: 0 0 28px rgba(231, 163, 90, 0.4), inset 0 0 22px rgba(231, 163, 90, 0.22);
+      pointer-events: none;
+      text-align: center;
+    }
+    .close-well .php {
+      display: block;
+      margin-top: 10px;
+      font-size: 7px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .close-well .pname {
+      display: block;
+      font-family: Fraunces, serif;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+    .close-well .fifo-slots {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+      margin-top: 6px;
+      padding: 0 14px;
+    }
+    .close-well .fifo-slot {
+      flex: 0 0 12px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(231, 163, 90, 0.35);
+      background: rgba(12, 10, 8, 0.55);
+      font-size: 0;
+      line-height: 0;
+    }
+    .close-well .fifo-slot.on {
+      border-color: rgba(231, 163, 90, 0.95);
+      background: #e7a35a;
+      box-shadow: 0 0 8px rgba(231, 163, 90, 0.85);
+    }
+    .close-well .fifo-slot.leave {
+      border-color: #7ec8c4;
+      background: #7ec8c4;
+    }
+    .close-sim.enqueue .close-well {
+      box-shadow: 0 0 36px rgba(231, 163, 90, 0.7), inset 0 0 24px rgba(231, 163, 90, 0.35);
+    }
+    .close-sim.send .close-well .fifo-slot,
+    .close-sim.sending .close-well .fifo-slot {
+      opacity: 0;
+      visibility: hidden;
+      box-shadow: none;
+      transform: none;
+      transition: none;
+    }
+    .close-wave {
+      display: none;
+      position: absolute;
+      left: 84%;
+      top: 32%;
+      width: 12px;
+      height: 12px;
+      transform: translate(-50%, -50%);
+      z-index: 6;
+      pointer-events: none;
+    }
+    .close-sim.disturb .close-wave,
+    .close-sim.forgetRam .close-wave,
+    .close-sim.try-go .close-wave,
+    .close-sim.try-see .close-wave { display: block; }
+    .close-sim.store-go.disturb .close-wave,
+    .close-sim.store-go.forgetRam .close-wave,
+    .close-sim.store-go.try-go .close-wave,
+    .close-sim.store-go.try-see .close-wave { left: 50%; top: 50%; }
+    .close-wave i {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid rgba(231, 163, 90, 0.7);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.2);
+      opacity: 0;
+      animation: closeFieldWave 2s ease-out infinite;
+    }
+    .close-sim.try-go .close-wave i,
+    .close-sim.try-see .close-wave i {
+      border-color: rgba(139, 126, 200, 0.9);
+      box-shadow: 0 0 10px rgba(139, 126, 200, 0.45);
+    }
+    .close-wave i:nth-child(2) { animation-delay: 0.35s; }
+    .close-wave i:nth-child(3) { animation-delay: 0.7s; }
+    @keyframes closeFieldWave {
+      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0.85; }
+      100% { transform: translate(-50%, -50%) scale(30); opacity: 0; }
+    }
+    .close-sim.forgetStore .close-room.closing {
+      animation: closeRoomBlow 1.15s ease-out forwards;
+      overflow: visible;
+      z-index: 8;
+    }
+    .close-sim.forgetStore .close-room.closing .shell {
+      opacity: 1;
+      box-shadow: 0 0 22px #fff6e0, 0 0 40px rgba(231, 163, 90, 1);
+      animation: closeRoomBlowCore 1.15s ease-out forwards;
+    }
+    .close-sim.forgetStore .close-room.closing .pname {
+      animation: closeRoomBlowName 0.45s ease-out forwards;
+    }
+    .close-sim.forgetStore .close-room.closing::before,
+    .close-sim.forgetStore .close-room.closing::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #fff6e0;
+      pointer-events: none;
+    }
+    .close-sim.forgetStore .close-room.closing::before {
+      box-shadow:
+        10px -14px 0 0 #e7a35a,
+        -16px 6px 0 1px #fff6e0,
+        14px 12px 0 0 #f3eadc,
+        -8px -10px 0 0 #e7a35a,
+        0 -18px 0 1px rgba(255, 246, 224, 0.9);
+      animation: closeRoomShrapnel 1.15s ease-out forwards;
+    }
+    .close-sim.forgetStore .close-room.closing::after {
+      box-shadow:
+        -12px 16px 0 0 #e7a35a,
+        18px 4px 0 0 #fff6e0,
+        -4px 14px 0 1px #f3eadc,
+        8px -16px 0 0 #e7a35a;
+      animation: closeRoomShrapnel 1.15s 0.06s ease-out forwards;
+    }
+    @keyframes closeRoomBlow {
+      0% { transform: translate(-50%, -50%) scale(1); filter: brightness(1); opacity: 1; }
+      16% { transform: translate(-50%, -50%) scale(1.55); filter: brightness(2.4); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(2.2); filter: brightness(3); opacity: 0; }
+    }
+    @keyframes closeRoomBlowCore {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      18% { transform: translate(-50%, -50%) scale(2.4); }
+      100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    }
+    @keyframes closeRoomBlowName {
+      to { opacity: 0; }
+    }
+    @keyframes closeRoomShrapnel {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(5.5); }
+    }
+    .close-sim .photon.burst,
+    .close-sim .photon.disturb { display: none; }
+    .close-sim.enqueue .photon.send-sig { display: block; background: #e7a35a; box-shadow: 0 0 10px rgba(231, 163, 90, 0.95); animation-duration: 1.6s; }
+    .close-sim.send .photon.burst,
+    .close-sim.sending .photon.burst { display: block; background: #f3eadc; box-shadow: 0 0 8px rgba(243, 234, 220, 0.9); animation-duration: 1.1s; }
+    .close-sim.zoom .photon.disturb {
+      display: block;
+      width: 10px;
+      height: 10px;
+      background: #fff6e0;
+      box-shadow: 0 0 16px rgba(231, 163, 90, 1);
+      animation-duration: 1.8s;
+    }
+    .close-sim .flow-word.send,
+    .close-sim .flow-word.batch {
+      display: none;
+      left: 68%;
+      top: 30%;
+      color: #e7a35a;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: none;
+    }
+    .close-sim.enqueue .flow-word.send { display: flex; }
+    .close-sim.send .flow-word.batch,
+    .close-sim.sending .flow-word.batch {
+      display: flex;
+      left: 38%;
+      top: 44%;
+      color: #f3eadc;
+    }
+    .fifo-key {
+      position: absolute;
+      left: 50%;
+      top: 64%;
+      transform: translateX(-50%);
+      z-index: 8;
+      gap: 10px;
+      align-items: center;
+      font-size: 10px;
+      color: var(--soft);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .fifo-key i {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .fifo-key .k-other i { background: #e7a35a; }
+    .fifo-key .k-leave i { background: #7ec8c4; }
+    .fifo-key .k-batch i { background: #f3eadc; box-shadow: 0 0 6px #f3eadc; }
+    .close-stars-lab {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      pointer-events: none;
+      border: 1px dotted rgba(231, 163, 90, 0.45);
+      border-radius: 50%;
+    }
+    .close-sim.picked .close-stars-lab { display: block; }
+    .close-sim.disturb .close-stars-lab,
+    .close-sim.zoom .close-stars-lab,
+    .close-sim.hang .close-stars-lab,
+    .close-sim.forgetRam .close-stars-lab,
+    .close-sim.forgetStore .close-stars-lab { display: none; }
+    .close-stars-lab .php,
+    .close-stars-lab .orbit { display: none; }
+    .close-sim .moon.close-moon {
+      display: none;
+      width: 72px;
+      z-index: 7;
+      pointer-events: none;
+    }
+    .close-sim[data-n="1"] .moon.close-moon[data-i="0"],
+    .close-sim[data-n="2"] .moon.close-moon[data-i="0"],
+    .close-sim[data-n="2"] .moon.close-moon[data-i="1"],
+    .close-sim[data-n="3"] .moon.close-moon { display: flex; }
+    .close-sim.disturb .moon.close-moon,
+    .close-sim.zoom .moon.close-moon,
+    .close-sim.hang .moon.close-moon,
+    .close-sim.forgetRam .moon.close-moon,
+    .close-sim.forgetStore .moon.close-moon { display: none !important; }
+    .close-sim .moon.close-moon .globe {
+      width: 22px;
+      height: 22px;
+    }
+    .close-sim .moon.close-moon.on .globe {
+      transform: scale(1.25);
+      box-shadow: 0 0 18px rgba(231, 163, 90, 0.9);
+    }
+    .close-sim .moon.close-moon.done .globe { opacity: 0.35; }
+    .close-sim .lab-body.server { display: block; left: 84%; top: 32%; z-index: 7; pointer-events: none; }
+    .close-sim.zoom .lab-body.server {
+      left: 50%;
+      top: 52%;
+      z-index: 8;
+      transform: translate(-50%, -50%) scale(1.7);
+    }
+    .close-sim.store-go.disturb .lab-body.server {
+      left: 50%;
+      top: 50%;
+    }
+    .close-sim .engine-lab {
+      display: block !important;
+    }
+    .close-sim.people #labRunBtn,
+    .close-sim.awaitDelete #labRunBtn {
+      display: none !important;
+    }
+    .close-sim .engine-laws.close-laws {
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      left: 50%;
+      right: auto;
+      top: calc(128px + env(safe-area-inset-top));
+      bottom: auto;
+      transform: translateX(-50%);
+      z-index: 22;
+      width: min(260px, 86vw);
+      max-width: min(260px, 86vw);
+      pointer-events: auto;
+      text-align: center;
+    }
+    .close-sim.people .engine-laws.close-laws,
+    .close-sim.awaitDelete .engine-laws.close-laws { display: flex; }
+    .close-sim.run .engine-laws.close-laws { display: none; }
+    .close-sim.run .close-n,
+    .close-sim.run .close-store,
+    .close-sim.run #closeDel { display: none; }
+    .close-sim:not(.run) #closeMk,
+    .close-sim:not(.run) .close-try { display: none; }
+    .close-sim.run #closeMk {
+      display: block;
+      position: absolute;
+      top: max(12px, env(safe-area-inset-top));
+      right: 12px;
+      left: auto;
+      z-index: 24;
+      width: auto;
+      min-width: 148px;
+      flex: none;
+    }
+    .close-sim.run.mk-gone #closeMk { display: none; }
+    .close-sim.run .close-try {
+      display: block;
+      position: absolute;
+      top: max(52px, calc(env(safe-area-inset-top) + 44px));
+      right: 12px;
+      left: auto;
+      width: 148px;
+      text-align: right;
+      z-index: 24;
+    }
+    .close-sim:not(.ready) #closeDel { opacity: 0.38; }
+    .close-sim .engine-lab,
+    .close-sim .engine-lab.on { z-index: 22; filter: none; }
+    .close-n {
+      display: flex;
+      gap: 0;
+      margin: 0 auto 8px;
+      width: max-content;
+      padding: 2px;
+      border: 1px solid rgba(231, 163, 90, 0.45);
+      border-radius: 999px;
+      background: rgba(23, 20, 16, 0.72);
+    }
+    .close-n button {
+      flex: 0 0 auto;
+      min-width: 36px;
+      min-height: 32px;
+      padding: 4px 11px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      pointer-events: auto;
+    }
+    .close-n button.on { background: var(--accent); color: var(--ink); font-weight: 600; }
+    .close-acts { display: flex; flex-wrap: wrap; gap: 8px; position: relative; }
+    .close-acts .lab-play { flex: 1; min-width: 120px; font-size: 12px; padding: 8px 10px; }
+    .close-try {
+      display: none;
+      width: 100%;
+      margin: 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .close-sim.run .close-try { display: block; }
+    .close-help { display: none; }
+    .close-help { display: none; }
+    @media (min-width: 721px) {
+      .close-hud { left: 18px; right: 36%; top: 16px; max-width: 42ch; max-height: 22vh; }
+      .close-hud .close-tech { font-size: 20px; }
+      .close-hud .close-say { font-size: 14px; }
+      .close-sim.store-redis.disturb .close-catalog { left: 22%; top: 46%; }
+      .close-sim .path-lab.road { left: 58%; top: 42%; }
+      .close-sim.people .engine-laws.close-laws,
+      .close-sim.awaitDelete .engine-laws.close-laws { top: 78px; width: min(280px, 42vw); max-width: min(280px, 42vw); }
+      .close-sim .engine-clock { top: 14%; }
     }
   </style>
 </head>
@@ -4223,7 +5223,13 @@
 
     const ISSUES = {
       4663: { id: 4663, title: "Redis hiccup takes the whole platform down", see: "Redis is unreachable for a few minutes. The cluster stays dead for almost an hour. People cannot join. Someone has to delete every machine.", status: "review", why: "Health checks treat Redis as the heartbeat. Kubernetes kills every node at once, then drain waits forever.", url: "https://github.com/livekit/livekit/issues/4663" },
-      4726: { id: 4726, title: "Same room name kills the next call", see: "You end a session and start another with the same name. Join looks fine. About ten seconds later everyone is kicked.", status: "review", why: "Delete does not free the name until the old meeting has fully died. The new call lands in the old one.", url: "https://github.com/livekit/livekit/issues/4726" },
+      4726: { id: 4726, title: "Same room name kills the next call", label: "I deleted a room and quickly tried to create a room with the same name", see: "They delete a room by name. They create a new room with that same name. People join. Then everyone is kicked out.", status: "review", why: "Delete does not free the name until the old meeting has fully died. The new call lands in the old one.", url: "https://github.com/livekit/livekit/issues/4726", thread: [
+        { ask: "They delete the room, recreate that name, everyone is kicked", kind: "engine", say: "Delete one name on this program. Close hangs up that meeting on each person's TCP. Until that finishes the name is still taken. Create that same name and the new call lands in the old meeting. Then Leave arrives and they are kicked.", thread: [
+          { ask: "Delete, then create that name", kind: "lab", code: "closeLab", say: "Delete this name. Then create with this name. If Close is still running, Redis still has the name. CreateRoom fails until hang-up finishes." },
+          { ask: "TCP", kind: "geodesic", say: "That person's ordered stream. The outbound queue sits inside it. Front toward the phone. Leave appends at the back." },
+          { ask: "Stream.Send", kind: "pulse", say: "The write of whatever is already on that person's outbound queue onto that person's TCP. One batch. It sits until the write finishes. That sit is the wait." }
+        ] }
+      ] },
       4558: { id: 4558, title: "Delete does not actually free the room", see: "The room vanishes from the list. Recreate it too soon and you get the old room. It then auto-closes while people are talking.", status: "review", why: "Same race as #4726. The old hang-up timer is still running.", url: "https://github.com/livekit/livekit/issues/4558" },
       3766: { id: 3766, title: "Empty rooms you cannot delete", see: "The list shows empty rooms. Delete says they do not exist. One test left 8,682 of them.", status: "open", why: "The list reads Redis. Delete needs a live meeting on a machine. Those two copies disagree.", url: "https://github.com/livekit/livekit/issues/3766" },
       2703: { id: 2703, title: "After a week, no machine will take a room", see: "New rooms fail. The process looks healthy. A restart unblocks it.", status: "review", why: "Dead machines were only cleaned at startup, so the registry fills with ghosts.", url: "https://github.com/livekit/livekit/issues/2703" },
@@ -4239,9 +5245,10 @@
       1755: { id: 1755, title: "First join times out. Retry also fails.", see: "Works on VPN. Fails on the company network, especially with two NATs.", status: "open", why: "If the control socket blips during ICE, the server skips the next network path.", url: "https://github.com/livekit/livekit/issues/1755" },
       2344: { id: 2344, title: "TURN is on, clients get the wrong port", see: "You set a custom TURN port. Clients are still told to use 443.", status: "review", why: "The listen port and the advertised port are not the same setting.", url: "https://github.com/livekit/livekit/issues/2344" },
       4702: { id: 4702, title: "Logs say switch to TCP. It never did.", see: "Video shreds on bad NAT. Logs repeat 'switch to TCP'. The connection stays on UDP.", status: "again", why: "The log ran. The actual switch did not. Fixed in 1.13.6.", url: "https://github.com/livekit/livekit/issues/4702" },
-      4477: { id: 4477, title: "After airplane mode, the agent looks gone", label: "Airplane mode", see: "The websocket isn't starting when we expect it to start.", status: "open", why: "", url: "https://github.com/livekit/livekit/issues/4477", thread: [
-        { ask: "The websocket isn't starting when we expect it to start", say: "Yes. The phone already has internet. We expect the SDK to open the control websocket then. It waits, because its retry timer grew while you were offline.", thread: [
-          { ask: "The retry is late, so they stay disconnected longer than necessary", say: "The user starts a live session with an AI voice agent. The websocket is what creates and maintains the call. The user is in the call, then goes on airplane mode, which cuts the connection. The internet returns, but the retry is late, so they stay disconnected longer than necessary.", thread: [
+      4477: { id: 4477, title: "After airplane mode, the agent looks gone", label: "Airplane mode", see: "The websocket isn't starting when we expect it to start.", status: "open", why: "", url: "https://github.com/livekit/livekit/issues/4477", steps: [
+        { ask: "The websocket isn't starting when we expect it to start", say: "Yes. The phone already has internet. We expect the SDK to open the control websocket then. It waits, because its retry timer grew while you were offline." },
+        { ask: "The retry is late, so they stay disconnected longer than necessary", say: "The user starts a live session with an AI voice agent. The websocket is what creates and maintains the call. The user is in the call, then goes on airplane mode, which cuts the connection. The internet returns, but the retry is late, so they stay disconnected longer than necessary." }
+      ], thread: [
             { ask: "What is the retry?", kind: "engine", say: "A wait-timer in LiveKit's Flutter SDK on this phone. After the websocket dies, the SDK waits, then calls connect again. Retry is one clock inside this SDK. The connection is the live link (websocket + voice).", thread: [
               { ask: "Run the simulation", kind: "lab", say: "The OS either tears down the websocket and TCP connection or leaves it open with nothing moving in it." },
               { ask: "How connect starts", kind: "ignite", say: "The app calls room.connect. That is the SDK opening the websocket." },
@@ -4251,8 +5258,6 @@
               { ask: "Retry wait", kind: "clock", code: "retryWait", say: "The clock that calls connect again. It lives in this SDK. After the websocket is dead, it waits (0ms, then 300ms, up to 7s) and calls connect. #4477 is this clock still counting after internet is back." },
               { ask: "TCP", kind: "geodesic", say: "The ordered stream between this phone and the LiveKit server — the same gold plane at The connection. TCP carries the websocket. Airplane mode can cut it, or leave it half-open so the stream still looks there while the websocket is silent." },
               { ask: "The websocket", kind: "tube", say: "The control socket the SDK opened. Join, tracks, ping, and pong all travel on it. It rides TCP. If it goes quiet for 15s, the SDK treats the call as dead even if TCP has not closed." }
-            ] }
-          ] }
         ] },
         { ask: "Where does WebRTC fit?", say: "WebRTC is the voice path: What they send / What they hear, on UDP. The late retry is the websocket still in backoff. After control is up, WebRTC can play audio again (TrackSubscribed). The agent looks gone because ParticipantConnected is a websocket event for a new join. A resume does not send it." }
       ] },
@@ -4313,20 +5318,74 @@
     }
 
     const GATES = [
-      { issueId: 4477, label: "Airplane mode" }
+      { issueId: 4477, label: "Airplane mode", slug: "airplane-mode", aliases: ["airplane", "4477"] },
+      { issueId: 4726, label: "I deleted a room and quickly tried to create a room with the same name", slug: "delete-same-name", aliases: ["same-name", "4726"] }
     ];
-    const HOME_GATE = GATES[0];
+    let HOME_GATE = GATES[0];
     function issueStartPath(iss) {
       const root = "issue:" + iss.id;
-      if (isHomeGate(iss.id) && (iss.thread || []).length) return [root, root + ":0"];
+      if ((iss.thread || []).length) return [root, root + ":0"];
       return [root];
+    }
+    function shortcutPath(iss) {
+      if (!iss) return ["universe"];
+      if (hasNextBoxes(iss) || isGateIssue(iss.id)) return issueStartPath(iss);
+      return pathToIssue(iss.id) || ["universe"];
     }
     function gatePath(g = HOME_GATE) {
       const iss = lookupIssue(g.issueId);
       return iss ? issueStartPath(iss) : ["issue:" + g.issueId];
     }
+    function gateForIssue(id) {
+      return GATES.find((g) => String(g.issueId) === String(id)) || null;
+    }
+    function isGateIssue(id) {
+      return !!gateForIssue(id);
+    }
     function isHomeGate(id) {
       return String(id) === String(HOME_GATE.issueId);
+    }
+    function readEntryKey() {
+      const hash = decodeURIComponent((location.hash || "").replace(/^#\/?/, "")).trim();
+      if (hash) return hash;
+      const q = new URLSearchParams(location.search);
+      return (q.get("sim") || q.get("ticket") || q.get("t") || "").trim();
+    }
+    function resolveGate(key) {
+      if (!key) return null;
+      const k = String(key).toLowerCase();
+      return GATES.find((g) => {
+        if (String(g.issueId) === String(key)) return true;
+        if (g.slug === k) return true;
+        return (g.aliases || []).some((a) => String(a).toLowerCase() === k);
+      }) || null;
+    }
+    function setPageTitle(iss) {
+      if (!iss) {
+        document.title = "LiveKit";
+        return;
+      }
+      document.title = issueTag(iss) + " · " + (issueLabel(iss) || iss.title);
+    }
+    function setHomeGate(gate) {
+      if (!gate) return;
+      HOME_GATE = gate;
+      setPageTitle(lookupIssue(gate.issueId));
+    }
+    function writeEntryUrl(gate) {
+      const g = gate || HOME_GATE;
+      const next = "#" + g.slug;
+      if (location.hash !== next) history.replaceState(null, "", next);
+    }
+    function landOnGate(gate) {
+      const g = gate || GATES[0];
+      setHomeGate(g);
+      const iss = lookupIssue(g.issueId);
+      if (!iss) return;
+      state.selectedIssue = iss.id;
+      state.path = issueStartPath(iss);
+      state.watching = { id: iss.id, path: [...state.path] };
+      writeEntryUrl(g);
     }
     function isIssuePath(path) {
       return !!(path && path[0] && parseIssueId(path[0]));
@@ -4386,7 +5445,7 @@
     const connectionNode = {
       id: "connection",
       name: "The connection",
-      who: "How that person is attached. Websocket on TCP. WebRTC voice on UDP.",
+      who: "How that person is attached. Websocket on TCP. WebRTC voice on UDP. Stream.Send writes a batch onto that person's TCP.",
       deep: "The websocket, what they send, and what they hear and see. These sit on the person.",
       broken: "Internet is back. They are still off. Chat works and there is no sound.",
       issueIds: [],
@@ -4403,10 +5462,11 @@
         {
           id: "room",
           name: "The room",
-          who: "The meeting. The list of people. The list of tracks.",
-          deep: "This is the meeting itself. The join name and the internal id are separate fields. Close is slow. A new call with the same name can land in the old meeting.",
-          broken: "The next call with the same name dies. Empty rooms you cannot delete.",
-          issueIds: [4726, 4558, 3766]
+          who: "The meeting. Same name in the list, in RAM, and in the join token.",
+          deep: "Delete does not free that name until Close has finished on the old meeting.",
+          broken: "They delete. They join that name again. Join looks fine. Then everyone is kicked.",
+          issueIds: [4726, 4558, 3766],
+          linkIds: [4477]
         },
         {
           id: "person",
@@ -4487,6 +5547,36 @@
           }
         ]
       },
+      "rock:stream-send": {
+        id: "rock:stream-send",
+        name: "Stream.Send",
+        vantage: "Rock",
+        rock: "send",
+        who: "The write of a batch from this program onto that person's TCP. Whatever is already on that person's outbound queue leaves as one piece. Stream.Send sits until that write finishes. That sit is the wait in DeleteRoom Close.",
+        issueIds: [4726],
+        children: [
+          {
+            id: "rock:stream-send:batch",
+            name: "One batch, not one send per message",
+            vantage: "Box",
+            rock: "send",
+            rockBox: true,
+            who: "The writer takes whatever is on that person's outbound queue right now and writes it as one batch. Leave is already on the queue. Stream.Send is the write, not the append.",
+            issueIds: [4726],
+            children: []
+          },
+          {
+            id: "rock:stream-send:sit",
+            name: "It sits until the write finishes",
+            vantage: "Box",
+            rock: "send",
+            rockBox: true,
+            who: "Stream.Send is not async. Close waits on this write, then hangs up that person, then the next person. Lab: about 51ms per person, linear in how many people are in the room.",
+            issueIds: [4726],
+            children: []
+          }
+        ]
+      },
       "rock:udp": {
         id: "rock:udp",
         name: "UDP",
@@ -4519,10 +5609,33 @@
       }
     };
 
-    const KEY = "lk-call-path-v9";
+    const KEY = "lk-call-path-v11";
     const STATUS = { open: "Open", review: "Fix in review", fixed: "Fix landed", again: "Came back", maybe: "Uncertain" };
     const STATUS_CLASS = { open: "s-open", review: "s-review", fixed: "s-fixed", again: "s-again", maybe: "s-again" };
 
+    function issuesOnNode(node) {
+      const ids = [...(node.issueIds || []), ...(node.linkIds || [])];
+      const seen = new Set();
+      const out = [];
+      for (const id of ids) {
+        const k = String(id);
+        if (seen.has(k)) continue;
+        seen.add(k);
+        const iss = lookupIssue(id);
+        if (iss) out.push(iss);
+      }
+      return out;
+    }
+    function ticketChipHtml(iss, onId) {
+      const on = onId && String(onId) === String(iss.id) ? "on" : "";
+      const tag = issueTag(iss);
+      const lab = isGateIssue(iss.id) ? issueLabel(iss) : (iss.label || "");
+      const title = lab ? tag + " " + lab : tag;
+      const gh = iss.url
+        ? `<a class="tix-ext" href="${escapeHtml(iss.url)}" target="_blank" rel="noopener noreferrer">ticket</a>`
+        : "";
+      return `<span class="tix-pair"><button type="button" class="${on}" data-issue="${iss.id}">${escapeHtml(title)}</button>${gh}</span>`;
+    }
     function findNode(id, node = TREE) {
       if (node.id === id) return node;
       for (const c of node.children || []) {
@@ -4590,7 +5703,7 @@
       if (!parsed.boxes.length) {
         return {
           id: "issue:" + iss.id,
-          name: issueTag(iss) + " " + issueLabel(iss),
+          name: issueTag(iss),
           who: iss.see,
           issueIds: [],
           children: (iss.thread || []).map((b, i) => boxNode(iss, [i], b))
@@ -4655,10 +5768,10 @@
       return Object.values(ISSUES);
     }
     function pathToIssue(id, node = TREE, path = [TREE.id]) {
+      const iss = lookupIssue(id);
+      if (iss && hasNextBoxes(iss)) return issueStartPath(iss);
       const want = String(id);
       if ((node.issueIds || []).some((x) => String(x) === want)) {
-        const iss = lookupIssue(id);
-        if (hasNextBoxes(iss)) return [...path, "issue:" + iss.id];
         return path;
       }
       for (const c of node.children || []) {
@@ -4688,7 +5801,7 @@
     }
     function isMappedTicket(iss) {
       if (!iss || !hasNextBoxes(iss)) return false;
-      if (isHomeGate(iss.id)) return true;
+      if (isGateIssue(iss.id)) return true;
       const cur = state.watching ? state.watching.id : state.selectedIssue;
       return String(cur) === String(iss.id);
     }
@@ -4722,7 +5835,9 @@
     if (typeof state.hideExplored !== "boolean") state.hideExplored = false;
     if (typeof state.strata !== "boolean") state.strata = false;
     if (typeof state.hidePad !== "boolean") state.hidePad = window.matchMedia("(max-width: 720px)").matches;
-    if (isHomeGate(state.selectedIssue) || state.selectedIssue == null) state.selectedIssue = HOME_GATE.issueId;
+    landOnGate(resolveGate(readEntryKey()) || GATES[0]);
+    if (state.walkStep !== 1 && state.walkStep !== 2) state.walkStep = null;
+    state.showAirSteps = false;
     if (state.lookedV !== 2) {
       state.looked = [];
       state.lookedV = 2;
@@ -4784,6 +5899,8 @@
     function recoverPath() {
       while (state.path.length > 1 && !nodeFromId(state.path[state.path.length - 1])) state.path.pop();
       if (!state.path.length || !here()) state.path = gatePath();
+      const homeAt = parseIssueId(state.path[0]);
+      if (homeAt && isHomeGate(homeAt.id) && state.path.length === 1) state.path = gatePath();
       const root = String(state.path[0] || "");
       if (root !== "universe" && !root.startsWith("issue:") && !root.startsWith("rock:")) state.path = gatePath();
       const inert = { clock: true, pulse: true, geodesic: true, tube: true, ignite: true };
@@ -4846,22 +5963,23 @@
     }
     function rememberPlace(path) {
       if (!path || path.length < 2) return;
+      if (isIssuePath(path)) return;
       if (!Array.isArray(state.explored)) state.explored = [];
       for (let i = 2; i <= path.length; i++) {
         const p = path.slice(0, i);
+        if (isIssuePath(p)) continue;
         if (!state.explored.some((x) => samePath(x, p))) state.explored.push(p);
       }
     }
     function exploredShortcuts() {
       const byKey = new Map();
-      const add = (path, ticket) => {
+      const add = (path) => {
         if (!path || path.length < 2) return;
+        if (path.some((id) => parseIssueId(id))) return;
         const k = path.join("/");
         if (!byKey.has(k)) byKey.set(k, { path: [...path], tickets: [] });
-        if (ticket && !byKey.get(k).tickets.some((t) => t.id === ticket.id)) byKey.get(k).tickets.push(ticket);
       };
-      for (const iss of goneIntoTickets()) add(pathToIssue(iss.id), iss);
-      for (const p of state.explored || []) add(p, null);
+      for (const p of state.explored || []) add(p);
       return [...byKey.values()].sort((a, b) => a.path.length - b.path.length || a.path.join("/").localeCompare(b.path.join("/")));
     }
     function exploredPhoneHops() {
@@ -5017,7 +6135,7 @@
       flyThen(applyUniverse, "out");
     }
     function atGateHome() {
-      return samePath(state.path, ["issue:" + HOME_GATE.issueId]);
+      return samePath(state.path, gatePath());
     }
 
     function escapeHtml(s) {
@@ -5217,6 +6335,7 @@
     }
     function engineHtml(engineNode, onId) {
       const kids = engineNode.children || [];
+      if (kids.some((c) => c.code === "closeLab")) return closeEngineHtml(engineNode, onId);
       const interval = kids.find((c) => c.code === "pingInterval");
       const timeout = kids.find((c) => c.code === "pingTimeout");
       const retry = kids.find((c) => c.code === "retryWait");
@@ -5501,9 +6620,696 @@
         </div>
       </div>`;
     }
+    function closeEngineHtml(engineNode, onId) {
+      const kids = engineNode.children || [];
+      const road = kids.find((c) => c.kind === "geodesic");
+      const lab = kids.find((c) => c.kind === "lab");
+      const on = (n) => n && String(n.id) === String(onId) ? " on" : "";
+      const holes = [
+        "M20 50 C 34 50, 44 49, 50 48 C 62 46, 74 38, 84 32",
+        "M14 40 C 30 44, 42 47, 50 48 C 62 46, 74 38, 84 32",
+        "M22 62 C 34 56, 44 51, 50 48 C 62 46, 74 38, 84 32"
+      ];
+      const holeSvg = holes.map((d, i) => `<g class="close-hole" data-hole="${i}">
+          <path class="tcp-road hole-fill" d="${d}"/>
+          <path class="tcp-road" d="${d}"/>
+          <path class="tcp-grit" d="${d}"/>
+          <path class="tube" d="${d}"/>
+        </g>`).join("");
+      return `<div class="engine-stage close-sim idle" id="closeStage" data-n="1" data-store="">
+        <svg class="engine-tether" viewBox="0 0 100 100" preserveAspectRatio="none">${holeSvg}</svg>
+        <span class="photon disturb" id="closeDisturb" style="--x0:84%;--y0:32%;--x1:22%;--y1:38%;"></span>
+        <div class="close-wave" id="closeWave" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="photon send-sig" id="closeSendPhoton" style="--x0:84%;--y0:32%;--x1:50%;--y1:48%;"></span>
+        <span class="photon burst" id="closeBurst0" style="--x0:50%;--y0:48%;--x1:20%;--y1:50%;"></span>
+        <span class="photon burst delay" id="closeBurst1" style="--x0:52%;--y0:46%;--x1:20%;--y1:50%;"></span>
+        <span class="photon burst" id="closeBurst2" style="--x0:48%;--y0:50%;--x1:20%;--y1:50%;"></span>
+        <span class="flow-word send">Stream.Send</span>
+        <span class="flow-word batch">batch send</span>
+        <div class="close-banner">
+          <p class="close-title" id="closeTitle"></p>
+          <p class="close-why" id="closeWhy"></p>
+        </div>
+        <div class="engine-clock interval" id="closeTickClock">
+          ${clockFace("interval")}
+          <span class="pname" id="closeClockFace">0.0s</span>
+          <small id="closeClockLab">Close</small>
+        </div>
+        <div class="close-hud">
+          <p class="close-fail" id="closeFail">Create failed. The old room name is still there.</p>
+        </div>
+        <div class="close-lattice" id="closeLattice" aria-hidden="true"></div>
+        <div class="close-catalog">
+          <span class="php">Redis rooms</span>
+          <div class="close-program" id="closeProgram"></div>
+        </div>
+        <div class="close-orbit" id="closeOrbit" aria-hidden="true"></div>
+        <div class="close-stars-lab" id="closeSys" aria-hidden="true"></div>
+        <button class="moon close-moon on" type="button" data-i="0" style="left:20%;top:50%">
+          <span class="globe"></span>
+          <span class="pname">phone 1</span>
+        </button>
+        <button class="moon close-moon" type="button" data-i="1" style="left:14%;top:40%">
+          <span class="globe"></span>
+          <span class="pname">phone 2</span>
+        </button>
+        <button class="moon close-moon" type="button" data-i="2" style="left:22%;top:62%">
+          <span class="globe"></span>
+          <span class="pname">phone 3</span>
+        </button>
+        <div class="close-well" id="closeWell" style="left:50%;top:48%">
+          <span class="php">TCP</span>
+          <span class="pname">FIFO queue</span>
+          <div class="fifo-slots" id="closeSlots"></div>
+        </div>
+        <div class="fifo-key" id="closeKey">
+          <span class="k-other"><i></i>other</span>
+          <span class="k-leave"><i></i>Leave</span>
+          <span class="k-batch"><i></i>batch send</span>
+        </div>
+        ${road ? `<div class="path-lab road${on(road)}">
+          <span class="mini-ring"></span>
+          <span class="pname">TCP</span>
+          ${skyTip("TCP is the ordered stream from this phone to livekit-server. The FIFO queue is the list of messages waiting to go out on that stream. Stream.Send writes that list onto TCP as one batch.", [
+            { label: "TCP", path: ["universe", "connection", "rock:tcp"] },
+            { label: "Stream.Send", path: ["universe", "connection", "rock:stream-send"] }
+          ])}
+        </div>` : ""}
+        <div class="lab-body server">
+          <span class="globe"></span>
+          <span class="pname">LiveKit</span>
+        </div>
+        <button class="engine-lab${on(lab)}" type="button" id="labRunBtn">
+          <span class="pname">Run the simulation</span>
+        </button>
+        <div class="engine-laws close-laws">
+          <div class="close-n close-store">
+            <button type="button" data-close-store="redis">Redis</button>
+            <button type="button" data-close-store="go">Go</button>
+          </div>
+          <div class="close-n">
+            <button type="button" data-close-n="1">1</button>
+            <button type="button" data-close-n="2">2</button>
+            <button type="button" data-close-n="3">3</button>
+          </div>
+          <div class="close-acts">
+            <button class="lab-play" type="button" id="closeDel">DeleteRoom</button>
+          </div>
+        </div>
+        <p class="close-try">↑ try create to see failure</p>
+        <button class="lab-play ghost" type="button" id="closeMk">create same room</button>
+      </div>`;
+    }
+    let closeRaf = 0;
+    const closeLiveRooms = () => [
+      { name: "device-abc", state: "live" },
+      { name: "device-xyz", state: "live" },
+      { name: "lobby", state: "live" }
+    ];
+    const CLOSE_WELL = { left: 50, top: 48 };
+    const CLOSE_MOONS = [
+      { left: 20, top: 50 },
+      { left: 14, top: 40 },
+      { left: 22, top: 62 }
+    ];
+    const CLOSE_FIELD = [
+      { left: 22, top: 42 },
+      { left: 58, top: 28 },
+      { left: 72, top: 58 }
+    ];
+    const CLOSE_ORBIT = [
+      { left: 50, top: 34 },
+      { left: 34, top: 62 },
+      { left: 66, top: 62 }
+    ];
+    const closeSim = {
+      name: "device-abc",
+      rooms: closeLiveRooms(),
+      people: 1,
+      person: 0,
+      phase: "idle",
+      beat: "idle",
+      store: "",
+      hold: 0,
+      beatDur: 1,
+      slots: 0,
+      leaveOn: false,
+      elapsed: 0,
+      t0: 0,
+      failed: false,
+      sendGen: 0,
+      pickedN: false,
+      pickedStore: false,
+      tryOn: false,
+      tryStep: "",
+      tryHold: 0,
+      mkGone: false
+    };
+    function closeReady() {
+      return closeSim.pickedStore && closeSim.pickedN;
+    }
+    function closeGate() {
+      if (closeSim.phase === "run" || closeSim.phase === "done") return;
+      closeSim.phase = closeReady() ? "awaitDelete" : "people";
+    }
+    function closeFindRoom(name) {
+      return closeSim.rooms.find((r) => r.name === name) || null;
+    }
+    function closeNameTaken() {
+      const r = closeFindRoom(closeSim.name);
+      if (!r) return false;
+      return r.state === "live" || r.state === "closing";
+    }
+    function closeStop() {
+      if (closeRaf) cancelAnimationFrame(closeRaf);
+      closeRaf = 0;
+    }
+    function closeBeat(name, seconds) {
+      closeSim.beat = name;
+      closeSim.beatDur = seconds;
+      closeSim.hold = seconds;
+      if (name === "send") closeSim.sendGen += 1;
+    }
+    function closePeopleHtml(room) {
+      if (!room || room.name !== closeSim.name) return "";
+      if (room.state === "gone") return "";
+      const n = closeSim.people;
+      let s = "";
+      for (let i = 0; i < n; i++) {
+        const st = room.state === "closing"
+          ? (i < closeSim.person ? "done" : (i === closeSim.person && closeSim.phase === "run" ? "on" : ""))
+          : "";
+        s += `<span class="close-dot ${st}"></span>`;
+      }
+      return `<span class="dots">${s}</span>`;
+    }
+    function closeSlotsHtml() {
+      const filled = closeSim.slots;
+      let s = "";
+      for (let i = 0; i < 4; i++) {
+        const on = i < filled;
+        const leave = on && closeSim.leaveOn && i === 3;
+        s += `<div class="fifo-slot ${on ? "on" : ""} ${leave ? "leave" : ""}"></div>`;
+      }
+      return s;
+    }
+    function closeRoomsHtml() {
+      return closeSim.rooms.map((r, i) => {
+        const pos = CLOSE_FIELD[i] || CLOSE_FIELD[0];
+        const hit = r.name === closeSim.name && (r.state === "closing" || closeSim.beat === "disturb" || closeSim.tryOn);
+        const cls = r.state + (r.name === closeSim.name ? " pick" : "") + (hit ? " hit" : "");
+        return `<button class="close-room ${cls}" type="button" data-room="${escapeHtml(r.name)}" style="left:${pos.left}%;top:${pos.top}%">
+          <span class="shell outer"></span>
+          <span class="pname">${escapeHtml(r.name)}</span>
+        </button>`;
+      }).join("");
+    }
+    function closeOrbitHtml() {
+      return closeSim.rooms.map((r, i) => {
+        const pos = CLOSE_ORBIT[i] || CLOSE_ORBIT[0];
+        const hit = r.name === closeSim.name;
+        return `<div class="moon${hit ? " hit" : ""}" data-room="${escapeHtml(r.name)}" style="left:${pos.left}%;top:${pos.top}%">
+          <span class="globe"></span>
+          <span class="pname">${escapeHtml(r.name)}</span>
+        </div>`;
+      }).join("");
+    }
+    function closeWords() {
+      const { phase, beat, people, person, name, store } = closeSim;
+      const n = person + 1;
+      const redis = store !== "go";
+      const where = redis ? "Redis" : "this server's room list";
+      if (closeSim.tryOn) {
+        if (closeSim.tryStep === "go") {
+          return {
+            title: redis ? "Searching Redis for room " + name + "…" : "Searching this server's room list for " + name + "…",
+            why: "Create with the same name looks it up the same way DeleteRoom did. Close has not removed it yet.",
+            lab: "looking up"
+          };
+        }
+        if (closeSim.tryStep === "see") {
+          return {
+            title: "Found " + name + " — still there",
+            why: "DeleteRoom already returned OK, but Close has not deleted this name yet. The old meeting still owns it.",
+            lab: "still there"
+          };
+        }
+        return {
+          title: "Create failed — " + name + " is taken",
+          why: where + " still has the old room, so this is not a new meeting.",
+          lab: "name taken"
+        };
+      }
+      if (phase === "idle") {
+        return { title: "", why: "", lab: "Close" };
+      }
+      if (phase === "people") {
+        return {
+          title: "Pick Redis or Go, then how many people",
+          why: "Redis is the shared list of room names. Go keeps that list only in this server. DeleteRoom stays off until both are set.",
+          lab: "Close"
+        };
+      }
+      if (phase === "awaitDelete") {
+        return {
+          title: "Ready to delete " + name,
+          why: people + (people === 1 ? " person is" : " people are") + " in the meeting. The name stays in " + where + " until Close finishes.",
+          lab: "Close"
+        };
+      }
+      if (beat === "disturb") {
+        return {
+          title: redis ? "Searching Redis for room " + name + "…" : "Searching this server's room list for " + name + "…",
+          why: "DeleteRoom looks up the name. It does not delete anything yet.",
+          lab: "looking up"
+        };
+      }
+      if (beat === "zoom") {
+        return {
+          title: "Found the live meeting on this server",
+          why: name + " is still in memory here. Close starts on that meeting.",
+          lab: "in memory"
+        };
+      }
+      if (beat === "enqueue") {
+        return {
+          title: "Queuing Leave for person " + n + "…",
+          why: "Leave is added to that person's outgoing messages. It has not been sent yet.",
+          lab: "queue"
+        };
+      }
+      if (beat === "send") {
+        return {
+          title: "Sending Leave to person " + n + "…",
+          why: "The server writes those messages onto that person's connection and waits until the write finishes.",
+          lab: (closeSim.elapsed).toFixed(1) + "s"
+        };
+      }
+      if (beat === "hang") {
+        return {
+          title: "Person " + n + " disconnected",
+          why: "Their connection is closed. " + name + " is still in " + where + ".",
+          lab: "disconnected"
+        };
+      }
+      if (beat === "forgetRam") {
+        return {
+          title: "Removing " + name + " from this server…",
+          why: "Everyone is gone. The live meeting is dropped from memory. " + where + " still has the name.",
+          lab: "memory"
+        };
+      }
+      if (beat === "forgetStore") {
+        return {
+          title: redis ? "Deleting " + name + " from Redis…" : "Deleting " + name + " from this server's room list…",
+          why: "Once this name is gone, creating it again starts a new meeting.",
+          lab: "deleting"
+        };
+      }
+      if (phase === "done" && (!beat || beat === "idle")) {
+        return {
+          title: name + " is gone",
+          why: "Creating the same name now starts a new meeting.",
+          lab: "done"
+        };
+      }
+      return { title: "", why: "", lab: "Close" };
+    }
+    function closeAim(person) {
+      const well = CLOSE_WELL;
+      const m = CLOSE_MOONS[Math.min(Math.max(person, 0), CLOSE_MOONS.length - 1)];
+      const wellEl = document.getElementById("closeWell");
+      if (wellEl) {
+        wellEl.style.left = well.left + "%";
+        wellEl.style.top = well.top + "%";
+      }
+      const sig = document.getElementById("closeSendPhoton");
+      if (sig) {
+        sig.style.setProperty("--x0", "84%");
+        sig.style.setProperty("--y0", "32%");
+        sig.style.setProperty("--x1", well.left + "%");
+        sig.style.setProperty("--y1", well.top + "%");
+      }
+      for (let i = 0; i < 3; i++) {
+        const b = document.getElementById("closeBurst" + i);
+        if (!b) continue;
+        b.style.setProperty("--x0", (well.left + (i - 1) * 2) + "%");
+        b.style.setProperty("--y0", (well.top + (i - 1) * 2) + "%");
+        b.style.setProperty("--x1", m.left + "%");
+        b.style.setProperty("--y1", m.top + "%");
+      }
+      const dist = document.getElementById("closeDisturb");
+      if (!dist) return;
+      const ri = Math.max(0, closeSim.rooms.findIndex((r) => r.name === closeSim.name));
+      if (closeSim.beat === "zoom") {
+        const o = CLOSE_ORBIT[ri] || CLOSE_ORBIT[0];
+        dist.style.setProperty("--x0", "12%");
+        dist.style.setProperty("--y0", "18%");
+        dist.style.setProperty("--x1", o.left + "%");
+        dist.style.setProperty("--y1", o.top + "%");
+      } else if (closeSim.store === "go") {
+        dist.style.setProperty("--x0", "84%");
+        dist.style.setProperty("--y0", "32%");
+        dist.style.setProperty("--x1", "50%");
+        dist.style.setProperty("--y1", "50%");
+      } else {
+        const f = CLOSE_FIELD[ri] || CLOSE_FIELD[0];
+        dist.style.setProperty("--x0", "84%");
+        dist.style.setProperty("--y0", "32%");
+        dist.style.setProperty("--x1", f.left + "%");
+        dist.style.setProperty("--y1", f.top + "%");
+      }
+    }
+    function closeFitStars() {
+      const stage = document.getElementById("closeStage");
+      const sys = document.getElementById("closeSys");
+      if (!stage || !sys) return;
+      if (!closeSim.pickedN) return;
+      const sr = stage.getBoundingClientRect();
+      if (sr.width < 8 || sr.height < 8) return;
+      const n = closeSim.people;
+      let minX = Infinity;
+      let minY = Infinity;
+      let maxX = -Infinity;
+      let maxY = -Infinity;
+      stage.querySelectorAll(".moon.close-moon").forEach((el) => {
+        const i = Number(el.getAttribute("data-i"));
+        if (i >= n) return;
+        el.querySelectorAll(".globe, .pname").forEach((part) => {
+          const r = part.getBoundingClientRect();
+          if (r.width < 1 && r.height < 1) return;
+          minX = Math.min(minX, r.left);
+          minY = Math.min(minY, r.top);
+          maxX = Math.max(maxX, r.right);
+          maxY = Math.max(maxY, r.bottom);
+        });
+      });
+      if (!isFinite(minX)) return;
+      const pad = 14;
+      const cx = (minX + maxX) / 2 - sr.left;
+      const cy = (minY + maxY) / 2 - sr.top;
+      const halfW = (maxX - minX) / 2 + pad;
+      const halfH = (maxY - minY) / 2 + pad;
+      const d = 2 * Math.sqrt(halfW * halfW + halfH * halfH);
+      sys.style.left = cx + "px";
+      sys.style.top = cy + "px";
+      sys.style.width = d + "px";
+      sys.style.height = d + "px";
+    }
+    function closePaint() {
+      const stage = document.getElementById("closeStage");
+      if (!stage) return;
+      if (closeSim.people > 3) closeSim.people = 3;
+      if (closeSim.people < 1) closeSim.people = 1;
+      const { phase, beat, people, person, elapsed, failed, store } = closeSim;
+      const beatClass = ((phase === "run" || phase === "done") && beat && beat !== "idle") ? beat : "";
+      const tcpOn = beat === "enqueue" || beat === "send";
+      const sendClass = beat === "send" ? " sending" : "";
+      const storeClass = store === "redis" ? " store-redis" : store === "go" ? " store-go" : "";
+      const tryClass = closeSim.tryOn ? " try try-" + closeSim.tryStep : "";
+      const mkClass = closeSim.mkGone ? " mk-gone" : "";
+      const nextClass = "engine-stage close-sim " + phase + (beatClass ? " " + beatClass : "") + sendClass + storeClass + (tcpOn ? " tcp" : "") + tryClass + mkClass + (closeSim.pickedN ? " picked" : "") + (closeReady() ? " ready" : "");
+      if (stage.className !== nextClass) stage.className = nextClass;
+      if (stage.getAttribute("data-n") !== String(people)) stage.setAttribute("data-n", String(people));
+      if (stage.getAttribute("data-store") !== store) stage.setAttribute("data-store", store);
+      closeAim(person);
+      stage.querySelectorAll(".close-hole").forEach((g) => {
+        const i = Number(g.getAttribute("data-hole"));
+        g.classList.toggle("on", i === person && tcpOn);
+      });
+      stage.querySelectorAll(".moon.close-moon").forEach((el) => {
+        const i = Number(el.getAttribute("data-i"));
+        el.classList.toggle("on", i === person);
+        el.classList.toggle("done", tcpOn && i < person);
+      });
+      const w = closeWords();
+      const title = document.getElementById("closeTitle");
+      const why = document.getElementById("closeWhy");
+      if (title) title.textContent = w.title || "";
+      if (why) why.textContent = w.why || "";
+      const face = document.getElementById("closeClockFace");
+      const lab = document.getElementById("closeClockLab");
+      const tickClock = document.getElementById("closeTickClock");
+      if (face) face.textContent = elapsed.toFixed(1) + "s";
+      if (lab) lab.textContent = w.lab || "Close";
+      if (tickClock) tickClock.classList.toggle("live", phase === "run");
+      if (tickClock) tickClock.classList.toggle("on", phase === "run");
+      const fail = document.getElementById("closeFail");
+      if (fail) {
+        fail.textContent = store === "go"
+          ? "Create failed. This server's room list still has the old name, so this is not a new meeting."
+          : "Create failed. Redis still has the old room name, so this is not a new meeting.";
+      }
+      const catPhp = stage.querySelector(".close-catalog > .php");
+      if (catPhp) catPhp.textContent = store === "go" ? "Go map" : "Redis rooms";
+      const prog = document.getElementById("closeProgram");
+      if (prog) prog.innerHTML = closeRoomsHtml();
+      const orbit = document.getElementById("closeOrbit");
+      if (orbit) {
+        if (beat === "zoom") {
+          if (orbit.dataset.built !== "1") {
+            orbit.innerHTML = closeOrbitHtml();
+            orbit.dataset.built = "1";
+          }
+        } else if (orbit.dataset.built) {
+          orbit.innerHTML = "";
+          delete orbit.dataset.built;
+        }
+      }
+      const slotsEl = document.getElementById("closeSlots");
+      if (slotsEl) slotsEl.innerHTML = closeSlotsHtml();
+      document.querySelectorAll("[data-close-n]").forEach((b) => {
+        b.classList.toggle("on", Number(b.dataset.closeN) === people);
+        b.disabled = phase === "run";
+      });
+      document.querySelectorAll("[data-close-store]").forEach((b) => {
+        b.classList.toggle("on", b.dataset.closeStore === store);
+        b.disabled = phase === "run";
+      });
+      const del = document.getElementById("closeDel");
+      if (del) del.disabled = phase === "run" || !closeReady();
+      const runBtn = document.getElementById("labRunBtn");
+      const runLab = runBtn && runBtn.querySelector(".pname");
+      if (runBtn) runBtn.disabled = false;
+      if (runLab) {
+        if (phase === "run") runLab.textContent = "Stop";
+        else if (phase === "done") runLab.textContent = "Clear";
+        else runLab.textContent = "Run the simulation";
+      }
+      if (closeSim.pickedN && !closeSim.tryOn && beat !== "disturb" && beat !== "zoom" && beat !== "hang" && beat !== "forgetRam" && beat !== "forgetStore") closeFitStars();
+    }
+    function closeNextBeat() {
+      if (closeSim.beat === "disturb") {
+        closeBeat("zoom", 2.4);
+        return;
+      }
+      if (closeSim.beat === "zoom") {
+        closeSim.slots = 0;
+        closeSim.leaveOn = false;
+        closeBeat("enqueue", 1.8);
+        return;
+      }
+      if (closeSim.beat === "enqueue") {
+        closeBeat("send", 2.0);
+        return;
+      }
+      if (closeSim.beat === "send") {
+        closeSim.person += 1;
+        if (closeSim.person < closeSim.people) {
+          closeSim.slots = 0;
+          closeSim.leaveOn = false;
+          closeBeat("enqueue", 1.8);
+        } else {
+          closeBeat("hang", 0.9);
+        }
+        return;
+      }
+      if (closeSim.beat === "hang") {
+        closeBeat("forgetRam", 2.2);
+        return;
+      }
+      if (closeSim.beat === "forgetRam") {
+        closeBeat("forgetStore", 1.4);
+        return;
+      }
+      if (closeSim.beat === "forgetStore") {
+        const r = closeSim.rooms.find((x) => x.state === "closing");
+        if (r) r.state = "gone";
+        closeSim.phase = "done";
+        closeSim.beat = "idle";
+        closeSim.hold = 0;
+        closeSim.failed = false;
+      }
+    }
+    function closeTick(now) {
+      if (!document.getElementById("closeStage")) {
+        closeStop();
+        return;
+      }
+      const dt = Math.min(0.05, (now - (closeSim.t0 || now)) / 1000);
+      closeSim.t0 = now;
+      if (closeSim.phase === "run") {
+        if (closeSim.tryOn) {
+          closeSim.tryHold -= dt * 0.45;
+          if (closeSim.tryHold <= 0) {
+            if (closeSim.tryStep === "go") {
+              closeSim.tryStep = "see";
+              closeSim.tryHold = 2.4;
+            } else if (closeSim.tryStep === "see") {
+              closeSim.tryStep = "err";
+              closeSim.tryHold = 2.2;
+            } else {
+              closeSim.mkGone = true;
+              closeSim.tryOn = false;
+              closeSim.tryStep = "";
+              closeSim.tryHold = 0;
+            }
+          }
+        } else {
+          closeSim.elapsed += dt;
+          closeSim.hold -= dt;
+          if (closeSim.beat === "enqueue") {
+            const p = 1 - Math.max(0, closeSim.hold) / Math.max(closeSim.beatDur, 0.001);
+            closeSim.slots = Math.min(4, 1 + Math.floor(p * 3.2));
+            closeSim.leaveOn = closeSim.slots >= 4;
+          }
+          if (closeSim.hold <= 0) closeNextBeat();
+        }
+      }
+      closePaint();
+      if (closeSim.phase === "run") closeRaf = requestAnimationFrame(closeTick);
+      else closeRaf = 0;
+    }
+    function closeResetRooms() {
+      closeSim.rooms = closeLiveRooms();
+      if (!closeFindRoom(closeSim.name)) closeSim.rooms.unshift({ name: closeSim.name, state: "live" });
+      else closeFindRoom(closeSim.name).state = "live";
+      closeSim.person = 0;
+      closeSim.slots = 0;
+      closeSim.leaveOn = false;
+      closeSim.elapsed = 0;
+      closeSim.failed = false;
+      closeSim.beat = "idle";
+      closeSim.hold = 0;
+      closeSim.tryOn = false;
+      closeSim.tryStep = "";
+      closeSim.tryHold = 0;
+      closeSim.mkGone = false;
+    }
+    function closeClear() {
+      closeStop();
+      closeResetRooms();
+      closeSim.pickedN = false;
+      closeSim.pickedStore = false;
+      closeSim.store = "";
+      closeSim.people = 1;
+      closeSim.phase = "idle";
+      closePaint();
+    }
+    function closeHalt() {
+      closeStop();
+      closeSim.phase = "done";
+      closePaint();
+    }
+    function closeShow() {
+      closeGate();
+      closePaint();
+    }
+    function closeCtrl() {
+      if (closeSim.phase === "run") {
+        closeHalt();
+        return;
+      }
+      if (closeSim.phase === "done") {
+        closeClear();
+        return;
+      }
+      if (closeSim.phase !== "idle") return;
+      closeShow();
+    }
+    function closeRun() {
+      if (closeSim.phase === "run") return;
+      closeStop();
+      closeResetRooms();
+      closeSim.phase = "people";
+      closePaint();
+    }
+    function closeDelete() {
+      if (closeSim.phase === "run") return;
+      if (!closeReady()) return;
+      const name = closeSim.name;
+      const room = closeFindRoom(name);
+      if (!room || room.state === "gone") return;
+      closeStop();
+      closeSim.rooms.forEach((r) => {
+        if (r.name === name) r.state = "closing";
+        else if (r.state === "fresh") r.state = "live";
+      });
+      closeSim.person = 0;
+      closeSim.slots = 0;
+      closeSim.leaveOn = false;
+      closeSim.elapsed = 0;
+      closeSim.failed = false;
+      closeSim.phase = "run";
+      closeBeat("disturb", 2.4);
+      closeSim.t0 = performance.now();
+      closeRaf = requestAnimationFrame(closeTick);
+      closePaint();
+    }
+    function closeCreate() {
+      if (closeSim.phase === "run") {
+        if (closeSim.tryOn || closeSim.mkGone) return;
+        if (!closeNameTaken()) return;
+        closeSim.tryOn = true;
+        closeSim.tryStep = "go";
+        closeSim.tryHold = 2.4;
+        closePaint();
+        return;
+      }
+      const name = closeSim.name;
+      const room = closeFindRoom(name);
+      if (closeNameTaken()) {
+        closeSim.failed = true;
+        closePaint();
+        return;
+      }
+      closeSim.failed = false;
+      if (room) room.state = "fresh";
+      else closeSim.rooms.push({ name: name, state: "fresh" });
+      closePaint();
+    }
+    function bindCloseLab() {
+      closePaint();
+      const runBtn = document.getElementById("labRunBtn");
+      if (runBtn) runBtn.onclick = closeCtrl;
+      document.querySelectorAll("[data-close-n]").forEach((b) => {
+        b.onclick = () => {
+          if (closeSim.phase === "run") return;
+          closeSim.people = Math.min(3, Math.max(1, Number(b.dataset.closeN) || 1));
+          closeSim.person = 0;
+          closeSim.pickedN = true;
+          closeGate();
+          closePaint();
+        };
+      });
+      document.querySelectorAll("[data-close-store]").forEach((b) => {
+        b.onclick = () => {
+          if (closeSim.phase === "run") return;
+          closeSim.store = b.dataset.closeStore === "go" ? "go" : "redis";
+          closeSim.pickedStore = true;
+          closeGate();
+          closePaint();
+        };
+      });
+      const del = document.getElementById("closeDel");
+      if (del) del.onclick = closeDelete;
+      const mk = document.getElementById("closeMk");
+      if (mk) mk.onclick = closeCreate;
+    }
     function labStop() {
       if (labRaf) cancelAnimationFrame(labRaf);
       labRaf = 0;
+      closeStop();
     }
     function labResetUp() {
       labSim.phase = "up";
@@ -5719,6 +7525,10 @@
       labRaf = requestAnimationFrame(labTick);
     }
     function bindLab() {
+      if (document.getElementById("closeStage")) {
+        bindCloseLab();
+        return;
+      }
       stripLabTips();
       labPaint();
       document.querySelectorAll("[data-lab-law]").forEach((b) => {
@@ -5889,7 +7699,7 @@
     }
     function spinVars(id) {
       const h = idHash(id);
-      return `--spin:${8 + (h % 6)}s;--spin-delay:-${h % 10}s`;
+      return `--spin:${8 + (h % 6)}s;--spin-delay:-${h % 10}s;--ring-tilt:${58 + (h % 16)}deg;--ring-yaw:${-12 + (h % 25)}deg`;
     }
     function starFireSvg(id) {
       const n = idHash(id);
@@ -5997,23 +7807,66 @@
     }
     function gritOrbit(rx, ry, cls) {
       const a = cls ? ` class="${cls}"` : "";
-      const b = cls ? ` class="grit ${cls}"` : ` class="grit"`;
-      return `<ellipse${a} cx="50" cy="50" rx="${rx}" ry="${ry}"/><ellipse${b} cx="50" cy="50" rx="${rx}" ry="${ry}"/>`;
+      const extra = cls ? ` ${cls}` : "";
+      const rxD = (rx * 0.965).toFixed(2);
+      const ryD = (ry * 0.965).toFixed(2);
+      return `<ellipse${a} cx="50" cy="50" rx="${rx}" ry="${ry}"/><ellipse class="grit${extra}" cx="50" cy="50" rx="${rx}" ry="${ry}"/><ellipse class="dust${extra}" cx="50" cy="50" rx="${rxD}" ry="${ryD}"/>`;
     }
     function beltHtml(kind) {
       if (kind === "star") {
-        return `<svg class="belt" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="50" cy="25" rx="28" ry="11.5"/><ellipse class="inner" cx="50" cy="25" rx="19" ry="7.2"/></svg>`;
+        return `<svg class="belt" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="50" cy="25" rx="28" ry="11.5"/><ellipse class="grit" cx="50" cy="25" rx="27.1" ry="11.1"/><ellipse class="inner" cx="50" cy="25" rx="19" ry="7.2"/></svg>`;
       }
       if (kind === "galaxy") {
-        return `<svg class="belt faint" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="50" cy="25" rx="30" ry="12"/></svg>`;
+        return `<svg class="belt faint" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="50" cy="25" rx="30" ry="12"/><ellipse class="grit" cx="50" cy="25" rx="29.2" ry="11.6"/></svg>`;
       }
       if (kind === "planet") {
-        return `<svg class="belt close" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="50" cy="25" rx="14" ry="5.5"/></svg>`;
+        return `<svg class="belt close" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="50" cy="25" rx="14" ry="5.5"/><ellipse class="grit" cx="50" cy="25" rx="13.4" ry="5.2"/></svg>`;
       }
       return "";
     }
+    function unitHash(i, seed) {
+      const n = Math.sin(i * 127.1 + seed * 311.7) * 43758.5453;
+      return n - Math.floor(n);
+    }
+    function ringGrainsSvg(className, seed, count) {
+      const disks = `<ellipse class="disk outer" cx="50" cy="50" rx="46.6" ry="46.6"/><ellipse class="disk mid" cx="50" cy="50" rx="44.9" ry="44.9"/><ellipse class="disk grit" cx="50" cy="50" rx="45.7" ry="45.7"/><ellipse class="disk inner" cx="50" cy="50" rx="36.2" ry="36.2"/><ellipse class="disk grit" cx="50" cy="50" rx="35.4" ry="35.4"/>`;
+      let bits = "";
+      for (let i = 0; i < count; i++) {
+        if (unitHash(i, seed + 0.4) < 0.12) continue;
+        const band = unitHash(i, seed + 1.1);
+        let r;
+        let cls;
+        if (band < 0.5) {
+          r = 45.0 + unitHash(i, seed + 2.2) * 1.6;
+          cls = "chip out";
+        } else if (band < 0.88) {
+          r = 35.2 + unitHash(i, seed + 3.3) * 1.4;
+          cls = "chip in";
+        } else {
+          r = 39.6 + unitHash(i, seed + 4.4) * 1.1;
+          cls = "chip stray";
+        }
+        const a = (i / count) * Math.PI * 2 + (unitHash(i, seed + 5.5) - 0.5) * 0.05;
+        const x = 50 + r * Math.cos(a);
+        const y = 50 + r * Math.sin(a);
+        const rot = unitHash(i, seed + 6.6) * 180;
+        const rx = 0.16 + unitHash(i, seed + 7.7) * 0.18;
+        const ry = rx * (0.8 + unitHash(i, seed + 8.8) * 0.18);
+        bits += `<ellipse class="${cls}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" rx="${rx.toFixed(2)}" ry="${ry.toFixed(2)}" transform="rotate(${rot.toFixed(1)} ${x.toFixed(2)} ${y.toFixed(2)})"/>`;
+      }
+      return `<svg class="${className}" viewBox="0 0 100 100" aria-hidden="true">${disks}${bits}</svg>`;
+    }
     function moonStonesSvg() {
-      return `<svg class="moon-stones" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="50" rx="46" ry="46"/><ellipse class="inner" cx="50" cy="50" rx="37" ry="37"/></svg>`;
+      return ringGrainsSvg("moon-stones", 7.1, 64);
+    }
+    function planetRingSvg() {
+      return ringGrainsSvg("ring-ice", 3.2, 52);
+    }
+    function planetHasRings(kind) {
+      return kind === "p-ring" || kind === "p-ice";
+    }
+    function planetRingHtml() {
+      return `<span class="ring-rig"><span class="ring back">${planetRingSvg()}</span><span class="globe"></span><span class="ring front">${planetRingSvg()}</span></span>`;
     }
     function hereMoonHtml(cls, label, enterId) {
       const tag = enterId ? "button" : "div";
@@ -6125,7 +7978,6 @@
       const send = world.querySelector('[data-enter="send"]');
       const get = world.querySelector('[data-enter="get"]');
       const path = world.querySelector(".filament path");
-      const hit = document.getElementById("filament4477");
       const tick = (now) => {
         if (!world.isConnected) return;
         if (!strataDragging) {
@@ -6155,10 +8007,6 @@
           const cx = (ax + bx) / 2 + 3;
           const cy = (ay + by) / 2;
           path.setAttribute("d", `M${ax.toFixed(1)} ${ay.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`);
-          if (hit) {
-            hit.style.left = cx + "%";
-            hit.style.top = cy + "%";
-          }
         }
         skyMotionRaf = requestAnimationFrame(tick);
       };
@@ -6168,35 +8016,14 @@
       const iss = lookupIssue(id);
       if (!iss) return;
       markLooked(iss.id);
-      if (!hasNextBoxes(iss)) {
-        state.selectedIssue = iss.id;
-        state.watching = { id: iss.id, path: pathToIssue(iss.id) || [...state.path] };
-        persist();
-        render();
+      if (hasNextBoxes(iss)) {
+        openGoneInto(iss.id);
         return;
       }
-      const issueId = "issue:" + iss.id;
-      const at = state.path.indexOf(issueId);
-      if (at >= 0) {
         state.selectedIssue = iss.id;
-        state.watching = { id: iss.id, path: pathToIssue(iss.id) || state.path.slice(0, at + 1) };
-        persist();
-        if (samePath(state.path, state.path.slice(0, at + 1))) render();
-        else warpTo(state.path.slice(0, at + 1));
-        return;
-      }
-      document.querySelectorAll("[data-enter], [data-issue]").forEach((b) => {
-        if (b !== el) b.classList.add("fade");
-      });
-      if (el) el.classList.add("zoom");
-      flyThen(() => {
-        state.path = isHomeGate(iss.id) ? validPath(issueStartPath(iss)) : validPath([...state.path, issueId]);
-        state.selectedIssue = iss.id;
-        state.watching = { id: iss.id, path: [...state.path] };
-        rememberPlace(state.path);
+      state.watching = { id: iss.id, path: pathToIssue(iss.id) || [...state.path] };
         persist();
         render();
-      }, "in");
     }
     function selectIssue(id) {
       enterIssue(id);
@@ -6204,11 +8031,21 @@
     function openGoneInto(id) {
       const iss = lookupIssue(id);
       if (!iss) return;
-      let path = isHomeGate(iss.id) ? gatePath() : (pathToIssue(iss.id) || ["universe"]);
-      if (!isHomeGate(iss.id) && !hasLooked(iss.id) && parseIssueId(path[path.length - 1])) {
-        path = path.slice(0, -1);
-        if (!path.length) path = ["universe"];
+      markLooked(iss.id);
+      if (String(iss.id) === "4477" && state.showAirSteps) {
+        state.showAirSteps = false;
+        state.walkStep = null;
+        renderGoneInto();
+        return;
       }
+      state.showAirSteps = String(iss.id) === "4477";
+      state.walkStep = null;
+      const gate = gateForIssue(iss.id);
+      if (gate) {
+        setHomeGate(gate);
+        writeEntryUrl(gate);
+      }
+      const path = shortcutPath(iss);
       state.selectedIssue = iss.id;
       state.watching = { id: iss.id, path };
       rememberPlace(path);
@@ -6217,9 +8054,14 @@
       else warpTo(path);
     }
     function hopTo(path, ticketId) {
-      const p = validPath(path);
       const iss = ticketId ? lookupIssue(ticketId) : null;
+      const p = iss && hasNextBoxes(iss) ? validPath(shortcutPath(iss)) : validPath(path);
       if (iss) {
+        const gate = gateForIssue(iss.id);
+        if (gate) {
+          setHomeGate(gate);
+          writeEntryUrl(gate);
+        }
         state.selectedIssue = iss.id;
         state.watching = { id: iss.id, path: p };
         persist();
@@ -6229,11 +8071,10 @@
     }
     function jumpToWatching() {
       if (!state.watching) return;
-      state.selectedIssue = state.watching.id;
-      const path = isHomeGate(state.watching.id)
-        ? gatePath()
-        : (pathToIssue(state.watching.id) || (state.watching.path && state.watching.path.length ? [...state.watching.path] : gatePath()));
-      warpTo(path);
+      const iss = lookupIssue(state.watching.id);
+      if (!iss) return;
+      state.selectedIssue = iss.id;
+      warpTo(shortcutPath(iss));
     }
     function stopWatching() {
       state.watching = null;
@@ -6248,14 +8089,18 @@
       if (rootIssue && String(rootIssue.id) === String(w.id)) { el.innerHTML = ""; return; }
       const boxes = (w.thread || []).length;
       const where = pathLabel(state.watching.path);
+      const gh = w.url
+        ? `<a class="tix-ext" href="${escapeHtml(w.url)}" target="_blank" rel="noopener noreferrer">ticket</a>`
+        : "";
       el.innerHTML = `
         <div class="watch">
           <p class="kicker">Looking at${boxes ? " · " + boxes + " next" : ""}</p>
-          <b>${escapeHtml(issueTag(w))} ${escapeHtml(issueLabel(w))}</b>
+          <b>${escapeHtml(issueTag(w))}</b>
           ${where ? `<p class="kicker" style="margin:6px 0 8px;text-transform:none;letter-spacing:0;font-size:11px;line-height:1.35">${escapeHtml(where)}</p>` : ""}
           <div class="watch-row">
             <button type="button" id="watchJump">Go there</button>
             <button type="button" class="ghost" id="watchOff">Put away</button>
+            ${gh}
           </div>
         </div>`;
       document.getElementById("watchJump").onclick = jumpToWatching;
@@ -6319,13 +8164,6 @@
       persist();
       render();
     }
-    function openFilament4477() {
-      const path = gatePath();
-      state.selectedIssue = 4477;
-      state.watching = { id: 4477, path };
-      persist();
-      warpTo(path);
-    }
     function bindStrataDrag() {
       const stage = document.getElementById("depthStage");
       const world = document.getElementById("depthWorld");
@@ -6386,7 +8224,7 @@
       const asBoxes = (atTicket || atBox || atRock || atRockStay) && !cosmic;
       const boxSteps = asBoxes && (atTicket || atBox) ? skyKids : [];
       const onlyNext = boxSteps.length === 1 ? boxSteps[0] : null;
-      const issues = (node.issueIds || []).map((id) => ISSUES[id]).filter(Boolean);
+      const issues = issuesOnNode(node);
       const issue = (state.watching && ISSUES[state.watching.id])
         || (state.selectedIssue && ISSUES[state.selectedIssue])
         || null;
@@ -6394,8 +8232,11 @@
       const uniDepth = (chain[0] && chain[0].id === "universe") ? depth : -1;
       const gateHere = atTicket && isHomeGate(parsedHere.id);
       const rootedInIssue = isIssuePath(state.path);
+      const closeLabHere = node.code === "closeLab"
+        || (node.children || []).some((c) => c.code === "closeLab")
+        || (parent && (parent.children || []).some((c) => c.code === "closeLab"));
       document.querySelector(".hud").classList.remove("issue-walk");
-      if (onPhone()) {
+      if (onPhone() || closeLabHere) {
         document.getElementById("where").innerHTML = "";
       } else {
         document.getElementById("where").innerHTML = chain.map((n, i) => {
@@ -6408,23 +8249,10 @@
       const home = atGateHome();
       const warpOut = rootedInIssue;
       const phone = onPhone();
-      const hops = phone ? exploredPhoneHops() : exploredShortcuts();
-      const orbExplored = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2.1" fill="currentColor"/><circle cx="12" cy="12" r="2.1" fill="currentColor"/><circle cx="18" cy="6" r="2.1" fill="currentColor"/><path d="M7.6 16.4L10.4 13.6M13.6 10.4L16.4 7.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`;
       const orbTickets = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7.5h15v3c-1.35.35-1.35 2.65 0 3v3h-15v-3c1.35-.35 1.35-2.65 0-3v-3z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8.2l-1.2 7.6M15.2 8.2l-1.2 7.6M8 11h8M7.6 14.2h8" fill="none" stroke="currentColor" stroke-width="1.35"/></svg>`;
-      document.querySelector(".shell").classList.toggle("hops-on", !!(hops.length && !state.hideExplored));
-      const hopBtn = (h, simple) => {
-        const hereNow = samePath(state.path, h.path);
-        const last = nodeFromId(h.path[h.path.length - 1]);
-        const attrs = `class="ship-hop ${hereNow ? "on" : ""}" type="button" data-hop="${h.path.join(",")}" data-ticket="${h.tickets[0] ? h.tickets[0].id : ""}" ${hereNow ? "disabled" : ""}`;
-        if (simple) return `<button ${attrs}>${escapeHtml(last ? last.name : "")}</button>`;
-        const tix = h.tickets.map((t) => issueTag(t)).join(" ");
-        const title = tix ? tix + " · " + (last ? last.name : "") : (last ? last.name : "");
-        return `<button ${attrs}><b>${escapeHtml(title)}</b><small>${escapeHtml(pathLabel(h.path))}</small></button>`;
-      };
+      document.querySelector(".shell").classList.remove("hops-on");
       document.getElementById("ship").innerHTML = phone ? `
-        ${hops.length && !state.hideExplored ? `<div class="ship-hops">${hops.map((h) => hopBtn(h, true)).join("")}</div>` : ""}
         <div class="ship-orbit">
-          ${hops.length ? `<button class="ship-orb ${state.hideExplored ? "" : "on"}" type="button" id="shipExploredToggle" aria-label="Explored places" title="Explored">${orbExplored}</button>` : ""}
           <button class="ship-orb ${state.hidePad ? "" : "on"}" type="button" id="shipTickets" aria-label="Tickets" title="Tickets">${orbTickets}</button>
         </div>
         <div class="ship-nav">
@@ -6433,25 +8261,14 @@
           ${state.warpBack ? `<button class="ship-warp" type="button" id="shipWarpBack">Warp back</button>` : ""}
         </div>
       ` : `
-        ${hops.length && !state.hideExplored ? `<div class="ship-hops">${hops.map((h) => hopBtn(h, false)).join("")}</div>` : ""}
         <button class="ship-back" type="button" id="shipBack" ${home ? "disabled" : ""}>Step back</button>
         <button class="ship-warp" type="button" id="shipWarp">${warpOut ? "Out to LiveKit" : "Warp to #" + HOME_GATE.issueId}</button>
         ${state.warpBack ? `<button class="ship-warp" type="button" id="shipWarpBack">Warp back</button>` : ""}
-        ${hops.length ? `<div class="ship-lab">Explored <button type="button" id="shipExploredToggle">${state.hideExplored ? "Show" : "Hide"}</button></div>` : ""}
       `;
       document.getElementById("shipBack").onclick = stepBack;
       document.getElementById("shipWarp").onclick = warpOut ? exploreUniverse : warpHome;
       const warpBackBtn = document.getElementById("shipWarpBack");
       if (warpBackBtn) warpBackBtn.onclick = warpBack;
-      const exploredToggle = document.getElementById("shipExploredToggle");
-      if (exploredToggle) {
-        exploredToggle.onclick = () => {
-          state.hideExplored = !state.hideExplored;
-          if (onPhone() && !state.hideExplored) state.hidePad = true;
-          persist();
-          render();
-        };
-      }
       const shipTickets = document.getElementById("shipTickets");
       if (shipTickets) {
         shipTickets.onclick = () => {
@@ -6514,8 +8331,8 @@
           ? bodyOrbitPos(knownI, knownKids.length, now, planetRx, planetRy, planetPeriod)
           : bodyOrbitPos(knownI, knownKids.length, now, 30, 26, planetPeriod);
         const zStyle = slot ? `;transform:translate(-50%,-50%) translateZ(${slot.z}px)` : "";
-        const rockClass = slot ? " rock-" + slot.rock : "";
-        const rockTag = slot ? `<span class="rock-tag">${slot.rock}</span>` : "";
+        const rockClass = slot && slot.rock ? " rock-" + slot.rock : "";
+        const rockTag = slot && slot.rock ? `<span class="rock-tag">${slot.rock}</span>` : "";
         if (asBoxes && (atTicket || atBox)) {
           const p = boxSlot(i, skyKids.length);
           const deeper = (c.children || []).length > 0;
@@ -6556,7 +8373,7 @@
         if (kind === "galaxy") {
           return `<button class="body galaxy haze ${nodeIsMapped(c) ? "known" : ""}" type="button" data-enter="${c.id}" style="left:${p.left}%;top:${p.top}%">
             <span class="g-halo"></span>
-            ${c.id === "connection" ? `<span class="g-strata">TCP · UDP</span>` : ""}
+            ${c.id === "connection" ? `<span class="g-strata">TCP · UDP · Stream.Send</span>` : ""}
             ${galaxySvg(knownI, hues[knownI % hues.length])}
             <span class="g-name">${escapeHtml(c.name)}</span>
             ${mark}
@@ -6579,9 +8396,8 @@
         const pKind = kindFrom(c.id, PLANET_KINDS);
         const near = p.front != null ? (0.7 + p.front * 0.42).toFixed(2) : "1";
         const z = p.front != null ? 3 + Math.round(p.front * 5) : 3;
-        return `<button class="planet ${pKind} ${farClass(c)}" type="button" data-enter="${c.id}" style="left:${p.left}%;top:${p.top}%;z-index:${z};--near:${near};${spinVars(c.id)}">
-          ${pKind === "p-ring" ? `<span class="ring"></span>` : ""}
-          <span class="globe"></span>
+        return `<button class="planet ${pKind} ${planetHasRings(pKind) ? "has-rings" : ""} ${farClass(c)}" type="button" data-enter="${c.id}" style="left:${p.left}%;top:${p.top}%;z-index:${z};--near:${near};${spinVars(c.id)}">
+          ${planetHasRings(pKind) ? planetRingHtml() : `<span class="globe"></span>`}
           <span class="pname">${escapeHtml(c.name)}</span>
           ${mark}
           ${g && n ? `<span class="count">${n}</span>` : ""}
@@ -6599,7 +8415,7 @@
         const lab = issueLabel(iss);
         const mapped = isMappedTicket(iss);
         const sub = mapped
-          ? [deep ? countBoxes(iss.thread) + " next" : "", isHomeGate(iss.id) ? lab : ""].filter(Boolean).join(" · ")
+          ? [deep ? countBoxes(iss.thread) + " next" : "", isGateIssue(iss.id) ? lab : ""].filter(Boolean).join(" · ")
           : "";
         const slack = iss.source === "slack";
         return `<button class="moon ${on} ${maybe ? "maybe" : ""} ${mapped ? "" : "haze"} ${slack ? "path" : ""} ${st}" type="button" data-issue="${iss.id}" title="${escapeHtml(tag + " " + lab)}" style="left:${p.left}%;top:${p.top}%">
@@ -6619,10 +8435,6 @@
               <svg class="filament" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <path d="M50 32 Q62 48 76 66"/>
               </svg>
-              <button class="filament-hit" type="button" id="filament4477">
-                #4477
-                <small>websocket · WebRTC</small>
-              </button>
               ${bodies}
             </div>
           </div>`
@@ -6660,7 +8472,7 @@
         : showStar
         ? `<div class="here-star">${starFireSvg(node.id)}<span class="pname">${escapeHtml(node.name)}</span></div>`
         : showPlanetHere
-        ? `<div class="here-planet ${hereKind}" style="${spinVars(node.id)}">${hereKind === "p-ring" ? `<span class="ring"></span>` : ""}<span class="globe"></span><span class="pname">${escapeHtml(node.name)}</span></div>`
+        ? `<div class="here-planet ${hereKind}${planetHasRings(hereKind) ? " has-rings" : ""}" style="${spinVars(node.id)}">${planetHasRings(hereKind) ? planetRingHtml() : `<span class="globe"></span>`}<span class="pname">${escapeHtml(node.name)}</span></div>`
         : "";
 
       const scale = atEngine || atEngineStay ? "engine"
@@ -6711,11 +8523,15 @@
             <span class="g-name">LiveKit</span>
           </button>` : ""}
         ${strataHere ? `
-          <button class="land rock-door" type="button" data-rock="tcp" style="${phoneSky() ? "left:22%;top:18%" : "left:16%;top:22%"}">
+          <button class="land rock-door" type="button" data-rock="tcp" style="${phoneSky() ? "left:18%;top:14%" : "left:16%;top:22%"}">
             <span class="pname">TCP</span>
             <small>ordered stream</small>
           </button>
-          <button class="land rock-door udp" type="button" data-rock="udp" style="${phoneSky() ? "left:78%;top:18%" : "left:78%;top:22%"}">
+          <button class="land rock-door send" type="button" data-rock="stream-send" style="${phoneSky() ? "left:50%;top:14%" : "left:50%;top:12%"}">
+            <span class="pname">Stream.Send</span>
+            <small>batch onto TCP</small>
+          </button>
+          <button class="land rock-door udp" type="button" data-rock="udp" style="${phoneSky() ? "left:82%;top:14%" : "left:78%;top:22%"}">
             <span class="pname">UDP</span>
             <small>WebRTC media</small>
           </button>` : ""}
@@ -6737,8 +8553,6 @@
         b.classList.add("zoom");
         flyThen(applyUniverse, "out");
       }));
-      const filamentBtn = document.getElementById("filament4477");
-      if (filamentBtn) filamentBtn.onclick = openFilament4477;
       bindStrataDrag();
       if (!atLab && !atEngine && !atEngineStay) labStop();
       if (atDna || atBase) {
@@ -6769,12 +8583,11 @@
       const chips = atRock || atRockStay
         ? `<div class="dock-tix">
             <button type="button" class="${node.rock === "tcp" && atRock ? "on" : ""}" data-rock="tcp">TCP</button>
+            <button type="button" class="${node.rock === "send" && atRock ? "on" : ""}" data-rock="stream-send">Stream.Send</button>
             <button type="button" class="${node.rock === "udp" && atRock ? "on" : ""}" data-rock="udp">UDP</button>
           </div>`
         : !atTicket && !atBox && issues.length
-        ? `<div class="dock-tix">${issues.map((iss) => `
-            <button type="button" class="${issue && String(issue.id) === String(iss.id) ? "on" : ""}" data-issue="${iss.id}">${escapeHtml(issueTag(iss))} ${escapeHtml(issueLabel(iss))}</button>
-          `).join("")}</div>`
+        ? `<div class="dock-tix">${issues.map((iss) => ticketChipHtml(iss, issue && issue.id)).join("")}</div>`
         : atEngine || atEngineStay
         ? ""
         : atWorldlineStay
@@ -6790,44 +8603,82 @@
             <button type="button" class="${c.id === node.id ? "on" : ""}" data-enter="${c.id}">${escapeHtml(c.name)}</button>
           `).join("")}</div>`
         : "";
+      if (rootedInIssue) {
+        document.getElementById("brief").innerHTML = "";
+      } else {
       document.getElementById("brief").innerHTML = `
         <p class="kicker">${escapeHtml(node.name)}</p>
-        <p class="who">${escapeHtml(atRock || atRockBox ? (node.who || "") : strataHere ? "Click TCP or UDP. Gold is the ordered stream. Teal skips a hole and keeps voice flowing." : (node.who || ""))}</p>
+          <p class="who">${escapeHtml(atRock || atRockBox ? (node.who || "") : strataHere ? "Click TCP, UDP, or Stream.Send. TCP is the ordered stream. Stream.Send writes a batch onto that person's TCP. UDP skips a hole and keeps voice flowing." : (node.who || ""))}</p>
+          ${node.id === "room" && node.deep ? `<p class="who">${escapeHtml(node.deep)}</p>` : ""}
         ${chips}
       `;
       document.querySelectorAll("#brief [data-enter]").forEach((b) => b.addEventListener("click", () => enterChild(b.dataset.enter, b)));
       document.querySelectorAll("#brief [data-go]").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.go)));
       document.querySelectorAll("#brief [data-issue]").forEach((b) => b.addEventListener("click", () => enterIssue(b.dataset.issue)));
       document.querySelectorAll("#brief [data-rock]").forEach((b) => b.addEventListener("click", () => enterRock(b.dataset.rock)));
+      }
       renderGoneInto();
       notePlace();
     }
 
     function renderGoneInto() {
       const root = document.getElementById("gone");
-      const tickets = allTickets();
-      const mappedList = tickets.filter((iss) => isMappedTicket(iss));
-      const rest = tickets.filter((iss) => !isMappedTicket(iss));
-      if (!mappedList.length && !rest.length) { root.innerHTML = ""; return; }
+      const air = lookupIssue(4477);
+      const room = lookupIssue(4726);
+      const featured = [air, room].filter(Boolean);
+      const featuredIds = new Set(featured.map((iss) => String(iss.id)));
+      const rest = allTickets().filter((iss) => !featuredIds.has(String(iss.id)));
       const onId = state.watching ? state.watching.id : state.selectedIssue;
-      const card = (iss) => {
-        const path = pathToIssue(iss.id) || [];
-        const mapped = isMappedTicket(iss);
-        const extra = mapped ? (hasNextBoxes(iss)
-          ? `<span class="gone-path">${escapeHtml(pathLabel(path) || "")}</span><span>${countBoxes(iss.thread)} next</span>`
-          : `<span class="gone-path">${escapeHtml(pathLabel(path) || "")}</span>`) : "";
+      const showSteps = !!state.showAirSteps;
+      const card = (iss, head) => {
+        const title = head || issueLabel(iss) || iss.title || "";
+        const blurb = iss.see || "";
+        const tix = iss.url
+          ? `<a class="gone-tix" href="${escapeHtml(iss.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(issueTag(iss))}</a>`
+          : `<span class="gone-tix">${escapeHtml(issueTag(iss))}</span>`;
         return `
-          <button type="button" class="${String(onId) === String(iss.id) ? "on" : ""} ${mapped ? "" : "haze"} ${iss.source === "slack" ? "path" : ""}" data-gone="${iss.id}">
-            <b>${escapeHtml(issueTag(iss))} ${escapeHtml(issueLabel(iss))}</b>
-            ${extra}
+          <button type="button" class="${String(onId) === String(iss.id) ? "on" : ""} ${iss.source === "slack" ? "path" : ""}" data-gone="${iss.id}">
+            <b>${escapeHtml(title)}</b>
+            ${blurb ? `<span class="gone-blurb">${escapeHtml(blurb)}</span>` : ""}
+            ${tix}
           </button>`;
       };
+      const walkHtml = (iss) => {
+        const steps = (iss && iss.steps) || [];
+        if (!steps.length) return "";
+        return `<div class="walk-steps">${steps.map((s, i) => {
+          const n = i + 1;
+          const open = state.walkStep === n;
+          return `<button type="button" class="walk-step${open ? " on" : ""}" data-walk="${n}">
+            <span class="walk-n">${n}</span>
+            <b>${escapeHtml(s.ask)}</b>
+            ${open && s.say ? `<span class="walk-say">${escapeHtml(s.say)}</span>` : ""}
+          </button>`;
+        }).join("")}</div>`;
+      };
       root.innerHTML = `
-        ${mappedList.length ? `<p class="kicker">Looked at</p>${mappedList.map(card).join("")}` : ""}
-        ${rest.length ? `<div class="gone-rest"><p class="kicker">Also there</p>${rest.map(card).join("")}</div>` : ""}
+        <p class="kicker">Shortcuts</p>
+        ${air ? card(air, "Airplane mode") : ""}
+        ${showSteps ? walkHtml(air) : ""}
+        ${room ? card(room, "I deleted a room and quickly tried to create a room with the same name") : ""}
+        ${rest.length ? `<div class="gone-rest"><p class="kicker">Also there</p>${rest.map((iss) => card(iss)).join("")}</div>` : ""}
       `;
       root.querySelectorAll("[data-gone]").forEach((b) => b.addEventListener("click", () => openGoneInto(b.dataset.gone)));
+      root.querySelectorAll("[data-walk]").forEach((b) => b.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const n = Number(b.dataset.walk);
+        state.walkStep = state.walkStep === n ? null : n;
+        renderGoneInto();
+      }));
+      root.querySelectorAll(".gone-tix").forEach((a) => a.addEventListener("click", (e) => e.stopPropagation()));
     }
+    window.addEventListener("hashchange", () => {
+      const g = resolveGate(readEntryKey()) || GATES[0];
+      if (String(g.issueId) === String(HOME_GATE.issueId) && atGateHome()) return;
+      landOnGate(g);
+      persist();
+      render();
+    });
     document.getElementById("logo").addEventListener("click", exploreUniverse);
     document.getElementById("padHide").addEventListener("click", () => setPadHidden(true));
     document.getElementById("padShow").addEventListener("click", () => setPadHidden(false));
