@@ -12,14 +12,17 @@
   <meta property="og:site_name" content="LiveKit landscape" />
   <meta property="og:title" content="Airplane mode" />
   <meta property="og:description" content="The websocket does not start when they expect it to, after airplane mode." />
-  <meta property="og:image" content="https://emms21.github.io/livekit-landscape/og-airplane.png" />
+  <link rel="canonical" href="https://emms21.github.io/livekit-landscape/" />
+  <meta property="og:image" content="https://emms21.github.io/livekit-landscape/og-airplane.png?v=2" />
+  <meta property="og:image:secure_url" content="https://emms21.github.io/livekit-landscape/og-airplane.png?v=2" />
+  <meta property="og:image:alt" content="Airplane mode" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:url" content="https://emms21.github.io/livekit-landscape/" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Airplane mode" />
   <meta name="twitter:description" content="The websocket does not start when they expect it to, after airplane mode." />
-  <meta name="twitter:image" content="https://emms21.github.io/livekit-landscape/og-airplane.png" />
+  <meta name="twitter:image" content="https://emms21.github.io/livekit-landscape/og-airplane.png?v=2" />
   <link rel="icon" href="favicon-airplane.png" type="image/png" />
   <link rel="apple-touch-icon" href="apple-airplane.png" />
   <!--/share-->
@@ -72,6 +75,13 @@
       overscroll-behavior: none;
       -webkit-text-size-adjust: 100%;
       color-scheme: dark;
+    }
+    .share-name {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
     }
     body {
       background: var(--bg);
@@ -5181,6 +5191,7 @@
   </style>
 </head>
 <body>
+  <h1 class="share-name">Airplane mode</h1>
   <div class="shell">
     <div class="main">
       <div class="sky" id="sky"></div>
@@ -5371,8 +5382,7 @@
       return String(id) === String(HOME_GATE.issueId);
     }
     function readEntryKey() {
-      const file = (location.pathname.split("/").pop() || "").toLowerCase();
-      if (file === "delete-same-name.html") return "delete-same-name";
+      if (/delete-same-name/.test(location.pathname || "")) return "delete-same-name";
       const hash = decodeURIComponent((location.hash || "").replace(/^#\/?/, "")).trim();
       if (hash) return hash;
       const q = new URLSearchParams(location.search);
@@ -5415,11 +5425,11 @@
         if (location.hash !== hash) history.replaceState(null, "", hash);
         return;
       }
-      const onDel = pageFile() === "delete-same-name.html";
+      const onDel = /delete-same-name/.test(location.pathname || "");
       const wantDel = g.slug === "delete-same-name";
-      if (wantDel && !onDel) history.replaceState(null, "", "delete-same-name.html");
+      if (wantDel && !onDel) history.replaceState(null, "", "delete-same-name.html?card=1");
       else if (!wantDel && onDel) history.replaceState(null, "", "./");
-      else if (location.hash) history.replaceState(null, "", wantDel ? "delete-same-name.html" : "./");
+      else if (location.hash) history.replaceState(null, "", wantDel ? "delete-same-name.html?card=1" : "./");
     }
     function landOnGate(gate) {
       const g = gate || GATES[0];
@@ -8700,11 +8710,13 @@
           </button>`;
         }).join("")}</div>`;
       };
+      const airCard = air ? card(air, "Airplane mode") : "";
+      const airWalk = showSteps ? walkHtml(air) : "";
+      const roomCard = room ? card(room, "I deleted a room and quickly tried to create a room with the same name") : "";
+      const leadRoom = String(HOME_GATE.issueId) === "4726";
       root.innerHTML = `
         <p class="kicker">Shortcuts</p>
-        ${air ? card(air, "Airplane mode") : ""}
-        ${showSteps ? walkHtml(air) : ""}
-        ${room ? card(room, "I deleted a room and quickly tried to create a room with the same name") : ""}
+        ${leadRoom ? roomCard + airCard + airWalk : airCard + airWalk + roomCard}
         ${rest.length ? `<div class="gone-rest"><p class="kicker">Also there</p>${rest.map((iss) => card(iss)).join("")}</div>` : ""}
       `;
       root.querySelectorAll("[data-gone]").forEach((b) => b.addEventListener("click", () => openGoneInto(b.dataset.gone)));
