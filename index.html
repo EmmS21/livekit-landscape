@@ -4495,9 +4495,21 @@
       transform: translate(-50%, -50%) scale(0.62);
     }
     .close-sim.store-redis.disturb .close-catalog,
+    .close-sim.store-redis.hang .close-catalog,
     .close-sim.store-redis.forgetRam .close-catalog,
     .close-sim.store-redis.forgetStore .close-catalog,
+    .close-sim.store-redis.decayRedis .close-catalog,
+    .close-sim.store-redis.decayPause .close-catalog,
     .close-sim.store-redis.try .close-catalog { display: block; transform: translate(-50%, -50%) scale(1); }
+    .close-sim.store-redis.decayRedis .close-catalog,
+    .close-sim.store-redis.decayPause .close-catalog {
+      left: 50%;
+      top: 58%;
+      width: min(440px, 88vw);
+      height: min(320px, 58vh);
+      z-index: 12;
+    }
+    .close-sim.store-redis.decayServer .close-catalog { display: none; }
     .close-catalog > .php {
       display: block;
       font-size: 9px;
@@ -4505,6 +4517,34 @@
       text-transform: uppercase;
       color: var(--accent);
       margin-bottom: 8px;
+    }
+    .close-lattice > .php {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 6px;
+      transform: translateX(-50%);
+      z-index: 4;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .close-sim.decayServer .close-lattice > .php { display: block; }
+    .close-field-id {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 22px;
+      transform: translateX(-50%);
+      z-index: 4;
+      font-family: Fraunces, serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+      pointer-events: none;
+      white-space: nowrap;
     }
     .close-program {
       position: relative;
@@ -4521,9 +4561,16 @@
       pointer-events: none;
     }
     .close-sim.disturb .close-program::before,
-    .close-sim.forgetRam .close-program::before {
+    .close-sim.forgetRam .close-program::before,
+    .close-sim.decayRedis .close-program::before {
       animation: closeFieldShimmer 2.2s ease-out;
     }
+    .close-sim.decayRedis .close-program,
+    .close-sim.decayPause .close-program {
+      height: calc(100% - 22px);
+    }
+    .close-sim.decayRedis .close-room,
+    .close-sim.decayPause .close-room { opacity: 0; }
     @keyframes closeFieldShimmer {
       0% { opacity: 0.25; }
       40% { opacity: 0.7; }
@@ -4624,7 +4671,20 @@
     .close-sim.store-go.zoom .close-lattice,
     .close-sim.store-go.forgetRam .close-lattice,
     .close-sim.store-go.forgetStore .close-lattice,
+    .close-sim.store-go.decayServer .close-lattice,
     .close-sim.store-go.try .close-lattice { display: block; }
+    .close-sim.store-redis.decayServer .close-lattice,
+    .close-sim.store-go.decayServer .close-lattice {
+      display: block;
+      left: 50%;
+      top: 58%;
+      width: min(440px, 88vw);
+      height: min(320px, 58vh);
+      transform: translate(-50%, -50%);
+      z-index: 12;
+    }
+    .close-sim.decayRedis .close-lattice,
+    .close-sim.decayPause .close-lattice { display: none; }
     .close-sim.store-go.disturb .close-lattice::after,
     .close-sim.store-go.forgetRam .close-lattice::after,
     .close-sim.store-go.forgetStore .close-lattice::after,
@@ -4641,9 +4701,7 @@
       box-shadow: 0 0 22px rgba(231, 163, 90, 0.95);
       transform: translate(-50%, -50%);
     }
-    .close-sim.store-go.forgetStore .close-lattice::after {
-      animation: closeRoomBlow 1.15s ease-out forwards;
-    }
+    .close-sim.decayServer .close-lattice::after { display: none; content: none; }
     .close-orbit {
       display: none;
       position: absolute;
@@ -4671,21 +4729,33 @@
     .close-sim.hang .engine-tether,
     .close-sim.forgetRam .engine-tether,
     .close-sim.forgetStore .engine-tether,
+    .close-sim.decayRedis .engine-tether,
+    .close-sim.decayPause .engine-tether,
+    .close-sim.decayServer .engine-tether,
     .close-sim.disturb .close-well,
     .close-sim.zoom .close-well,
     .close-sim.hang .close-well,
     .close-sim.forgetRam .close-well,
     .close-sim.forgetStore .close-well,
+    .close-sim.decayRedis .close-well,
+    .close-sim.decayPause .close-well,
+    .close-sim.decayServer .close-well,
     .close-sim.disturb .path-lab.road,
     .close-sim.zoom .path-lab.road,
     .close-sim.hang .path-lab.road,
     .close-sim.forgetRam .path-lab.road,
     .close-sim.forgetStore .path-lab.road,
+    .close-sim.decayRedis .path-lab.road,
+    .close-sim.decayPause .path-lab.road,
+    .close-sim.decayServer .path-lab.road,
     .close-sim.disturb .fifo-key,
     .close-sim.zoom .fifo-key,
     .close-sim.hang .fifo-key,
     .close-sim.forgetRam .fifo-key,
     .close-sim.forgetStore .fifo-key,
+    .close-sim.decayRedis .fifo-key,
+    .close-sim.decayPause .fifo-key,
+    .close-sim.decayServer .fifo-key,
     .close-sim.try .engine-tether,
     .close-sim.try .close-well,
     .close-sim.try .path-lab.road,
@@ -4886,12 +4956,16 @@
     }
     .close-sim.disturb .close-wave,
     .close-sim.forgetRam .close-wave,
+    .close-sim.decayRedis .close-wave,
+    .close-sim.decayServer .close-wave,
     .close-sim.try-go .close-wave,
     .close-sim.try-see .close-wave { display: block; }
     .close-sim.store-go.disturb .close-wave,
     .close-sim.store-go.forgetRam .close-wave,
     .close-sim.store-go.try-go .close-wave,
     .close-sim.store-go.try-see .close-wave { left: 50%; top: 50%; }
+    .close-sim.decayRedis .close-wave { left: 50%; top: 58%; }
+    .close-sim.decayServer .close-wave { left: 50%; top: 58%; }
     .close-wave i {
       position: absolute;
       left: 50%;
@@ -4915,65 +4989,140 @@
       0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0.85; }
       100% { transform: translate(-50%, -50%) scale(30); opacity: 0; }
     }
-    .close-sim.forgetStore .close-room.closing {
-      animation: closeRoomBlow 1.15s ease-out forwards;
-      overflow: visible;
-      z-index: 8;
+    .close-excitations {
+      display: none;
+      position: absolute;
+      inset: 48px 8px 12px;
+      z-index: 3;
+      pointer-events: none;
     }
-    .close-sim.forgetStore .close-room.closing .shell {
-      opacity: 1;
-      box-shadow: 0 0 22px #fff6e0, 0 0 40px rgba(231, 163, 90, 1);
-      animation: closeRoomBlowCore 1.15s ease-out forwards;
+    .close-sim.decayRedis .close-catalog .close-excitations,
+    .close-sim.decayPause .close-catalog .close-excitations,
+    .close-sim.decayServer .close-lattice .close-excitations { display: block; }
+    .close-sim.decayRedis .close-catalog .close-field-id,
+    .close-sim.decayPause .close-catalog .close-field-id,
+    .close-sim.decayServer .close-lattice .close-field-id { display: block; }
+    .close-sim.decayPause .close-catalog .close-field-id.off,
+    .close-sim.decayServer .close-lattice .close-field-id.off {
+      animation: closeIdGone 0.7s ease-out forwards;
     }
-    .close-sim.forgetStore .close-room.closing .pname {
-      animation: closeRoomBlowName 0.45s ease-out forwards;
+    @keyframes closeIdGone {
+      0% { opacity: 1; filter: brightness(1.4); }
+      100% { opacity: 0; }
     }
-    .close-sim.forgetStore .close-room.closing::before,
-    .close-sim.forgetStore .close-room.closing::after {
-      content: "";
+    .close-excite {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+    .close-excite .dot {
+      display: block;
+      width: 11px;
+      height: 11px;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 1px solid rgba(231, 163, 90, 0.55);
+      background: rgba(231, 163, 90, 0.38);
+      box-shadow: 0 0 12px rgba(231, 163, 90, 0.45);
+    }
+    .close-excite .ekey {
+      display: block;
+      margin-top: 5px;
+      font-size: 9px;
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--accent);
+      white-space: nowrap;
+      opacity: 0.85;
+    }
+    .close-excite.live { opacity: 0.42; }
+    .close-excite.dying { opacity: 1; z-index: 4; }
+    .close-excite.live .dot {
+      box-shadow: 0 0 16px rgba(231, 163, 90, 0.7);
+    }
+    .close-excite.dying .dot {
+      animation: closeExciteDecay 0.85s ease-out forwards;
+    }
+    .close-excite.dying .ekey {
+      animation: closeExciteDecayName 0.85s ease-out forwards;
+    }
+    .close-excite.gone {
+      opacity: 0;
+    }
+    .close-excite .bits {
       position: absolute;
       left: 50%;
-      top: 50%;
+      top: 5px;
+      width: 36px;
+      height: 36px;
+      margin-left: -18px;
+      margin-top: -18px;
+      pointer-events: none;
+    }
+    .close-excite .bits i {
+      position: absolute;
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: #fff6e0;
-      pointer-events: none;
+      background: rgba(231, 163, 90, 0.4);
+      opacity: 0.35;
     }
-    .close-sim.forgetStore .close-room.closing::before {
-      box-shadow:
-        10px -14px 0 0 #e7a35a,
-        -16px 6px 0 1px #fff6e0,
-        14px 12px 0 0 #f3eadc,
-        -8px -10px 0 0 #e7a35a,
-        0 -18px 0 1px rgba(255, 246, 224, 0.9);
-      animation: closeRoomShrapnel 1.15s ease-out forwards;
+    .close-excite[data-part="hash"] .bits i:nth-child(1) { left: 4px; top: 16px; }
+    .close-excite[data-part="hash"] .bits i:nth-child(2) { left: 16px; top: 16px; }
+    .close-excite[data-part="hash"] .bits i:nth-child(3) { left: 28px; top: 16px; }
+    .close-excite[data-part="node"] .bits i:nth-child(1) { left: 6px; top: 16px; }
+    .close-excite[data-part="node"] .bits i:nth-child(2) { left: 26px; top: 16px; }
+    .close-excite[data-part="people"] .bits i:nth-child(1) { left: 8px; top: 10px; }
+    .close-excite[data-part="people"] .bits i:nth-child(2) { left: 22px; top: 8px; }
+    .close-excite[data-part="people"] .bits i:nth-child(3) { left: 6px; top: 22px; }
+    .close-excite[data-part="people"] .bits i:nth-child(4) { left: 24px; top: 22px; }
+    .close-excite[data-part="agent"] .bits i:nth-child(1) { left: 16px; top: 6px; }
+    .close-excite[data-part="agent"] .bits i:nth-child(2) { left: 6px; top: 24px; }
+    .close-excite[data-part="agent"] .bits i:nth-child(3) { left: 26px; top: 24px; }
+    .close-excite[data-part="map"] .bits i:nth-child(1) { left: 8px; top: 8px; }
+    .close-excite[data-part="map"] .bits i:nth-child(2) { left: 24px; top: 8px; }
+    .close-excite[data-part="map"] .bits i:nth-child(3) { left: 8px; top: 24px; }
+    .close-excite[data-part="map"] .bits i:nth-child(4) { left: 24px; top: 24px; }
+    .close-excite[data-part="topic"] .bits i:nth-child(1) { left: 6px; top: 20px; }
+    .close-excite[data-part="topic"] .bits i:nth-child(2) { left: 16px; top: 8px; }
+    .close-excite[data-part="topic"] .bits i:nth-child(3) { left: 26px; top: 20px; }
+    .close-excite.dying .bits i {
+      animation: closeBitLight 0.85s ease-out forwards;
     }
-    .close-sim.forgetStore .close-room.closing::after {
-      box-shadow:
-        -12px 16px 0 0 #e7a35a,
-        18px 4px 0 0 #fff6e0,
-        -4px 14px 0 1px #f3eadc,
-        8px -16px 0 0 #e7a35a;
-      animation: closeRoomShrapnel 1.15s 0.06s ease-out forwards;
+    .close-excite.dying .bits i:nth-child(2) { animation-delay: 0.1s; }
+    .close-excite.dying .bits i:nth-child(3) { animation-delay: 0.2s; }
+    .close-excite.dying .bits i:nth-child(4) { animation-delay: 0.3s; }
+    @keyframes closeBitLight {
+      0% { opacity: 0.35; transform: scale(1); background: rgba(231, 163, 90, 0.45); }
+      28% { opacity: 1; transform: scale(1.7); background: #fff6e0; box-shadow: 0 0 10px #e7a35a; }
+      100% { opacity: 0; transform: scale(0.2); background: #fff6e0; }
     }
-    @keyframes closeRoomBlow {
-      0% { transform: translate(-50%, -50%) scale(1); filter: brightness(1); opacity: 1; }
-      16% { transform: translate(-50%, -50%) scale(1.55); filter: brightness(2.4); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(2.2); filter: brightness(3); opacity: 0; }
+    @keyframes closeExciteDecay {
+      0% { transform: scale(1); opacity: 1; }
+      22% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 18px rgba(231, 163, 90, 0.9); }
+      100% { transform: scale(0.15); opacity: 0; }
     }
-    @keyframes closeRoomBlowCore {
-      0% { transform: translate(-50%, -50%) scale(1); }
-      18% { transform: translate(-50%, -50%) scale(2.4); }
-      100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    @keyframes closeExciteDecayName {
+      40% { opacity: 0.85; }
+      100% { opacity: 0; }
     }
-    @keyframes closeRoomBlowName {
-      to { opacity: 0; }
-    }
-    @keyframes closeRoomShrapnel {
-      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(5.5); }
-    }
+    .close-sim.decayRedis .engine-clock,
+    .close-sim.decayPause .engine-clock,
+    .close-sim.decayServer .engine-clock,
+    .close-sim.decayRedis .lab-body.server,
+    .close-sim.decayPause .lab-body.server,
+    .close-sim.decayServer .lab-body.server { display: none !important; }
+    .close-sim.forgetRam .close-stars-lab,
+    .close-sim.forgetStore .close-stars-lab,
+    .close-sim.decayRedis .close-stars-lab,
+    .close-sim.decayPause .close-stars-lab,
+    .close-sim.decayServer .close-stars-lab { display: none; }
+    .close-sim.forgetRam .moon.close-moon,
+    .close-sim.forgetStore .moon.close-moon,
+    .close-sim.decayRedis .moon.close-moon,
+    .close-sim.decayPause .moon.close-moon,
+    .close-sim.decayServer .moon.close-moon { display: none !important; }
     .close-sim .photon.burst,
     .close-sim .photon.disturb { display: none; }
     .close-sim.enqueue .photon.send-sig { display: block; background: #e7a35a; box-shadow: 0 0 10px rgba(231, 163, 90, 0.95); animation-duration: 1.6s; }
@@ -5048,7 +5197,10 @@
     .close-sim.zoom .close-stars-lab,
     .close-sim.hang .close-stars-lab,
     .close-sim.forgetRam .close-stars-lab,
-    .close-sim.forgetStore .close-stars-lab { display: none; }
+    .close-sim.forgetStore .close-stars-lab,
+    .close-sim.decayRedis .close-stars-lab,
+    .close-sim.decayPause .close-stars-lab,
+    .close-sim.decayServer .close-stars-lab { display: none; }
     .close-stars-lab .php,
     .close-stars-lab .orbit { display: none; }
     .close-sim .moon.close-moon {
@@ -5065,7 +5217,10 @@
     .close-sim.zoom .moon.close-moon,
     .close-sim.hang .moon.close-moon,
     .close-sim.forgetRam .moon.close-moon,
-    .close-sim.forgetStore .moon.close-moon { display: none !important; }
+    .close-sim.forgetStore .moon.close-moon,
+    .close-sim.decayRedis .moon.close-moon,
+    .close-sim.decayPause .moon.close-moon,
+    .close-sim.decayServer .moon.close-moon { display: none !important; }
     .close-sim .moon.close-moon .globe {
       width: 22px;
       height: 22px;
@@ -6704,10 +6859,16 @@
         <div class="close-hud">
           <p class="close-fail" id="closeFail">Create failed. The old room name is still there.</p>
         </div>
-        <div class="close-lattice" id="closeLattice" aria-hidden="true"></div>
+        <div class="close-lattice" id="closeLattice" aria-hidden="true">
+          <span class="php">this server</span>
+          <div class="close-excitations" id="closeServerExcite"></div>
+          <span class="close-field-id" id="closeServerId"></span>
+        </div>
         <div class="close-catalog">
           <span class="php">Redis rooms</span>
           <div class="close-program" id="closeProgram"></div>
+          <div class="close-excitations" id="closeRedisExcite"></div>
+          <span class="close-field-id" id="closeRedisId"></span>
         </div>
         <div class="close-orbit" id="closeOrbit" aria-hidden="true"></div>
         <div class="close-stars-lab" id="closeSys" aria-hidden="true"></div>
@@ -6788,6 +6949,28 @@
       { left: 34, top: 62 },
       { left: 66, top: 62 }
     ];
+    const CLOSE_REDIS_KEYS = [
+      { key: "rooms", part: "hash", bits: 3, left: 24, top: 22 },
+      { key: "room_internal", part: "hash", bits: 3, left: 52, top: 16 },
+      { key: "room_node_map", part: "node", bits: 2, left: 78, top: 30 },
+      { key: "room_participants:", part: "people", bits: 4, prefix: true, left: 20, top: 58 },
+      { key: "agent_dispatch:", part: "agent", bits: 3, prefix: true, left: 50, top: 74 },
+      { key: "agent_job:", part: "agent", bits: 3, prefix: true, left: 78, top: 64 }
+    ];
+    const CLOSE_SERVER_KEYS = [
+      { key: "r.rooms", part: "map", bits: 4, left: 50, top: 24 },
+      { key: "room topic", part: "topic", bits: 3, left: 24, top: 54 },
+      { key: "agent-dispatch topic", part: "topic", bits: 3, left: 76, top: 54 },
+      { key: "participant topic", part: "topic", bits: 3, left: 50, top: 76 }
+    ];
+    const CLOSE_GO_KEYS = [
+      { key: "rooms", part: "hash", bits: 3, left: 22, top: 20 },
+      { key: "roomInternal", part: "hash", bits: 3, left: 50, top: 16 },
+      { key: "participants", part: "people", bits: 4, left: 78, top: 28 },
+      { key: "agentDispatches", part: "agent", bits: 3, left: 22, top: 58 },
+      { key: "agentJobs", part: "agent", bits: 3, left: 50, top: 76 },
+      { key: "r.rooms", part: "map", bits: 4, left: 78, top: 62 }
+    ];
     const closeSim = {
       name: "device-abc",
       rooms: closeLiveRooms(),
@@ -6809,7 +6992,8 @@
       tryOn: false,
       tryStep: "",
       tryHold: 0,
-      mkGone: false
+      mkGone: false,
+      decayI: 0
     };
     function closeReady() {
       return closeSim.pickedStore && closeSim.pickedN;
@@ -6858,6 +7042,25 @@
         s += `<div class="fifo-slot ${on ? "on" : ""} ${leave ? "leave" : ""}"></div>`;
       }
       return s;
+    }
+    function closeKeyLabel(item, name) {
+      if (item.prefix) return item.key + name;
+      if (item.key === "r.rooms") return "r.rooms[" + name + "]";
+      if (item.key.indexOf("topic") !== -1) return item.key + " " + name;
+      return item.key;
+    }
+    function closeExciteHtml(keys, decayI, dying) {
+      return keys.map((item, i) => {
+        const use = i < decayI ? "gone" : (i === decayI && dying ? "dying" : "live");
+        const n = item.bits || 3;
+        let bits = "";
+        for (let b = 0; b < n; b++) bits += "<i></i>";
+        return `<span class="close-excite ${use}" data-part="${escapeHtml(item.part || "hash")}" style="left:${item.left}%;top:${item.top}%">
+          <span class="bits" aria-hidden="true">${bits}</span>
+          <span class="dot"></span>
+          <span class="ekey">${escapeHtml(item.key)}</span>
+        </span>`;
+      }).join("");
     }
     function closeRoomsHtml() {
       return closeSim.rooms.map((r, i) => {
@@ -6958,18 +7161,30 @@
           lab: "disconnected"
         };
       }
-      if (beat === "forgetRam") {
+      if (beat === "decayRedis") {
+        const item = CLOSE_REDIS_KEYS[closeSim.decayI] || CLOSE_REDIS_KEYS[0];
+        const k = closeKeyLabel(item, name);
         return {
-          title: "Removing " + name + " from this server…",
-          why: "Everyone is gone. The live meeting is dropped from memory. " + where + " still has the name.",
-          lab: "memory"
+          title: "Removing " + k,
+          why: "Redis still has " + name + " in this hash. This copy is decaying. The others for this name are still on.",
+          lab: k
         };
       }
-      if (beat === "forgetStore") {
+      if (beat === "decayPause") {
         return {
-          title: redis ? "Deleting " + name + " from Redis…" : "Deleting " + name + " from this server's room list…",
-          why: "Once this name is gone, creating it again starts a new meeting.",
-          lab: "deleting"
+          title: name + " is gone from Redis",
+          why: "Every Redis hash for this name is empty. The room id is off this field.",
+          lab: "Redis empty"
+        };
+      }
+      if (beat === "decayServer") {
+        const keys = store === "go" ? CLOSE_GO_KEYS : CLOSE_SERVER_KEYS;
+        const item = keys[closeSim.decayI] || keys[0];
+        const k = closeKeyLabel(item, name);
+        return {
+          title: "Removing " + k,
+          why: "This server still has " + name + " here. Dropping this copy. The name is the same string as Redis used.",
+          lab: k
         };
       }
       if (phase === "done" && (!beat || beat === "idle")) {
@@ -7107,9 +7322,49 @@
           : "Create failed. Redis still has the old room name, so this is not a new meeting.";
       }
       const catPhp = stage.querySelector(".close-catalog > .php");
-      if (catPhp) catPhp.textContent = store === "go" ? "Go map" : "Redis rooms";
+      if (catPhp) {
+        if (beat === "decayRedis" || beat === "decayPause") catPhp.textContent = "Redis";
+        else catPhp.textContent = store === "go" ? "Go map" : "Redis rooms";
+      }
       const prog = document.getElementById("closeProgram");
       if (prog) prog.innerHTML = closeRoomsHtml();
+      const redisEx = document.getElementById("closeRedisExcite");
+      const redisId = document.getElementById("closeRedisId");
+      const serverEx = document.getElementById("closeServerExcite");
+      const serverId = document.getElementById("closeServerId");
+      const redisDecay = beat === "decayRedis" || beat === "decayPause";
+      const serverDecay = beat === "decayServer";
+      if (redisEx) {
+        const sig = beat + ":" + closeSim.decayI;
+        if (redisDecay && redisEx.dataset.sig !== sig) {
+          redisEx.innerHTML = closeExciteHtml(CLOSE_REDIS_KEYS, beat === "decayPause" ? CLOSE_REDIS_KEYS.length : closeSim.decayI, beat === "decayRedis");
+          redisEx.dataset.sig = sig;
+        }
+        if (!redisDecay && redisEx.dataset.sig) {
+          redisEx.innerHTML = "";
+          delete redisEx.dataset.sig;
+        }
+      }
+      if (redisId) {
+        redisId.textContent = closeSim.name;
+        redisId.classList.toggle("off", beat === "decayPause");
+      }
+      if (serverEx) {
+        const keys = store === "go" ? CLOSE_GO_KEYS : CLOSE_SERVER_KEYS;
+        const sig = beat + ":" + closeSim.decayI + ":" + store;
+        if (serverDecay && serverEx.dataset.sig !== sig) {
+          serverEx.innerHTML = closeExciteHtml(keys, closeSim.decayI, true);
+          serverEx.dataset.sig = sig;
+        }
+        if (!serverDecay && serverEx.dataset.sig) {
+          serverEx.innerHTML = "";
+          delete serverEx.dataset.sig;
+        }
+      }
+      if (serverId) {
+        serverId.textContent = closeSim.name;
+        serverId.classList.toggle("off", false);
+      }
       const orbit = document.getElementById("closeOrbit");
       if (orbit) {
         if (beat === "zoom") {
@@ -7142,7 +7397,7 @@
         else if (phase === "done") runLab.textContent = "Clear";
         else runLab.textContent = "Run the simulation";
       }
-      if (closeSim.pickedN && !closeSim.tryOn && beat !== "disturb" && beat !== "zoom" && beat !== "hang" && beat !== "forgetRam" && beat !== "forgetStore") closeFitStars();
+      if (closeSim.pickedN && !closeSim.tryOn && beat !== "disturb" && beat !== "zoom" && beat !== "hang" && beat !== "forgetRam" && beat !== "forgetStore" && beat !== "decayRedis" && beat !== "decayPause" && beat !== "decayServer") closeFitStars();
     }
     function closeNextBeat() {
       if (closeSim.beat === "disturb") {
@@ -7171,20 +7426,39 @@
         return;
       }
       if (closeSim.beat === "hang") {
-        closeBeat("forgetRam", 2.2);
+        closeSim.decayI = 0;
+        if (closeSim.store === "go") closeBeat("decayServer", 0.9);
+        else closeBeat("decayRedis", 0.9);
         return;
       }
-      if (closeSim.beat === "forgetRam") {
-        closeBeat("forgetStore", 1.4);
+      if (closeSim.beat === "decayRedis") {
+        if (closeSim.decayI < CLOSE_REDIS_KEYS.length - 1) {
+          closeSim.decayI += 1;
+          closeBeat("decayRedis", 0.9);
+        } else {
+          closeBeat("decayPause", 2.0);
+        }
         return;
       }
-      if (closeSim.beat === "forgetStore") {
-        const r = closeSim.rooms.find((x) => x.state === "closing");
-        if (r) r.state = "gone";
-        closeSim.phase = "done";
-        closeSim.beat = "idle";
-        closeSim.hold = 0;
-        closeSim.failed = false;
+      if (closeSim.beat === "decayPause") {
+        closeSim.decayI = 0;
+        closeBeat("decayServer", 0.9);
+        return;
+      }
+      if (closeSim.beat === "decayServer") {
+        const keys = closeSim.store === "go" ? CLOSE_GO_KEYS : CLOSE_SERVER_KEYS;
+        if (closeSim.decayI < keys.length - 1) {
+          closeSim.decayI += 1;
+          closeBeat("decayServer", 0.9);
+        } else {
+          const r = closeSim.rooms.find((x) => x.state === "closing");
+          if (r) r.state = "gone";
+          closeSim.phase = "done";
+          closeSim.beat = "idle";
+          closeSim.hold = 0;
+          closeSim.failed = false;
+        }
+        return;
       }
     }
     function closeTick(now) {
@@ -7241,6 +7515,7 @@
       closeSim.tryStep = "";
       closeSim.tryHold = 0;
       closeSim.mkGone = false;
+      closeSim.decayI = 0;
     }
     function closeClear() {
       closeStop();
