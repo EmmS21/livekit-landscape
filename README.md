@@ -1,11 +1,9 @@
 # LiveKit landscape
 
-A map of LiveKit drawn from GitHub issues. Each simulation has its own entry link. Opening that link starts on that behavior.
+A map of LiveKit drawn from GitHub issues. Each simulation has its own link, title, and logo.
 
-- [Airplane mode](https://emms21.github.io/livekit-landscape/#airplane-mode) (#4477) — the websocket does not start when they expect it to, after airplane mode.
-- [Delete, then the same name](https://emms21.github.io/livekit-landscape/#delete-same-name) (#4726) — they delete a room, create that name again, people join, then everyone is kicked.
-
-Ticket numbers work too: `#4477`, `#4726`. Or open `index.html` in a browser.
+- [Airplane mode](https://emms21.github.io/livekit-landscape/) (#4477) — the websocket does not start when they expect it to, after airplane mode.
+- [Delete, then the same name](https://emms21.github.io/livekit-landscape/delete-same-name.html) (#4726) — they delete a room, create that name again, people join, then everyone is kicked.
 
 ## Analytics
 
