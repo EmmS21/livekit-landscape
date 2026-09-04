@@ -439,11 +439,72 @@
       background: #e4eaf4;
       animation: glowSoft 8.5s ease-in-out infinite;
     }
+    .sky-spark i.diamond {
+      display: none;
+      width: 3px;
+      height: 3px;
+      border-radius: 0;
+      background: #e8dff4;
+      box-shadow: 0 0 4px rgba(200, 180, 230, 0.45);
+      transform: rotate(45deg);
+      opacity: 0.55;
+      animation: diamondTwinkle 4.2s ease-in-out infinite;
+    }
+    html.alt-universe .sky-spark i.diamond { display: block; }
+    html.alt-universe .sky-spark i.shift {
+      animation: hueTwinkle 3.6s ease-in-out infinite;
+    }
+    html.alt-universe .sky-spark i.diamond.shift {
+      animation: diamondHue 4.2s ease-in-out infinite;
+    }
     @keyframes twinkle {
       0%, 100% { opacity: 0.18; transform: scale(0.75); }
       47% { opacity: 0.52; }
       51% { opacity: 1; transform: scale(1.38); }
       56% { opacity: 0.32; transform: scale(0.85); }
+    }
+    @keyframes diamondTwinkle {
+      0%, 100% { opacity: 0.22; transform: rotate(45deg) scale(0.8); }
+      48% { opacity: 0.7; transform: rotate(45deg) scale(1.15); }
+      54% { opacity: 1; transform: rotate(45deg) scale(1.28); }
+      62% { opacity: 0.4; transform: rotate(45deg) scale(0.9); }
+    }
+    @keyframes hueTwinkle {
+      0%, 100% { background: #e6ecf5; box-shadow: 0 0 4px rgba(230, 236, 245, 0.4); }
+      50% { background: #cfc0e4; box-shadow: 0 0 6px rgba(180, 150, 220, 0.42); }
+    }
+    @keyframes diamondHue {
+      0%, 100% { background: #e8dff4; box-shadow: 0 0 4px rgba(200, 180, 230, 0.45); transform: rotate(45deg) scale(0.8); }
+      50% { background: #d4b8ea; box-shadow: 0 0 7px rgba(170, 130, 220, 0.5); transform: rotate(45deg) scale(1.2); }
+    }
+    html.alt-universe .sky.scale-engine,
+    html.alt-universe .sky.scale-lab {
+      background:
+        linear-gradient(rgba(92, 48, 140, 0.2), rgba(92, 48, 140, 0.2)),
+        radial-gradient(ellipse at 22% 58%, #1a1410 0%, transparent 42%),
+        radial-gradient(ellipse at 78% 38%, #121820 0%, #05060a 62%);
+    }
+    html.universe-shift .starfield {
+      animation: starStretch 0.92s ease-in-out;
+      transform-origin: 50% 50%;
+    }
+    html.universe-shift .sky::after {
+      animation: starDrift 96s linear infinite, starStretch 0.92s ease-in-out;
+      transform-origin: 50% 50%;
+    }
+    html.universe-shift .engine-stage.close-sim {
+      animation: sceneBend 0.92s ease-in-out;
+    }
+    @keyframes starStretch {
+      0% { transform: scale(1) translate(0, 0); filter: none; }
+      28% { transform: scaleX(1.72) scaleY(0.7) skewX(-16deg) translate(5%, -3%); filter: blur(1.6px) saturate(1.35); }
+      58% { transform: scaleX(0.82) scaleY(1.28) skewX(11deg) translate(-4%, 4%); filter: blur(1px); }
+      100% { transform: scale(1) translate(0, 0); filter: none; }
+    }
+    @keyframes sceneBend {
+      0% { filter: none; }
+      40% { filter: blur(2.2px) contrast(1.18) hue-rotate(-12deg); }
+      100% { filter: none; }
     }
     @keyframes glowSoft {
       0%, 100% { opacity: 0.28; }
@@ -4011,21 +4072,23 @@
       font-weight: 400;
     }
     .gone-rest {
-      max-height: 38vh;
-      overflow: auto;
+      max-height: 1.5em;
+      overflow: hidden;
       margin-top: 8px;
       padding-right: 2px;
-      opacity: 0.09;
-      filter: blur(4px);
-      transition: opacity 0.2s ease, filter 0.2s ease;
+      opacity: 0.45;
+      filter: none;
+      transition: opacity 0.2s ease, max-height 0.2s ease;
     }
     .gone-rest:hover, .gone-rest:focus-within {
-      opacity: 0.65;
-      filter: blur(0.5px);
+      max-height: 38vh;
+      overflow: auto;
+      opacity: 0.92;
+      filter: none;
     }
     .gone-rest:hover button, .gone-rest:focus-within button {
-      opacity: 0.5;
-      filter: blur(0.4px);
+      opacity: 1;
+      filter: none;
     }
     .gone button.haze, .moon.haze, .land.path,
     .gone button.dim, .moon.dim, .nebula.dim {
@@ -4096,6 +4159,8 @@
       .engine-core .heart, .engine-clock .hand, .engine-ignite .spark, .engine-tether .ping, .engine-tether .pong, .engine-tether path.wire,
       .engine-tether path.tube, .engine-tether path.tcp-grit, .engine-tether path.tcp-road, .worldline-path .tube, .worldline-path .tcp-grit, .worldline-path .tcp-road, .worldline-path .ping, .worldline-path .pong, .worldline-path .null-ray, .engine-tether .null-ray, .engine-tether .tcp-mote, .worldline-path .tcp-mote, .connect-act .spark,
       .path-lab .mini-ring, .path-lab .ember, .photon, .engine-collapse .void,
+      html.universe-shift .starfield, html.universe-shift .sky::after, html.universe-shift .engine-stage.close-sim,
+      .close-ridge, .close-probe, .close-gate, .close-gate-probe, .close-fork .fork-dot, .close-fork .fork-stem, .close-fork .fork-fix,
       .planet.p-gas .globe, .here-planet.p-gas .globe, .planet.has-rings .ring, .here-planet.has-rings .ring,
       .planet.has-rings .ring-ice, .here-planet.has-rings .ring-ice,
       .here-moon .globe-spin, .here-moon .moon-stones { animation: none; }
@@ -4111,8 +4176,10 @@
       .air-say,
       .lab-look { display: none !important; }
       .gone-rest, .gone-rest:focus-within {
-        opacity: 0.55;
-        filter: blur(0.5px);
+        max-height: 38vh;
+        overflow: auto;
+        opacity: 0.85;
+        filter: none;
       }
       .nebula { opacity: 0.28; filter: blur(3.5px); }
       .galaxy .g-disk, .galaxy .g-halo { filter: blur(3.2px); opacity: 0.88; }
@@ -4492,6 +4559,8 @@
     }
     .close-sim.store-redis:not(.run) .close-catalog {
       display: block;
+      left: 18%;
+      top: 34%;
       transform: translate(-50%, -50%) scale(0.62);
     }
     .close-sim.store-redis.disturb .close-catalog,
@@ -4563,7 +4632,7 @@
     .close-sim.disturb .close-program::before,
     .close-sim.forgetRam .close-program::before,
     .close-sim.decayRedis .close-program::before {
-      animation: closeFieldShimmer 2.2s ease-out;
+      animation: closeFieldShimmer 2.53s ease-out;
     }
     .close-sim.decayRedis .close-program,
     .close-sim.decayPause .close-program {
@@ -4623,7 +4692,29 @@
     .close-sim.disturb .close-room.hit .shell,
     .close-sim.try-see .close-room.hit .shell,
     .close-sim.try-err .close-room.hit .shell {
-      animation: closeNameAnswer 2.2s ease-out both;
+      animation: closeNameAnswer 2.53s ease-out both;
+    }
+    .close-sim.mk-fail .close-catalog {
+      display: block !important;
+      transform: translate(-50%, -50%) scale(1);
+      z-index: 12;
+    }
+    .close-sim.mk-fail .close-room,
+    .close-sim.mk-fail .close-room.pick { opacity: 1; }
+    .close-sim.mk-fail .close-room.pick .shell,
+    .close-sim.mk-fail .close-room.hit .shell {
+      width: 22px;
+      height: 22px;
+      background: #c47a6a;
+      border-color: #f3c4bc;
+      box-shadow: 0 0 22px rgba(196, 90, 70, 1);
+      animation: none;
+    }
+    .close-sim.mk-fail .close-room.pick .pname,
+    .close-sim.law-pr.store-redis.mk-fail .close-room.pick .pname {
+      display: block;
+      opacity: 1;
+      color: #f3c4bc;
     }
     @keyframes closeNameAnswer {
       0%, 38% {
@@ -4664,8 +4755,8 @@
       display: block;
       width: min(140px, 38vw);
       height: min(140px, 38vw);
-      left: 84%;
-      top: 32%;
+      left: 18%;
+      top: 34%;
     }
     .close-sim.store-go.disturb .close-lattice,
     .close-sim.store-go.zoom .close-lattice,
@@ -4720,8 +4811,14 @@
       box-shadow: 0 0 20px rgba(231, 163, 90, 0.95);
     }
     .close-sim .engine-tether { display: block; }
-    .close-sim .close-well { display: block; }
-    .close-sim .path-lab.road { display: block; }
+    .close-sim .close-well { display: none; }
+    .close-sim.enqueue .close-well,
+    .close-sim.send .close-well,
+    .close-sim.sending .close-well { display: block; }
+    .close-sim .path-lab.road { display: none; }
+    .close-sim.enqueue .path-lab.road,
+    .close-sim.send .path-lab.road,
+    .close-sim.sending .path-lab.road { display: block; }
     .close-sim .fifo-key { display: none; }
     .close-sim.tcp .fifo-key { display: flex; }
     .close-sim.disturb .engine-tether,
@@ -4764,12 +4861,12 @@
     .close-sim.try .close-stars-lab { display: none !important; }
     .close-banner {
       position: absolute;
-      left: 50%;
-      top: 24%;
-      transform: translateX(-50%);
+      left: 14px;
+      top: max(48px, calc(env(safe-area-inset-top) + 32px));
+      transform: none;
       z-index: 21;
-      width: min(44ch, calc(100% - 180px));
-      text-align: center;
+      width: min(28ch, 30vw);
+      text-align: left;
       pointer-events: none;
     }
     .close-banner .close-title,
@@ -4782,12 +4879,12 @@
       color: #6e675c;
     }
     .close-banner .close-why { margin-top: 2px; }
+    .close-sim.idle .close-banner,
     .close-sim.people .close-banner,
-    .close-sim.awaitDelete .close-banner {
-      top: max(40px, calc(env(safe-area-inset-top) + 24px));
-    }
-    .close-sim.run .close-banner {
-      top: max(36px, calc(env(safe-area-inset-top) + 18px));
+    .close-sim.awaitDelete .close-banner,
+    .close-sim.run .close-banner,
+    .close-sim.done .close-banner {
+      top: max(48px, calc(env(safe-area-inset-top) + 32px));
     }
     .close-sim .engine-clock {
       display: none;
@@ -5042,10 +5139,10 @@
       box-shadow: 0 0 16px rgba(231, 163, 90, 0.7);
     }
     .close-excite.dying .dot {
-      animation: closeExciteDecay 0.85s ease-out forwards;
+      animation: closeExciteDecay 0.98s ease-out forwards;
     }
     .close-excite.dying .ekey {
-      animation: closeExciteDecayName 0.85s ease-out forwards;
+      animation: closeExciteDecayName 0.98s ease-out forwards;
     }
     .close-excite.gone {
       opacity: 0;
@@ -5088,7 +5185,7 @@
     .close-excite[data-part="topic"] .bits i:nth-child(2) { left: 16px; top: 8px; }
     .close-excite[data-part="topic"] .bits i:nth-child(3) { left: 26px; top: 20px; }
     .close-excite.dying .bits i {
-      animation: closeBitLight 0.85s ease-out forwards;
+      animation: closeBitLight 0.98s ease-out forwards;
     }
     .close-excite.dying .bits i:nth-child(2) { animation-delay: 0.1s; }
     .close-excite.dying .bits i:nth-child(3) { animation-delay: 0.2s; }
@@ -5125,16 +5222,16 @@
     .close-sim.decayServer .moon.close-moon { display: none !important; }
     .close-sim .photon.burst,
     .close-sim .photon.disturb { display: none; }
-    .close-sim.enqueue .photon.send-sig { display: block; background: #e7a35a; box-shadow: 0 0 10px rgba(231, 163, 90, 0.95); animation-duration: 1.6s; }
+    .close-sim.enqueue .photon.send-sig { display: block; background: #e7a35a; box-shadow: 0 0 10px rgba(231, 163, 90, 0.95); animation-duration: 1.84s; }
     .close-sim.send .photon.burst,
-    .close-sim.sending .photon.burst { display: block; background: #f3eadc; box-shadow: 0 0 8px rgba(243, 234, 220, 0.9); animation-duration: 1.1s; }
+    .close-sim.sending .photon.burst { display: block; background: #f3eadc; box-shadow: 0 0 8px rgba(243, 234, 220, 0.9); animation-duration: 1.27s; }
     .close-sim.zoom .photon.disturb {
       display: block;
       width: 10px;
       height: 10px;
       background: #fff6e0;
       box-shadow: 0 0 16px rgba(231, 163, 90, 1);
-      animation-duration: 1.8s;
+      animation-duration: 2.07s;
     }
     .close-sim .flow-word.send,
     .close-sim .flow-word.batch {
@@ -5245,7 +5342,9 @@
       display: block !important;
     }
     .close-sim.people #labRunBtn,
-    .close-sim.awaitDelete #labRunBtn {
+    .close-sim.awaitDelete #labRunBtn,
+    .close-sim.run #labRunBtn,
+    .close-sim.done #labRunBtn {
       display: none !important;
     }
     .close-sim .engine-laws.close-laws {
@@ -5254,8 +5353,8 @@
       align-items: stretch;
       left: 50%;
       right: auto;
-      top: calc(128px + env(safe-area-inset-top));
-      bottom: auto;
+      top: auto;
+      bottom: max(18px, env(safe-area-inset-bottom));
       transform: translateX(-50%);
       z-index: 22;
       width: min(260px, 86vw);
@@ -5265,25 +5364,428 @@
     }
     .close-sim.people .engine-laws.close-laws,
     .close-sim.awaitDelete .engine-laws.close-laws { display: flex; }
-    .close-sim.run .engine-laws.close-laws { display: none; }
+    .close-sim.idle .close-n,
+    .close-sim.idle .close-acts,
     .close-sim.run .close-n,
     .close-sim.run .close-store,
+    .close-sim.run .close-acts,
     .close-sim.run #closeDel { display: none; }
-    .close-sim:not(.run) #closeMk,
-    .close-sim:not(.run) .close-try { display: none; }
-    .close-sim.run #closeMk {
+    .close-fork {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: calc(128px + env(safe-area-inset-top));
+      transform: translateX(-50%);
+      z-index: 18;
+      width: min(260px, 86vw);
+      margin: 0;
+      pointer-events: none;
+    }
+    .close-fork .fork-end { pointer-events: auto; }
+    .close-sim.idle .close-fork,
+    .close-sim.people .close-fork,
+    .close-sim.awaitDelete .close-fork,
+    .close-sim.run .close-fork,
+    .close-sim.done .close-fork { display: block; }
+    .close-fork svg {
+      display: block;
+      width: 100%;
+      height: 88px;
+      overflow: visible;
+    }
+    .close-fork.nested svg { height: 148px; }
+    .close-fork .fork-stem,
+    .close-fork .fork-now,
+    .close-fork .fork-pr,
+    .close-fork .fork-fix {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .close-fork .fork-stem {
+      stroke: rgba(243, 234, 220, 0.55);
+      stroke-width: 1.6;
+      stroke-dasharray: 5 9;
+      filter: drop-shadow(0 0 4px rgba(231, 163, 90, 0.7));
+      animation: forkGlow 2.8s linear infinite;
+    }
+    @keyframes forkGlow {
+      to { stroke-dashoffset: -14; }
+    }
+    .close-fork .fork-now,
+    .close-fork .fork-pr,
+    .close-fork .fork-fix {
+      stroke: rgba(243, 234, 220, 0.22);
+      stroke-width: 1.4;
+    }
+    .close-fork .fork-fix { display: none; }
+    .close-fork.nested .fork-fix { display: block; }
+    .close-fork[data-law="now"] .fork-now,
+    .close-fork[data-to="now"] .fork-now {
+      stroke: rgba(231, 163, 90, 0.95);
+      stroke-width: 1.85;
+      filter: drop-shadow(0 0 5px rgba(231, 163, 90, 0.85));
+    }
+    .close-fork[data-law="pr"] .fork-pr,
+    .close-fork[data-to="pr"] .fork-pr,
+    .close-fork[data-law="fix"] .fork-pr {
+      stroke: rgba(180, 150, 230, 0.95);
+      stroke-width: 1.85;
+      filter: drop-shadow(0 0 6px rgba(139, 126, 200, 0.9));
+    }
+    .close-fork[data-law="fix"] .fork-fix,
+    .close-fork[data-to="fix"] .fork-fix {
+      stroke: rgba(220, 200, 255, 0.95);
+      stroke-width: 1.85;
+      filter: drop-shadow(0 0 6px rgba(200, 180, 240, 0.95));
+    }
+    .close-fork .fork-dot {
+      fill: #fff6e0;
+      filter: drop-shadow(0 0 6px rgba(231, 163, 90, 1));
+    }
+    .close-fork[data-to="pr"] .fork-dot,
+    .close-fork[data-law="pr"] .fork-dot,
+    .close-fork[data-to="fix"] .fork-dot,
+    .close-fork[data-law="fix"] .fork-dot {
+      fill: #efe8ff;
+      filter: drop-shadow(0 0 7px rgba(180, 150, 230, 1));
+    }
+    .close-fork .fork-end {
+      position: absolute;
+      right: 0;
+      border: 0;
+      padding: 8px 6px;
+      min-height: 32px;
+      background: none;
+      color: var(--soft);
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 8px #000;
+      pointer-events: auto;
+    }
+    .close-fork .fork-end.now { top: 0; }
+    .close-fork .fork-end.pr { bottom: 0; }
+    .close-fork .fork-end.fix {
+      display: none;
+      bottom: 0;
+      text-align: right;
+      line-height: 1.25;
+      letter-spacing: 0.06em;
+      max-width: 11em;
+    }
+    .close-fork .fork-end.fix .fork-who {
+      display: block;
+      font-size: 8px;
+      letter-spacing: 0.14em;
+      text-transform: none;
+      color: #c4b4ee;
+      margin-bottom: 2px;
+    }
+    .close-fork.nested .fork-end.pr {
+      top: 48px;
+      bottom: auto;
+    }
+    .close-fork.nested .fork-end.fix { display: block; }
+    .close-fork .fork-end.on {
+      color: var(--accent);
+    }
+    .close-fork[data-law="pr"] .fork-end.pr.on,
+    .close-fork .fork-end.pr.on {
+      color: #c4b4ee;
+    }
+    .close-fork[data-law="fix"] .fork-end.fix.on,
+    .close-fork .fork-end.fix.on {
+      color: #e8dff8;
+    }
+    .close-fork .fork-end:disabled { cursor: default; opacity: 0.7; }
+    .close-ridge {
+      display: none;
+      position: absolute;
+      left: 22%;
+      top: 42%;
+      width: 86px;
+      height: 86px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 6;
+    }
+    .close-sim.law-pr.store-redis .close-ridge {
+      display: block;
+      animation: ridgeForm 0.98s ease-out both;
+    }
+    .close-sim.law-pr.store-redis.run.lock-up .close-ridge {
+      animation: none;
+      filter: brightness(1.25);
+      z-index: 8;
+    }
+    .close-sim.law-pr.store-redis.run.lock-up.mk-wait .close-ridge {
+      filter: brightness(1.55) saturate(1.2);
+    }
+    .close-sim.law-pr.store-redis.run.lock-up.mk-wait .close-ridge .ridge-ring {
+      stroke: rgba(255, 250, 255, 1);
+    }
+    .close-sim.law-pr.store-redis.run.lock-open .close-ridge {
+      animation: ridgeRelease 1.7s ease-out forwards;
+      z-index: 8;
+    }
+    .close-sim.law-pr.store-redis.run.lock-down.space-unstable .close-ridge {
+      display: block;
+      animation: none;
+      opacity: 0.28;
+      filter: hue-rotate(-48deg) saturate(1.4);
+    }
+    .close-sim.law-pr.store-redis.run.mk-wait .close-ridge,
+    .close-sim.law-pr.store-go.run.mk-wait .close-gate {
+      display: block;
+      opacity: 1;
+      animation: none;
+      filter: brightness(1.45);
+    }
+    .close-sim.law-pr.store-redis.done .close-ridge,
+    .close-sim.law-pr.store-redis.run.space-stable .close-ridge {
+      display: none;
+    }
+    @keyframes ridgeRelease {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; filter: brightness(1.6); }
+      42% { transform: translate(-50%, -50%) scale(1.38); opacity: 0.8; filter: brightness(1.2); }
+      100% { transform: translate(-50%, -50%) scale(1.85); opacity: 0.18; filter: hue-rotate(-40deg); }
+    }
+    .close-ridge .php {
+      position: absolute;
+      left: 50%;
+      top: auto;
+      bottom: calc(100% + 4px);
+      transform: translateX(-50%);
+      font-size: 7px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #c4b4ee;
+      text-shadow: 0 1px 8px #000;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .close-ridge svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .close-ridge .ridge-well { fill: url(#closeRidgeWell); }
+    .close-ridge .ridge-ring {
+      fill: none;
+      stroke-linecap: round;
+    }
+    .close-ridge .ridge-strut {
+      fill: none;
+      stroke: rgba(210, 190, 255, 0.5);
+      stroke-width: 0.9;
+    }
+    @keyframes ridgeForm {
+      0% { transform: translate(-50%, -50%) scale(0.42) scaleY(0.18); opacity: 0; }
+      55% { transform: translate(-50%, -50%) scale(1.06) scaleY(1.12); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1) scaleY(1); opacity: 1; }
+    }
+    .close-sim.law-pr.store-redis .close-program::before {
+      background-image:
+        radial-gradient(ellipse 48px 32px at 22% 42%, transparent 28%, rgba(170, 140, 230, 0.55) 34%, rgba(170, 140, 230, 0.18) 42%, transparent 48%),
+        radial-gradient(circle, rgba(231, 163, 90, 0.38) 1.1px, transparent 1.6px);
+      background-size: auto, 16px 16px;
+    }
+    .close-sim.law-pr.store-redis .close-room.pick .shell {
+      box-shadow: 0 0 10px rgba(180, 150, 230, 0.55);
+      border-color: rgba(210, 190, 255, 0.7);
+    }
+    .close-sim.law-pr.store-redis .close-room.pick .pname { display: none; }
+    .close-sim.law-pr.store-redis .close-room.fresh .pname {
+      display: block;
+      opacity: 1;
+      color: #7ec8c4;
+    }
+    .close-probe {
+      display: none;
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 7;
+    }
+    .close-sim.law-pr.store-redis .close-probe { display: block; }
+    .close-probe.same {
+      background: #e7a35a;
+      box-shadow: 0 0 8px rgba(231, 163, 90, 0.95);
+      animation: probeBlock 3.22s ease-in infinite;
+    }
+    .close-probe.other {
+      background: #7ec8c4;
+      box-shadow: 0 0 7px rgba(126, 200, 196, 0.85);
+      animation: probePass 2.99s linear infinite;
+    }
+    .close-probe.other.lobby {
+      animation-name: probePassLobby;
+      animation-duration: 3.57s;
+      animation-delay: 0.7s;
+    }
+    @keyframes probeBlock {
+      0% { left: 78%; top: 16%; opacity: 0.15; }
+      8% { opacity: 0.95; }
+      52% { left: 36%; top: 38%; opacity: 1; }
+      58% { left: 34%; top: 39%; opacity: 1; }
+      70% { left: 40%; top: 33%; opacity: 0.2; }
+      100% { left: 42%; top: 32%; opacity: 0; }
+    }
+    @keyframes probePass {
+      0% { left: 6%; top: 82%; opacity: 0.15; }
+      12% { opacity: 0.9; }
+      48% { left: 58%; top: 28%; opacity: 1; }
+      100% { left: 94%; top: 14%; opacity: 0.1; }
+    }
+    @keyframes probePassLobby {
+      0% { left: 8%; top: 12%; opacity: 0.15; }
+      14% { opacity: 0.9; }
+      52% { left: 72%; top: 58%; opacity: 1; }
+      100% { left: 96%; top: 78%; opacity: 0.1; }
+    }
+    .close-rooms {
+      position: absolute;
+      inset: 0;
+    }
+    .close-gate {
+      display: none;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 6;
+    }
+    .close-sim.store-go.law-pr .close-gate {
+      display: block;
+    }
+    .close-sim.store-go.law-pr.run.lock-up .close-gate svg {
+      animation: none;
+      filter: brightness(1.25);
+    }
+    .close-sim.store-go.law-pr.run.lock-up.mk-wait .close-gate svg {
+      filter: brightness(1.55) saturate(1.2);
+    }
+    .close-sim.store-go.law-pr.run.lock-open .close-gate svg {
+      animation: ridgeRelease 1.7s ease-out forwards;
+    }
+    .close-sim.store-go.law-pr.run.lock-down.space-unstable .close-gate {
+      display: block;
+      opacity: 0.28;
+      filter: hue-rotate(-48deg) saturate(1.4);
+    }
+    .close-sim.store-go.law-pr.done .close-gate,
+    .close-sim.store-go.law-pr.run.space-stable .close-gate {
+      display: none;
+    }
+    .close-gate svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      animation: gateForm 0.98s ease-out both;
+    }
+    .close-gate .php {
+      position: absolute;
+      left: 50%;
+      top: auto;
+      bottom: calc(100% + 2px);
+      transform: translateX(-50%);
+      z-index: 2;
+      font-size: 7px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #c4b4ee;
+      text-shadow: 0 1px 8px #000;
+      white-space: nowrap;
+    }
+    .close-sim.store-go.law-pr .close-lattice {
+      background:
+        repeating-linear-gradient(0deg, transparent 0 22px, rgba(170, 140, 230, 0.32) 22px 23px),
+        repeating-linear-gradient(90deg, transparent 0 22px, rgba(170, 140, 230, 0.32) 22px 23px);
+    }
+    @keyframes gateForm {
+      0% { transform: scale(0.46) scaleY(0.2); opacity: 0; }
+      55% { transform: scale(1.05) scaleY(1.1); opacity: 1; }
+      100% { transform: scale(1) scaleY(1); opacity: 1; }
+    }
+    .close-gate-probe {
+      display: none;
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: #7ec8c4;
+      box-shadow: 0 0 7px rgba(126, 200, 196, 0.85);
+      pointer-events: none;
+      z-index: 7;
+    }
+    .close-sim.store-go.law-pr .close-gate-probe { display: block; }
+    .close-gate-probe.a {
+      background: #e7a35a;
+      box-shadow: 0 0 8px rgba(231, 163, 90, 0.95);
+      animation: gateBlockA 3.22s ease-in infinite;
+    }
+    .close-gate-probe.b { animation: gateBlockB 2.99s ease-in infinite; }
+    .close-gate-probe.c {
+      animation: gateBlockC 3.57s ease-in infinite;
+      animation-delay: 0.7s;
+    }
+    @keyframes gateBlockA {
+      0% { left: 92%; top: 18%; opacity: 0.15; }
+      10% { opacity: 0.95; }
+      52% { left: 72%; top: 32%; opacity: 1; }
+      62% { left: 70%; top: 34%; opacity: 1; }
+      78% { left: 78%; top: 26%; opacity: 0.15; }
+      100% { left: 80%; top: 24%; opacity: 0; }
+    }
+    @keyframes gateBlockB {
+      0% { left: 8%; top: 78%; opacity: 0.15; }
+      12% { opacity: 0.95; }
+      52% { left: 28%; top: 68%; opacity: 1; }
+      62% { left: 30%; top: 66%; opacity: 1; }
+      78% { left: 18%; top: 74%; opacity: 0.15; }
+      100% { left: 16%; top: 76%; opacity: 0; }
+    }
+    @keyframes gateBlockC {
+      0% { left: 50%; top: 4%; opacity: 0.15; }
+      14% { opacity: 0.95; }
+      52% { left: 50%; top: 28%; opacity: 1; }
+      62% { left: 50%; top: 30%; opacity: 1; }
+      78% { left: 50%; top: 14%; opacity: 0.15; }
+      100% { left: 50%; top: 12%; opacity: 0; }
+    }
+    .close-sim:not(.run):not(.done) #closeMk,
+    .close-sim:not(.run):not(.done) .close-try { display: none; }
+    .close-sim.run #closeMk,
+    .close-sim.done #closeMk {
       display: block;
       position: absolute;
       top: max(12px, env(safe-area-inset-top));
       right: 12px;
       left: auto;
-      z-index: 24;
+      z-index: 40;
       width: auto;
       min-width: 148px;
+      min-height: 40px;
       flex: none;
+      font-size: 12px;
+      padding: 8px 14px;
+      pointer-events: auto;
     }
     .close-sim.run.mk-gone #closeMk { display: none; }
-    .close-sim.run .close-try {
+    .close-sim.law-pr.run.mk-gone #closeMk,
+    .close-sim.law-pr.done.mk-gone #closeMk { display: block; }
+    .close-sim.run .close-try,
+    .close-sim.done .close-try {
       display: block;
       position: absolute;
       top: max(52px, calc(env(safe-area-inset-top) + 44px));
@@ -5291,11 +5793,233 @@
       left: auto;
       width: 148px;
       text-align: right;
-      z-index: 24;
+      z-index: 40;
+      pointer-events: none;
     }
+    .close-sim.law-pr .close-try { color: #c4b4ee; }
+    .close-sim.law-pr.too-soon .close-try { color: #e08a72; }
+    .close-sim.too-soon:not(.mk-fly):not(.mk-fail):not(.mk-wait):not(.mk-ok):not(.mk-enter) #closeMk {
+      border-color: #e08a72;
+      color: #f3c4bc;
+      background: rgba(80, 24, 20, 0.72);
+      animation: mkTooSoon 0.72s ease-in-out infinite;
+    }
+    @keyframes mkTooSoon {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(224, 138, 114, 0.35); }
+      50% { box-shadow: 0 0 16px 2px rgba(224, 138, 114, 0.95); }
+    }
+    .close-soon-arrow {
+      display: none;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 23;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .close-sim.too-soon .close-soon-arrow { display: block; }
+    .close-soon-arrow line {
+      stroke: #e08a72;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+    }
+    .close-soon-arrow .soon-why {
+      fill: #e08a72;
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .close-sim.law-pr.mk-fail .close-try { color: #f3c4bc; }
+    .close-sim.law-pr.mk-ok .close-try,
+    .close-sim.law-pr.space-stable .close-try { color: #7ec8c4; }
     .close-sim:not(.ready) #closeDel { opacity: 0.38; }
     .close-sim .engine-lab,
     .close-sim .engine-lab.on { z-index: 22; filter: none; }
+    .close-sim.run .close-probe,
+    .close-sim.run .close-gate-probe,
+    .close-sim.done .close-probe,
+    .close-sim.done .close-gate-probe { display: none; }
+    .close-sim.law-pr.store-redis.run.lock-up:not(.decayRedis):not(.decayPause):not(.decayServer):not(.disturb):not(.hang) .close-catalog,
+    .close-sim.law-pr.store-redis.run.mk-wait:not(.decayRedis):not(.decayPause):not(.decayServer) .close-catalog {
+      display: block;
+      left: 18%;
+      top: 34%;
+      transform: translate(-50%, -50%) scale(0.72);
+    }
+    .close-sim.law-fix.store-redis.mk-wait .close-catalog,
+    .close-sim.law-fix.store-redis.mk-enter .close-catalog {
+      display: block !important;
+      left: 50%;
+      top: 58%;
+      width: min(440px, 88vw);
+      height: min(320px, 58vh);
+      transform: translate(-50%, -50%) scale(1);
+      z-index: 12;
+    }
+    .close-sim.law-pr.store-go.run.lock-up:not(.decayServer):not(.disturb):not(.zoom) .close-lattice,
+    .close-sim.law-pr.store-go.run.mk-wait:not(.decayServer) .close-lattice {
+      display: block;
+      width: min(140px, 38vw);
+      height: min(140px, 38vw);
+      left: 18%;
+      top: 34%;
+    }
+    .close-sim.law-fix.store-go.mk-wait .close-lattice,
+    .close-sim.law-fix.store-go.mk-enter .close-lattice {
+      display: block !important;
+      left: 50%;
+      top: 58%;
+      width: min(440px, 88vw);
+      height: min(320px, 58vh);
+      transform: translate(-50%, -50%);
+      z-index: 12;
+    }
+    .close-sim.law-pr.store-redis.done .close-catalog,
+    .close-sim.law-pr.store-redis.space-stable .close-catalog {
+      display: block;
+      left: 50%;
+      top: 58%;
+      width: min(440px, 88vw);
+      height: min(320px, 58vh);
+      transform: translate(-50%, -50%) scale(1);
+      z-index: 12;
+    }
+    .close-sim.law-pr.store-go.done .close-lattice,
+    .close-sim.law-pr.store-go.space-stable .close-lattice {
+      display: block;
+      left: 50%;
+      top: 58%;
+      width: min(440px, 88vw);
+      height: min(320px, 58vh);
+      transform: translate(-50%, -50%);
+      z-index: 12;
+    }
+    .close-sim.done .moon.close-moon,
+    .close-sim.done .close-stars-lab,
+    .close-sim.done .close-well,
+    .close-sim.done .fifo-key,
+    .close-sim.done .path-lab.road,
+    .close-sim.done .engine-tether,
+    .close-sim.done .engine-clock { display: none !important; }
+    .close-sim.lock-open.space-unstable .close-catalog,
+    .close-sim.lock-open.space-unstable .close-lattice {
+      box-shadow: inset 0 0 110px rgba(224, 138, 114, 0.42);
+    }
+    .close-sim.space-unstable .close-program::before {
+      background-image:
+        radial-gradient(ellipse 56px 36px at 22% 42%, transparent 22%, rgba(196, 90, 70, 0.5) 32%, rgba(196, 90, 70, 0.12) 44%, transparent 52%),
+        radial-gradient(circle, rgba(196, 90, 70, 0.5) 1.1px, transparent 1.6px);
+    }
+    .close-sim.space-unstable.store-go .close-lattice {
+      background:
+        repeating-linear-gradient(0deg, transparent 0 22px, rgba(196, 90, 70, 0.34) 22px 23px),
+        repeating-linear-gradient(90deg, transparent 0 22px, rgba(196, 90, 70, 0.34) 22px 23px);
+    }
+    .close-sim.space-stable .close-catalog,
+    .close-sim.space-stable .close-lattice,
+    .close-sim.done .close-catalog,
+    .close-sim.done .close-lattice {
+      box-shadow: inset 0 0 70px rgba(126, 200, 196, 0.12);
+    }
+    .close-sim.done .close-room,
+    .close-sim.space-stable .close-room { opacity: 1; }
+    .close-room.fresh .shell {
+      width: 16px;
+      height: 16px;
+      border-color: #7ec8c4;
+      background: rgba(126, 200, 196, 0.55);
+      box-shadow: 0 0 16px rgba(126, 200, 196, 0.9);
+    }
+    .close-room.fresh .pname { opacity: 1; color: #7ec8c4; }
+    .close-sim .photon.mk-bit {
+      display: none;
+      width: 16px;
+      height: 16px;
+      background: #d8ccff;
+      box-shadow: 0 0 18px rgba(180, 150, 230, 1);
+      z-index: 25;
+      animation: none;
+    }
+    .close-sim .photon.mk-bit .mk-lab {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 4px);
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #d8ccff;
+      text-shadow: 0 1px 8px #000;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .close-sim.mk-wait .photon.mk-bit .mk-lab { color: #c4b4ee; }
+    .close-sim.mk-fail .photon.mk-bit .mk-lab { color: #f3c4bc; }
+    .close-sim.mk-ok .photon.mk-bit .mk-lab { color: #7ec8c4; }
+    .close-sim.law-pr .close-banner .close-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .close-sim.law-pr .close-banner .close-why {
+      font-size: 11px;
+      color: var(--soft);
+    }
+    .close-sim.mk-fly .photon.mk-bit,
+    .close-sim.mk-wait .photon.mk-bit,
+    .close-sim.mk-enter .photon.mk-bit,
+    .close-sim.mk-fail .photon.mk-bit,
+    .close-sim.mk-ok .photon.mk-bit { display: block; }
+    .close-sim.mk-fly .photon.mk-bit {
+      animation: photonGo 1.15s ease-out forwards;
+    }
+    .close-sim.mk-wait .photon.mk-bit {
+      left: var(--x1);
+      top: var(--y1);
+      animation: mkWaitPulse 1.05s ease-in-out infinite;
+    }
+    .close-sim.mk-enter .photon.mk-bit {
+      animation: photonGo 1.05s ease-in forwards;
+    }
+    .close-sim.mk-fail .photon.mk-bit { display: none; }
+    .close-sim.mk-ok .photon.mk-bit {
+      left: var(--x1);
+      top: var(--y1);
+      background: #7ec8c4;
+      box-shadow: 0 0 22px rgba(126, 200, 196, 1);
+      animation: mkOkBloom 0.9s ease-out forwards;
+    }
+    @keyframes mkWaitPulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(1.35); opacity: 0.7; }
+    }
+    @keyframes mkFailHit {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      40% { transform: translate(-50%, -50%) scale(1.7); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    @keyframes mkOkBloom {
+      0% { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+    }
+    .close-sim.space-unstable .close-wave,
+    .close-sim.mk-fail .close-wave { display: block; }
+    .close-sim.mk-fail .close-wave i {
+      border-color: rgba(196, 90, 70, 0.95);
+      box-shadow: 0 0 12px rgba(196, 90, 70, 0.7);
+    }
+    .close-sim.mk-wait .close-banner .close-title { color: #c4b4ee; }
+    .close-sim.mk-fail .close-banner .close-title,
+    .close-sim.space-unstable .close-banner .close-title { color: #e08a72; }
+    .close-sim.mk-ok .close-banner .close-title,
+    .close-sim.space-stable .close-banner .close-title { color: #7ec8c4; }
+    .close-sim.law-pr .close-fail { display: none !important; }
+    .close-sim.law-pr.mk-fail .close-fail { display: block !important; }
+    .close-sim.law-pr.mk-fail .close-hud { max-height: none; overflow: visible; }
+    .close-sim.lock-open .close-ridge .php,
+    .close-sim.lock-open .close-gate .php { color: #e08a72; }
     .close-n {
       display: flex;
       gap: 0;
@@ -5330,7 +6054,8 @@
       font-weight: 600;
       color: var(--accent);
     }
-    .close-sim.run .close-try { display: block; }
+    .close-sim.run .close-try,
+    .close-sim.done .close-try { display: block; }
     .close-help { display: none; }
     .close-help { display: none; }
     @media (min-width: 721px) {
@@ -5339,9 +6064,34 @@
       .close-hud .close-say { font-size: 14px; }
       .close-sim.store-redis.disturb .close-catalog { left: 22%; top: 46%; }
       .close-sim .path-lab.road { left: 58%; top: 42%; }
+      .close-sim .close-fork { top: 78px; width: min(280px, 42vw); }
       .close-sim.people .engine-laws.close-laws,
-      .close-sim.awaitDelete .engine-laws.close-laws { top: 78px; width: min(280px, 42vw); max-width: min(280px, 42vw); }
+      .close-sim.awaitDelete .engine-laws.close-laws {
+        top: auto;
+        bottom: 24px;
+        width: min(280px, 42vw);
+        max-width: min(280px, 42vw);
+      }
       .close-sim .engine-clock { top: 14%; }
+    }
+    @media (max-width: 720px) {
+      .close-banner {
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        width: min(44ch, calc(100% - 20px));
+        top: max(6px, env(safe-area-inset-top));
+      }
+      .close-sim.idle .close-banner,
+      .close-sim.people .close-banner,
+      .close-sim.awaitDelete .close-banner,
+      .close-sim.run .close-banner,
+      .close-sim.done .close-banner {
+        top: max(6px, env(safe-area-inset-top));
+      }
+      .close-sim .close-fork {
+        top: calc(96px + env(safe-area-inset-top));
+      }
     }
   </style>
 </head>
@@ -6840,6 +7590,15 @@
       return `<div class="engine-stage close-sim idle" id="closeStage" data-n="1" data-store="">
         <svg class="engine-tether" viewBox="0 0 100 100" preserveAspectRatio="none">${holeSvg}</svg>
         <span class="photon disturb" id="closeDisturb" style="--x0:84%;--y0:32%;--x1:22%;--y1:38%;"></span>
+        <span class="photon mk-bit" id="closeMkBit" style="--x0:88%;--y0:12%;--x1:22%;--y1:42%;"><span class="mk-lab">CreateRoom</span></span>
+        <svg class="close-soon-arrow" id="closeSoonArrow" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <marker id="closeSoonHead" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+              <path d="M0,0 L5,2.5 L0,5 Z" fill="#e08a72"/>
+            </marker>
+          </defs>
+          <line id="closeSoonLine" x1="88" y1="10" x2="50" y2="58" marker-end="url(#closeSoonHead)"/>
+        </svg>
         <div class="close-wave" id="closeWave" aria-hidden="true"><i></i><i></i><i></i></div>
         <span class="photon send-sig" id="closeSendPhoton" style="--x0:84%;--y0:32%;--x1:50%;--y1:48%;"></span>
         <span class="photon burst" id="closeBurst0" style="--x0:50%;--y0:48%;--x1:20%;--y1:50%;"></span>
@@ -6861,12 +7620,58 @@
         </div>
         <div class="close-lattice" id="closeLattice" aria-hidden="true">
           <span class="php">this server</span>
+          <div class="close-gate" id="closeGateLock">
+            <span class="php">globalLock</span>
+            <svg viewBox="0 0 100 100">
+              <ellipse cx="50" cy="58" rx="38" ry="32" fill="none" stroke="rgba(160,130,220,0.28)" stroke-width="1"/>
+              <ellipse cx="50" cy="52" rx="34" ry="28" fill="none" stroke="rgba(190,165,240,0.55)" stroke-width="1.35"/>
+              <ellipse cx="50" cy="46" rx="30" ry="24" fill="none" stroke="rgba(230,220,255,0.92)" stroke-width="2"/>
+              <ellipse cx="50" cy="42" rx="26" ry="20" fill="none" stroke="rgba(255,252,255,0.7)" stroke-width="1.15"/>
+              <path d="M16 52 Q 20 28 28 36" fill="none" stroke="rgba(210,190,255,0.5)" stroke-width="0.9"/>
+              <path d="M84 52 Q 80 28 72 36" fill="none" stroke="rgba(210,190,255,0.5)" stroke-width="0.9"/>
+              <path d="M32 78 Q 38 48 42 52" fill="none" stroke="rgba(210,190,255,0.5)" stroke-width="0.9"/>
+              <path d="M68 78 Q 62 48 58 52" fill="none" stroke="rgba(210,190,255,0.5)" stroke-width="0.9"/>
+              <path d="M50 82 Q 50 44 50 44" fill="none" stroke="rgba(210,190,255,0.5)" stroke-width="0.9"/>
+            </svg>
+            <span class="close-gate-probe a" data-room="device-abc"></span>
+            <span class="close-gate-probe b" data-room="device-xyz"></span>
+            <span class="close-gate-probe c" data-room="lobby"></span>
+          </div>
           <div class="close-excitations" id="closeServerExcite"></div>
           <span class="close-field-id" id="closeServerId"></span>
         </div>
-        <div class="close-catalog">
+        <div class="close-catalog" id="closeCatalog">
           <span class="php">Redis rooms</span>
-          <div class="close-program" id="closeProgram"></div>
+          <div class="close-program" id="closeProgram">
+            <div class="close-ridge" id="closeRidge" aria-hidden="true">
+              <span class="php" id="closeLockLab">room_lock:device-abc</span>
+              <svg viewBox="0 0 100 100">
+                <defs>
+                  <radialGradient id="closeRidgeWell" cx="50%" cy="62%" r="48%">
+                    <stop offset="0%" stop-color="rgba(8,4,18,0.62)"/>
+                    <stop offset="58%" stop-color="rgba(48,24,80,0.22)"/>
+                    <stop offset="100%" stop-color="transparent"/>
+                  </radialGradient>
+                </defs>
+                <ellipse class="ridge-well" cx="50" cy="58" rx="30" ry="16"/>
+                <ellipse class="ridge-ring" cx="50" cy="66" rx="42" ry="20" stroke="rgba(160,130,220,0.28)" stroke-width="1"/>
+                <ellipse class="ridge-ring" cx="50" cy="56" rx="38" ry="16" stroke="rgba(190,165,240,0.55)" stroke-width="1.35"/>
+                <ellipse class="ridge-ring" cx="50" cy="46" rx="34" ry="12" stroke="rgba(230,220,255,0.92)" stroke-width="2"/>
+                <ellipse class="ridge-ring" cx="50" cy="38" rx="28" ry="8" stroke="rgba(255,252,255,0.7)" stroke-width="1.15"/>
+                <path class="ridge-strut" d="M12 64 Q 18 36 24 42"/>
+                <path class="ridge-strut" d="M88 64 Q 82 36 76 42"/>
+                <path class="ridge-strut" d="M28 76 Q 36 44 40 48"/>
+                <path class="ridge-strut" d="M72 76 Q 64 44 60 48"/>
+                <path class="ridge-strut" d="M50 80 Q 50 40 50 40"/>
+                <path class="ridge-strut" d="M18 50 Q 22 32 30 38"/>
+                <path class="ridge-strut" d="M82 50 Q 78 32 70 38"/>
+              </svg>
+            </div>
+            <span class="close-probe same" data-room="device-abc"></span>
+            <span class="close-probe other" data-room="device-xyz"></span>
+            <span class="close-probe other lobby" data-room="lobby"></span>
+            <div class="close-rooms" id="closeRooms"></div>
+          </div>
           <div class="close-excitations" id="closeRedisExcite"></div>
           <span class="close-field-id" id="closeRedisId"></span>
         </div>
@@ -6909,6 +7714,20 @@
         <button class="engine-lab${on(lab)}" type="button" id="labRunBtn">
           <span class="pname">Run the simulation</span>
         </button>
+        <div class="close-fork" id="closeFork" data-law="now" data-to="now">
+            <svg viewBox="0 0 240 96" aria-hidden="true">
+              <path class="fork-stem" d="M10 48 C 42 48, 72 48, 98 48"/>
+              <path class="fork-now" id="forkPathNow" d="M98 48 C 128 46, 156 22, 200 16"/>
+              <path class="fork-pr" id="forkPathPr" d="M98 48 C 128 50, 156 74, 200 80"/>
+              <path class="fork-fix" id="forkPathFix" d="M200 80 C 200 96, 200 108, 200 118"/>
+              <circle class="fork-dot" id="forkDot" r="3.4" cx="0" cy="0">
+                <animateMotion id="forkMove" dur="0.01s" fill="freeze" calcMode="linear" keyTimes="0;1" keyPoints="1;1" path="M10 48 C 42 48, 72 48, 98 48 C 128 46, 156 22, 200 16"/>
+              </circle>
+            </svg>
+            <button type="button" class="fork-end now on" data-close-law="now">current</button>
+            <button type="button" class="fork-end pr" data-close-law="pr">PR #4793</button>
+            <button type="button" class="fork-end fix" data-close-law="fix"><span class="fork-who">EmmS21</span>lock before wipe</button>
+        </div>
         <div class="engine-laws close-laws">
           <div class="close-n close-store">
             <button type="button" data-close-store="redis">Redis</button>
@@ -6923,8 +7742,8 @@
             <button class="lab-play" type="button" id="closeDel">DeleteRoom</button>
           </div>
         </div>
-        <p class="close-try">↑ try create to see failure</p>
-        <button class="lab-play ghost" type="button" id="closeMk">create same room</button>
+        <p class="close-try" id="closeTry">↑ try create to see failure</p>
+        <button class="lab-play ghost" type="button" id="closeMk" aria-label="create same room">create same room</button>
       </div>`;
     }
     let closeRaf = 0;
@@ -6941,8 +7760,8 @@
     ];
     const CLOSE_FIELD = [
       { left: 22, top: 42 },
-      { left: 58, top: 28 },
-      { left: 72, top: 58 }
+      { left: 78, top: 16 },
+      { left: 84, top: 78 }
     ];
     const CLOSE_ORBIT = [
       { left: 50, top: 34 },
@@ -6979,6 +7798,10 @@
       phase: "idle",
       beat: "idle",
       store: "",
+      law: "now",
+      forking: false,
+      lawTo: "",
+      forkGen: 0,
       hold: 0,
       beatDur: 1,
       slots: 0,
@@ -6993,13 +7816,129 @@
       tryStep: "",
       tryHold: 0,
       mkGone: false,
-      decayI: 0
+      mkOn: false,
+      mkStep: "",
+      mkHold: 0,
+      mkSig: "",
+      lock: "",
+      lockHold: 0,
+      soon: false,
+      soonHold: 0,
+      decayI: 0,
+      endHold: 0
     };
+    const CLOSE_END = 2;
+    function closeAlt() {
+      return closeSim.law === "pr" || closeSim.law === "fix";
+    }
+    function closeDur(base, kind) {
+      if (!closeAlt()) return base;
+      if (kind === "decay") return base * 2.35;
+      return base * 1.7;
+    }
+    function closeSpace() {
+      if (!closeAlt()) return "";
+      if (closeSim.law === "pr" && closeSim.soon) return "unstable";
+      if (closeSim.phase === "done") return "stable";
+      if (closeSim.phase !== "run") return "";
+      if (closeSim.lock === "up") return "protected";
+      if (closeSim.lock === "open") return "opening";
+      const beat = closeSim.beat;
+      if (beat === "decayRedis" || beat === "decayPause" || beat === "decayServer") return "unstable";
+      return "unstable";
+    }
+    function closeNeedTick() {
+      if (closeSim.endHold > 0) return true;
+      if (closeSim.phase === "run") return true;
+      if (!closeSim.mkOn || !closeSim.mkStep) return false;
+      if (closeSim.mkStep === "ok" || closeSim.mkStep === "fail") return false;
+      return true;
+    }
+    function closeFinish() {
+      if (closeSim.endHold > 0) return;
+      closeSim.endHold = CLOSE_END;
+    }
+    function closeMkPoint(id) {
+      const stage = document.getElementById("closeStage");
+      const el = document.getElementById(id) || (id.charAt(0) === "." ? document.querySelector(id) : null);
+      if (!stage || !el) return null;
+      const sr = stage.getBoundingClientRect();
+      const rr = el.getBoundingClientRect();
+      if (sr.width < 8 || rr.width < 2 && rr.height < 2) return null;
+      return {
+        x: (((rr.left + rr.width / 2) - sr.left) / sr.width * 100).toFixed(2) + "%",
+        y: (((rr.top + rr.height / 2) - sr.top) / sr.height * 100).toFixed(2) + "%"
+      };
+    }
+    function closeMkAim() {
+      const bit = document.getElementById("closeMkBit");
+      if (!bit) return;
+      const start = closeMkPoint("closeMk") || { x: "88%", y: "12%" };
+      const lock = closeSim.store === "go"
+        ? (closeMkPoint("closeGateLock") || { x: "50%", y: "42%" })
+        : (closeMkPoint("closeRidge") || { x: "22%", y: "42%" });
+      const field = closeSim.store === "go"
+        ? (closeMkPoint("closeLattice") || { x: "50%", y: "50%" })
+        : (closeMkPoint("closeCatalog") || closeMkPoint("closeProgram") || { x: "50%", y: "58%" });
+      const room = closeMkPoint("closePickRoom") || { x: "22%", y: "42%" };
+      const step = closeSim.mkStep;
+      const space = closeSpace();
+      let a = start;
+      let b = lock;
+      if (step === "fly") {
+        if (closeSim.soon) b = field;
+        else if (space === "stable") b = room;
+        else if (closeSim.law === "fix") b = field;
+        else b = lock;
+      } else if (step === "wait") {
+        if (closeSim.law === "fix") {
+          a = field;
+          b = field;
+        } else {
+          a = lock;
+          b = lock;
+        }
+      } else if (step === "enter") {
+        a = {
+          x: bit.style.getPropertyValue("--x1") || lock.x,
+          y: bit.style.getPropertyValue("--y1") || lock.y
+        };
+        b = space === "stable" ? room : field;
+      } else if (step === "fail") {
+        a = {
+          x: bit.style.getPropertyValue("--x1") || field.x,
+          y: bit.style.getPropertyValue("--y1") || field.y
+        };
+        b = a;
+      } else if (step === "ok") {
+        a = {
+          x: bit.style.getPropertyValue("--x1") || room.x,
+          y: bit.style.getPropertyValue("--y1") || room.y
+        };
+        b = a;
+      }
+      bit.style.setProperty("--x0", a.x);
+      bit.style.setProperty("--y0", a.y);
+      bit.style.setProperty("--x1", b.x);
+      bit.style.setProperty("--y1", b.y);
+    }
+    function closeSoonArrow() {
+      const line = document.getElementById("closeSoonLine");
+      if (!line) return;
+      const from = closeMkPoint("closeMk") || { x: "88%", y: "10%" };
+      const to = closeSim.store === "go"
+        ? (closeMkPoint("closeLattice") || { x: "50%", y: "50%" })
+        : (closeMkPoint("closeCatalog") || { x: "50%", y: "58%" });
+      line.setAttribute("x1", String(parseFloat(from.x)));
+      line.setAttribute("y1", String(parseFloat(from.y)));
+      line.setAttribute("x2", String(parseFloat(to.x)));
+      line.setAttribute("y2", String(parseFloat(to.y)));
+    }
     function closeReady() {
       return closeSim.pickedStore && closeSim.pickedN;
     }
     function closeGate() {
-      if (closeSim.phase === "run" || closeSim.phase === "done") return;
+      if (closeSim.phase === "run") return;
       closeSim.phase = closeReady() ? "awaitDelete" : "people";
     }
     function closeFindRoom(name) {
@@ -7065,9 +8004,10 @@
     function closeRoomsHtml() {
       return closeSim.rooms.map((r, i) => {
         const pos = CLOSE_FIELD[i] || CLOSE_FIELD[0];
-        const hit = r.name === closeSim.name && (r.state === "closing" || closeSim.beat === "disturb" || closeSim.tryOn);
+        const hit = r.name === closeSim.name && (r.state === "closing" || closeSim.beat === "disturb" || closeSim.tryOn || closeSim.mkStep === "fail");
         const cls = r.state + (r.name === closeSim.name ? " pick" : "") + (hit ? " hit" : "");
-        return `<button class="close-room ${cls}" type="button" data-room="${escapeHtml(r.name)}" style="left:${pos.left}%;top:${pos.top}%">
+        const id = r.name === closeSim.name ? " id=\"closePickRoom\"" : "";
+        return `<button class="close-room ${cls}" type="button" data-room="${escapeHtml(r.name)}"${id} style="left:${pos.left}%;top:${pos.top}%">
           <span class="shell outer"></span>
           <span class="pname">${escapeHtml(r.name)}</span>
         </button>`;
@@ -7088,6 +8028,74 @@
       const n = person + 1;
       const redis = store !== "go";
       const where = redis ? "Redis" : "this server's room list";
+      if (closeAlt() && closeSim.mkOn) {
+        if (closeSim.mkStep === "wait") {
+          return {
+            title: "Waiting in " + (redis ? "Redis" : "this server's list") + ".",
+            why: "Create is in the waiting room. Delete keeps running. When the name is gone, this create goes in.",
+            lab: "waiting"
+          };
+        }
+        if (closeSim.mkStep === "enter") {
+          return {
+            title: "The wave is gone. CreateRoom is going in.",
+            why: name + " is empty. This create can form a new meeting.",
+            lab: "in"
+          };
+        }
+        if (closeSim.mkStep === "fail") {
+          return {
+            title: "CreateRoom returned the old room.",
+            why: name + " was still in " + where + ". This is not a new meeting. Join looks fine, then everyone is kicked.",
+            lab: "error"
+          };
+        }
+        if (closeSim.mkStep === "ok") {
+          return {
+            title: "New room.",
+            why: "The wave finished first. This " + name + " is a new meeting.",
+            lab: "new"
+          };
+        }
+        if (closeSim.mkStep === "fly") {
+          return {
+            title: "CreateRoom is on its way.",
+            why: closeSpace() === "protected" ? "The lock is up." : (closeSpace() === "stable" ? "The field is empty." : "The lock is gone. The wave is still in the field."),
+            lab: "CreateRoom"
+          };
+        }
+      }
+      if (closeAlt() && (phase === "run" || phase === "done")) {
+        const space = closeSpace();
+        if (space === "protected") {
+          return {
+            title: "The lock is up.",
+            why: "CreateRoom with this name stops at the boundary.",
+            lab: redis ? "room_lock" : "globalLock"
+          };
+        }
+        if (space === "opening") {
+          return {
+            title: "The lock just opened.",
+            why: "The wave is still in the field.",
+            lab: "lock open"
+          };
+        }
+        if (space === "unstable") {
+          return {
+            title: "The lock is gone.",
+            why: "The wave is still clearing " + name + " from " + where + ".",
+            lab: "wave"
+          };
+        }
+        if (space === "stable") {
+          return {
+            title: "The field is empty.",
+            why: "The wave has left. This name can form a new meeting.",
+            lab: "empty"
+          };
+        }
+      }
       if (closeSim.tryOn) {
         if (closeSim.tryStep === "go") {
           return {
@@ -7107,6 +8115,34 @@
           title: "Create failed — " + name + " is taken",
           why: where + " still has the old room, so this is not a new meeting.",
           lab: "name taken"
+        };
+      }
+      if (closeAlt() && closeSim.store && (phase === "idle" || phase === "people" || phase === "awaitDelete")) {
+        if (closeSim.law === "fix") {
+          if (store === "go") {
+            return {
+              title: "EmmS21: lock before wipe.",
+              why: "Take the lock before dropping this server. Create waits at that gate until this server and the list are empty.",
+              lab: "globalLock"
+            };
+          }
+          return {
+            title: "EmmS21: lock before wipe.",
+            why: "Take the lock before wiping this server. The ridge goes up first. Create with this name waits until Redis is empty. Other rooms still pass.",
+            lab: "room_lock"
+          };
+        }
+        if (store === "go") {
+          return {
+            title: "This server's room list is locked",
+            why: "This PR takes one lock for the whole Go list. Create or delete for any name waits at that gate. Other rooms wait too.",
+            lab: "globalLock"
+          };
+        }
+        return {
+          title: "The field around " + name + " is locked",
+          why: "This PR raises a ridge around that name in Redis. Anything with the same room name stops at the ridge. Other rooms still pass.",
+          lab: "room_lock"
         };
       }
       if (phase === "idle") {
@@ -7282,14 +8318,21 @@
       if (!stage) return;
       if (closeSim.people > 3) closeSim.people = 3;
       if (closeSim.people < 1) closeSim.people = 1;
-      const { phase, beat, people, person, elapsed, failed, store } = closeSim;
+      const { phase, beat, people, person, elapsed, failed, store, law } = closeSim;
       const beatClass = ((phase === "run" || phase === "done") && beat && beat !== "idle") ? beat : "";
       const tcpOn = beat === "enqueue" || beat === "send";
       const sendClass = beat === "send" ? " sending" : "";
       const storeClass = store === "redis" ? " store-redis" : store === "go" ? " store-go" : "";
+      const lawClass = closeAlt() ? (" law-pr" + (law === "fix" ? " law-fix" : "")) : " law-now";
+      const forkClass = closeSim.forking ? " forking" : "";
       const tryClass = closeSim.tryOn ? " try try-" + closeSim.tryStep : "";
-      const mkClass = closeSim.mkGone ? " mk-gone" : "";
-      const nextClass = "engine-stage close-sim " + phase + (beatClass ? " " + beatClass : "") + sendClass + storeClass + (tcpOn ? " tcp" : "") + tryClass + mkClass + (closeSim.pickedN ? " picked" : "") + (closeReady() ? " ready" : "");
+      const mkClass = closeSim.mkOn && closeSim.mkStep ? " mk-" + closeSim.mkStep : "";
+      const mkGoneClass = (closeSim.mkGone && !closeAlt()) ? " mk-gone" : "";
+      const space = closeSpace();
+      const lockClass = closeAlt() && closeSim.lock ? " lock-" + closeSim.lock : "";
+      const spaceClass = (space === "unstable" || space === "opening") ? " space-unstable" : (space === "stable" ? " space-stable" : "");
+      const soonClass = (law === "pr" && closeSim.soon && closeSim.mkStep !== "wait" && closeSim.mkStep !== "ok") ? " too-soon" : "";
+      const nextClass = "engine-stage close-sim " + phase + (beatClass ? " " + beatClass : "") + sendClass + storeClass + lawClass + forkClass + (tcpOn ? " tcp" : "") + tryClass + mkClass + mkGoneClass + lockClass + spaceClass + soonClass + (closeSim.pickedN ? " picked" : "") + (closeReady() ? " ready" : "");
       if (stage.className !== nextClass) stage.className = nextClass;
       if (stage.getAttribute("data-n") !== String(people)) stage.setAttribute("data-n", String(people));
       if (stage.getAttribute("data-store") !== store) stage.setAttribute("data-store", store);
@@ -7308,6 +8351,17 @@
       const why = document.getElementById("closeWhy");
       if (title) title.textContent = w.title || "";
       if (why) why.textContent = w.why || "";
+      const tryEl = document.getElementById("closeTry");
+      if (tryEl) {
+        if (!closeAlt()) tryEl.textContent = "↑ try create to see failure";
+        else if (closeSim.mkStep === "wait") tryEl.textContent = "waiting";
+        else if (closeSim.mkStep === "fail") tryEl.textContent = "not a new meeting";
+        else if (closeSim.mkStep === "ok") tryEl.textContent = "new room";
+        else if (space === "protected") tryEl.textContent = law === "fix" ? "click create — it waits" : "lock is up";
+        else if (space === "opening" || space === "unstable") tryEl.textContent = "lock open — wave still in the field";
+        else if (space === "stable") tryEl.textContent = "field is empty";
+        else tryEl.textContent = "create this name";
+      }
       const face = document.getElementById("closeClockFace");
       const lab = document.getElementById("closeClockLab");
       const tickClock = document.getElementById("closeTickClock");
@@ -7327,7 +8381,42 @@
         else catPhp.textContent = store === "go" ? "Go map" : "Redis rooms";
       }
       const prog = document.getElementById("closeProgram");
-      if (prog) prog.innerHTML = closeRoomsHtml();
+      const roomsEl = document.getElementById("closeRooms");
+      if (roomsEl) roomsEl.innerHTML = closeRoomsHtml();
+      else if (prog) prog.innerHTML = closeRoomsHtml();
+      const mkBit = document.getElementById("closeMkBit");
+      if (mkBit) {
+        const sig = closeSim.mkOn ? closeSim.mkStep : "";
+        if (mkBit.dataset.sig !== sig) {
+          mkBit.dataset.sig = sig;
+          if (sig) closeMkAim();
+        } else if (sig === "wait") {
+          closeMkAim();
+        }
+        const lab = mkBit.querySelector(".mk-lab");
+        if (lab) {
+          if (closeSim.mkStep === "wait") lab.textContent = "waiting";
+          else if (closeSim.mkStep === "fail") lab.textContent = "old room";
+          else if (closeSim.mkStep === "ok") lab.textContent = "new room";
+          else lab.textContent = "CreateRoom";
+        }
+      }
+      const wave = document.getElementById("closeWave");
+      if (wave && (space === "unstable" || space === "opening" || closeSim.soon || closeSim.mkStep === "fail")) {
+        const field = closeSim.store === "go"
+          ? (closeMkPoint("closeLattice") || { x: "50%", y: "50%" })
+          : (closeMkPoint("closeCatalog") || { x: "50%", y: "58%" });
+        wave.style.left = field.x;
+        wave.style.top = field.y;
+      }
+      if (closeSim.soon && closeSim.mkStep !== "wait" && closeSim.mkStep !== "ok") closeSoonArrow();
+      const mkBtn = document.getElementById("closeMk");
+      if (mkBtn) {
+        mkBtn.textContent = "create same room";
+        mkBtn.setAttribute("aria-label", "create same room");
+      }
+      const lockLab = document.getElementById("closeLockLab");
+      if (lockLab) lockLab.textContent = "room_lock:" + closeSim.name;
       const redisEx = document.getElementById("closeRedisExcite");
       const redisId = document.getElementById("closeRedisId");
       const serverEx = document.getElementById("closeServerExcite");
@@ -7387,31 +8476,116 @@
         b.classList.toggle("on", b.dataset.closeStore === store);
         b.disabled = phase === "run";
       });
+      const fork = document.getElementById("closeFork");
+      if (fork) {
+        const nest = closeAlt() || (closeSim.forking && (closeSim.lawTo === "pr" || closeSim.lawTo === "fix"));
+        fork.dataset.law = closeSim.law;
+        fork.dataset.to = closeSim.forking ? (closeSim.lawTo || closeSim.law) : closeSim.law;
+        fork.classList.toggle("nested", nest);
+        const svg = fork.querySelector("svg");
+        if (svg) svg.setAttribute("viewBox", nest ? "0 0 240 132" : "0 0 240 96");
+      }
+      document.querySelectorAll("[data-close-law]").forEach((b) => {
+        b.classList.toggle("on", b.dataset.closeLaw === closeSim.law);
+        b.disabled = closeSim.forking;
+      });
       const del = document.getElementById("closeDel");
       if (del) del.disabled = phase === "run" || !closeReady();
       const runBtn = document.getElementById("labRunBtn");
       const runLab = runBtn && runBtn.querySelector(".pname");
       if (runBtn) runBtn.disabled = false;
-      if (runLab) {
-        if (phase === "run") runLab.textContent = "Stop";
-        else if (phase === "done") runLab.textContent = "Clear";
-        else runLab.textContent = "Run the simulation";
+      if (runLab) runLab.textContent = "Run the simulation";
+      if (closeSim.pickedN && !closeSim.tryOn && !closeSim.mkOn && phase === "run" && beat !== "disturb" && beat !== "zoom" && beat !== "hang" && beat !== "forgetRam" && beat !== "forgetStore" && beat !== "decayRedis" && beat !== "decayPause" && beat !== "decayServer") closeFitStars();
+      if (!closeSim.forking) {
+        document.documentElement.classList.toggle("alt-universe", closeAlt());
+        closeForkPark(closeSim.law);
       }
-      if (closeSim.pickedN && !closeSim.tryOn && beat !== "disturb" && beat !== "zoom" && beat !== "hang" && beat !== "forgetRam" && beat !== "forgetStore" && beat !== "decayRedis" && beat !== "decayPause" && beat !== "decayServer") closeFitStars();
+    }
+    function closeLawSky() {
+      const on = closeAlt() && !closeSim.forking;
+      document.documentElement.classList.toggle("alt-universe", on);
+      if (!closeSim.forking) document.documentElement.classList.remove("universe-shift");
+    }
+    const FORK_PATHS = {
+      now: "M10 48 C 42 48, 72 48, 98 48 C 128 46, 156 22, 200 16",
+      pr: "M10 48 C 42 48, 72 48, 98 48 C 128 50, 156 74, 200 80",
+      fix: "M10 48 C 42 48, 72 48, 98 48 C 128 50, 156 74, 200 80 C 200 96, 200 108, 200 118",
+      nest: "M200 80 C 200 96, 200 108, 200 118"
+    };
+    function closeForkPark(at) {
+      const mot = document.getElementById("forkMove");
+      if (!mot) return;
+      if (mot.getAttribute("data-at") === at) return;
+      mot.setAttribute("path", FORK_PATHS[at] || FORK_PATHS.now);
+      mot.setAttribute("dur", "0.01s");
+      mot.setAttribute("keyPoints", "1;1");
+      mot.setAttribute("keyTimes", "0;1");
+      mot.setAttribute("calcMode", "linear");
+      mot.setAttribute("data-at", at);
+      if (typeof mot.beginElement === "function") mot.beginElement();
+    }
+    function closeForkTravel(from, to) {
+      const mot = document.getElementById("forkMove");
+      if (!mot) return;
+      mot.removeAttribute("data-at");
+      let path = FORK_PATHS[to] || FORK_PATHS.now;
+      let a = "0";
+      let b = "1";
+      if (from === "pr" && to === "fix") path = FORK_PATHS.nest;
+      else if (from === "fix" && to === "pr") {
+        path = FORK_PATHS.nest;
+        a = "1";
+        b = "0";
+      }
+      mot.setAttribute("path", path);
+      mot.setAttribute("dur", "0.53s");
+      mot.setAttribute("keyPoints", a + ";" + b);
+      mot.setAttribute("keyTimes", "0;1");
+      mot.setAttribute("calcMode", "linear");
+      if (typeof mot.beginElement === "function") mot.beginElement();
+    }
+    function closeSwitchLaw(next) {
+      if (next !== "pr" && next !== "fix") next = "now";
+      if (next === "fix" && closeSim.law === "now") return;
+      if (closeSim.forking) return;
+      if (closeSim.law === next) return;
+      const from = closeSim.law;
+      closeResetSim();
+      const gen = ++closeSim.forkGen;
+      closeSim.forking = true;
+      closeSim.lawTo = next;
+      document.documentElement.classList.remove("universe-shift");
+      closePaint();
+      closeForkTravel(from, next);
+      window.setTimeout(() => {
+        if (gen !== closeSim.forkGen) return;
+        closeSim.law = next;
+        document.documentElement.classList.add("universe-shift");
+        document.documentElement.classList.toggle("alt-universe", next === "pr" || next === "fix");
+        closePaint();
+        window.setTimeout(() => {
+          if (gen !== closeSim.forkGen) return;
+          closeSim.forking = false;
+          closeSim.lawTo = "";
+          document.documentElement.classList.remove("universe-shift");
+          closeLawSky();
+          closePaint();
+        }, 828);
+      }, 529);
     }
     function closeNextBeat() {
       if (closeSim.beat === "disturb") {
-        closeBeat("zoom", 2.4);
+        closeBeat("zoom", closeDur(2.76));
         return;
       }
       if (closeSim.beat === "zoom") {
         closeSim.slots = 0;
         closeSim.leaveOn = false;
-        closeBeat("enqueue", 1.8);
+        closeBeat("enqueue", closeDur(2.07));
         return;
       }
       if (closeSim.beat === "enqueue") {
-        closeBeat("send", 2.0);
+        closeBeat("send", closeDur(2.3));
         return;
       }
       if (closeSim.beat === "send") {
@@ -7419,44 +8593,50 @@
         if (closeSim.person < closeSim.people) {
           closeSim.slots = 0;
           closeSim.leaveOn = false;
-          closeBeat("enqueue", 1.8);
+          closeBeat("enqueue", closeDur(2.07));
         } else {
-          closeBeat("hang", 0.9);
+          closeBeat("hang", closeDur(1.15));
         }
         return;
       }
       if (closeSim.beat === "hang") {
         closeSim.decayI = 0;
-        if (closeSim.store === "go") closeBeat("decayServer", 0.9);
-        else closeBeat("decayRedis", 0.9);
+        if (closeSim.law === "pr") {
+          closeSim.lock = "open";
+          closeSim.lockHold = 1.85;
+        }
+        if (closeSim.store === "go") closeBeat("decayServer", closeDur(1.04, "decay"));
+        else closeBeat("decayRedis", closeDur(1.04, "decay"));
         return;
       }
       if (closeSim.beat === "decayRedis") {
         if (closeSim.decayI < CLOSE_REDIS_KEYS.length - 1) {
           closeSim.decayI += 1;
-          closeBeat("decayRedis", 0.9);
+          closeBeat("decayRedis", closeDur(1.04, "decay"));
         } else {
-          closeBeat("decayPause", 2.0);
+          closeBeat("decayPause", closeDur(2.3, "decay"));
         }
         return;
       }
       if (closeSim.beat === "decayPause") {
         closeSim.decayI = 0;
-        closeBeat("decayServer", 0.9);
+        closeBeat("decayServer", closeDur(1.04, "decay"));
         return;
       }
       if (closeSim.beat === "decayServer") {
         const keys = closeSim.store === "go" ? CLOSE_GO_KEYS : CLOSE_SERVER_KEYS;
         if (closeSim.decayI < keys.length - 1) {
           closeSim.decayI += 1;
-          closeBeat("decayServer", 0.9);
+          closeBeat("decayServer", closeDur(1.04, "decay"));
         } else {
           const r = closeSim.rooms.find((x) => x.state === "closing");
           if (r) r.state = "gone";
           closeSim.phase = "done";
           closeSim.beat = "idle";
+          closeSim.lock = "down";
           closeSim.hold = 0;
-          closeSim.failed = false;
+          const waiting = closeSim.mkOn && closeSim.mkStep !== "ok" && closeSim.mkStep !== "fail";
+          if (!waiting) closeFinish();
         }
         return;
       }
@@ -7468,24 +8648,41 @@
       }
       const dt = Math.min(0.05, (now - (closeSim.t0 || now)) / 1000);
       closeSim.t0 = now;
+      if (closeSim.endHold > 0) {
+        closeSim.endHold -= dt;
+        if (closeSim.endHold <= 0) {
+          closeHalt();
+          return;
+        }
+        closePaint();
+        if (closeNeedTick()) closeRaf = requestAnimationFrame(closeTick);
+        else closeRaf = 0;
+        return;
+      }
       if (closeSim.phase === "run") {
-        if (closeSim.tryOn) {
-          closeSim.tryHold -= dt * 0.45;
+        if (closeSim.soon) {
+          closeSim.soonHold -= dt;
+          if (closeSim.soonHold <= 0) {
+            closeSim.soon = false;
+            if (closeSim.lock === "open") closeSim.lock = "down";
+          }
+        } else if (closeSim.lock === "open") {
+          closeSim.lockHold -= dt;
+          if (closeSim.lockHold <= 0) closeSim.lock = "down";
+        }
+        const pauseWave = closeSim.law === "pr" && ((closeSim.soon && closeSim.mkStep !== "wait") || closeSim.mkStep === "fail");
+        if (!closeAlt() && closeSim.tryOn) {
+          closeSim.tryHold -= dt * 0.39;
           if (closeSim.tryHold <= 0) {
             if (closeSim.tryStep === "go") {
               closeSim.tryStep = "see";
-              closeSim.tryHold = 2.4;
+              closeSim.tryHold = 2.76;
             } else if (closeSim.tryStep === "see") {
               closeSim.tryStep = "err";
-              closeSim.tryHold = 2.2;
-            } else {
-              closeSim.mkGone = true;
-              closeSim.tryOn = false;
-              closeSim.tryStep = "";
-              closeSim.tryHold = 0;
+              closeFinish();
             }
           }
-        } else {
+        } else if (!pauseWave) {
           closeSim.elapsed += dt;
           closeSim.hold -= dt;
           if (closeSim.beat === "enqueue") {
@@ -7496,8 +8693,41 @@
           if (closeSim.hold <= 0) closeNextBeat();
         }
       }
+      if (closeSim.mkOn) {
+        if (closeSim.mkStep === "wait") {
+          if (closeSim.phase === "done") {
+            closeSim.mkStep = "enter";
+            closeSim.mkHold = 1.05;
+          }
+        } else if (closeSim.mkStep !== "ok" && closeSim.mkStep !== "fail") {
+          closeSim.mkHold -= dt;
+          if (closeSim.mkHold <= 0) {
+            if (closeSim.mkStep === "fly") {
+              if (closeSim.soon) {
+                closeSim.mkStep = "fail";
+                closeFinish();
+              } else if (closeSim.phase === "done" || closeSpace() === "stable") {
+                closeSim.mkStep = "ok";
+                const room = closeFindRoom(closeSim.name);
+                if (room) room.state = "fresh";
+                else closeSim.rooms.push({ name: closeSim.name, state: "fresh" });
+                closeFinish();
+              } else {
+                closeSim.mkStep = "wait";
+                closeSim.mkHold = 0;
+              }
+            } else if (closeSim.mkStep === "enter") {
+              closeSim.mkStep = "ok";
+              const room = closeFindRoom(closeSim.name);
+              if (room) room.state = "fresh";
+              else closeSim.rooms.push({ name: closeSim.name, state: "fresh" });
+              closeFinish();
+            }
+          }
+        }
+      }
       closePaint();
-      if (closeSim.phase === "run") closeRaf = requestAnimationFrame(closeTick);
+      if (closeNeedTick()) closeRaf = requestAnimationFrame(closeTick);
       else closeRaf = 0;
     }
     function closeResetRooms() {
@@ -7515,21 +8745,36 @@
       closeSim.tryStep = "";
       closeSim.tryHold = 0;
       closeSim.mkGone = false;
+      closeSim.mkOn = false;
+      closeSim.mkStep = "";
+      closeSim.mkHold = 0;
+      closeSim.mkSig = "";
+      closeSim.lock = "";
+      closeSim.lockHold = 0;
+      closeSim.soon = false;
+      closeSim.soonHold = 0;
       closeSim.decayI = 0;
+      closeSim.endHold = 0;
     }
-    function closeClear() {
+    function closeResetSim() {
       closeStop();
       closeResetRooms();
+      closeSim.phase = "idle";
+    }
+    function closeClear() {
       closeSim.pickedN = false;
       closeSim.pickedStore = false;
       closeSim.store = "";
+      closeSim.law = "now";
+      closeSim.forking = false;
+      closeSim.lawTo = "";
       closeSim.people = 1;
-      closeSim.phase = "idle";
+      closeResetSim();
+      document.documentElement.classList.remove("alt-universe", "universe-shift");
       closePaint();
     }
     function closeHalt() {
-      closeStop();
-      closeSim.phase = "done";
+      closeResetSim();
       closePaint();
     }
     function closeShow() {
@@ -7537,16 +8782,7 @@
       closePaint();
     }
     function closeCtrl() {
-      if (closeSim.phase === "run") {
-        closeHalt();
-        return;
-      }
-      if (closeSim.phase === "done") {
-        closeClear();
-        return;
-      }
-      if (closeSim.phase !== "idle") return;
-      closeShow();
+      if (closeSim.phase === "idle") closeShow();
     }
     function closeRun() {
       if (closeSim.phase === "run") return;
@@ -7572,18 +8808,49 @@
       closeSim.elapsed = 0;
       closeSim.failed = false;
       closeSim.phase = "run";
-      closeBeat("disturb", 2.4);
+      if (closeSim.law === "fix") {
+        closeSim.lock = "up";
+        closeSim.lockHold = 0;
+        closeSim.soon = false;
+        closeSim.soonHold = 0;
+      } else if (closeSim.law === "pr") {
+        closeSim.lock = "up";
+        closeSim.lockHold = 0;
+        closeSim.soon = true;
+        closeSim.soonHold = 3;
+      } else {
+        closeSim.lock = "";
+        closeSim.soon = false;
+        closeSim.soonHold = 0;
+      }
+      closeBeat("disturb", closeDur(2.76));
       closeSim.t0 = performance.now();
       closeRaf = requestAnimationFrame(closeTick);
       closePaint();
     }
     function closeCreate() {
+      if (closeSim.endHold > 0) return;
+      if (closeAlt()) {
+        if (closeSim.phase !== "run" && closeSim.phase !== "done") return;
+        if (closeSim.mkOn && closeSim.mkStep !== "fail" && closeSim.mkStep !== "ok") return;
+        closeSim.mkOn = true;
+        closeSim.mkStep = "fly";
+        closeSim.mkHold = 1.15;
+        const bit = document.getElementById("closeMkBit");
+        if (bit) delete bit.dataset.sig;
+        closePaint();
+        if (!closeRaf) {
+          closeSim.t0 = performance.now();
+          closeRaf = requestAnimationFrame(closeTick);
+        }
+        return;
+      }
       if (closeSim.phase === "run") {
         if (closeSim.tryOn || closeSim.mkGone) return;
         if (!closeNameTaken()) return;
         closeSim.tryOn = true;
         closeSim.tryStep = "go";
-        closeSim.tryHold = 2.4;
+        closeSim.tryHold = 2.76;
         closePaint();
         return;
       }
@@ -7622,6 +8889,12 @@
           closePaint();
         };
       });
+      document.querySelectorAll("[data-close-law]").forEach((b) => {
+        b.onclick = () => {
+          const v = b.dataset.closeLaw;
+          closeSwitchLaw(v === "pr" || v === "fix" ? v : "now");
+        };
+      });
       const del = document.getElementById("closeDel");
       if (del) del.onclick = closeDelete;
       const mk = document.getElementById("closeMk");
@@ -7631,6 +8904,7 @@
       if (labRaf) cancelAnimationFrame(labRaf);
       labRaf = 0;
       closeStop();
+      document.documentElement.classList.remove("alt-universe", "universe-shift");
     }
     function labResetUp() {
       labSim.phase = "up";
@@ -8113,17 +9387,26 @@
       for (let i = 0; i < 24; i++) {
         const x = (3 + frac(i, 1.1) * 94).toFixed(1);
         const y = (4 + frac(i, 2.7) * 88).toFixed(1);
-        const cls = kinds[i % kinds.length];
-        const dur = cls === "spark" ? (2.6 + frac(i, 8) * 2.4).toFixed(2)
-          : cls === "dying" ? (18 + frac(i, 9) * 16).toFixed(2)
+        const cls = kinds[i % kinds.length] + (frac(i, 6.1) < 0.1 ? " shift" : "");
+        const dur = cls.indexOf("spark") !== -1 ? (2.6 + frac(i, 8) * 2.4).toFixed(2)
+          : cls.indexOf("dying") !== -1 ? (18 + frac(i, 9) * 16).toFixed(2)
           : (7 + frac(i, 10) * 7).toFixed(2);
         const delay = (frac(i, 12) * 14).toFixed(2);
         sparks += `<i class="${cls}" style="left:${x}%;top:${y}%;animation-duration:${dur}s;animation-delay:-${delay}s"></i>`;
       }
+      let diamonds = "";
+      for (let i = 0; i < 10; i++) {
+        const x = (5 + frac(i, 21.4) * 90).toFixed(1);
+        const y = (6 + frac(i, 17.8) * 86).toFixed(1);
+        const shift = frac(i, 3.3) < 0.1 ? " shift" : "";
+        const dur = (3.4 + frac(i, 4.2) * 2.2).toFixed(2);
+        const delay = (frac(i, 9.1) * 11).toFixed(2);
+        diamonds += `<i class="diamond${shift}" style="left:${x}%;top:${y}%;animation-duration:${dur}s;animation-delay:-${delay}s"></i>`;
+      }
       return `<div class="starfield">
         <div class="sf-layer far"><b style="box-shadow:${fieldShadows(20, 14, 3.2, 1280, 920)}"></b></div>
         <div class="sf-layer mid"><b style="box-shadow:${fieldShadows(13, 9, 8.7, 1080, 780)}"></b></div>
-        <div class="sky-spark">${sparks}</div>
+        <div class="sky-spark">${sparks}${diamonds}</div>
       </div>`;
     }
     function gritOrbit(rx, ry, cls) {
